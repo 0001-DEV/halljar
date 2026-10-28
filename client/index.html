@@ -1590,17 +1590,9 @@
         </div>
       </div>
 
-      <!-- Quick Metrics -->
-      <div class="dash-metrics-grid">
-        <div class="dash-metric-card">
-          <div class="dash-metric-num" id="dashMetricItems">0</div>
-          <div class="dash-metric-lbl">Total Products</div>
-        </div>
-        <div class="dash-metric-card">
-          <div class="dash-metric-num" id="dashMetricViews">0</div>
-          <div class="dash-metric-lbl">Total Views</div>
-        </div>
-        <div class="dash-metric-card">
+      <!-- Quick Metrics (Customer Rating Only) -->
+      <div style="margin-bottom: 20px; display: flex; justify-content: center;">
+        <div class="dash-metric-card" style="min-width: 200px; max-width: 260px; width: 100%; padding: 14px 18px; text-align: center;">
           <div class="dash-metric-num" id="dashMetricRating">5.0 ⭐</div>
           <div class="dash-metric-lbl">Customer Rating</div>
         </div>
@@ -3440,10 +3432,10 @@
           // Update Dashboard Metrics
           currentVendorListings = data.listings || [];
           const activeListings = currentVendorListings.filter(l => l.status === 'ACTIVE');
-          document.getElementById('dashMetricItems').textContent = currentVendorListings.length;
+          if (document.getElementById('dashMetricItems')) document.getElementById('dashMetricItems').textContent = currentVendorListings.length;
           const totalViews = currentVendorListings.reduce((sum, i) => sum + (i.views || 0), 0);
-          document.getElementById('dashMetricViews').textContent = totalViews;
-          document.getElementById('dashMetricRating').textContent = `${data.store.ratingAvg || 5.0} ⭐ (${data.store.ratingCount || 0})`;
+          if (document.getElementById('dashMetricViews')) document.getElementById('dashMetricViews').textContent = totalViews;
+          if (document.getElementById('dashMetricRating')) document.getElementById('dashMetricRating').textContent = `${data.store.ratingAvg || 5.0} ⭐ (${data.store.ratingCount || 0})`;
           document.getElementById('dashShelfCount').textContent = `${currentVendorListings.length} product${currentVendorListings.length > 1 ? 's' : ''} on shelves (${activeListings.length} in stock)`;
 
           const container = document.getElementById('dashInventoryContainer');
