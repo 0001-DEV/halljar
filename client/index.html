@@ -1818,6 +1818,13 @@
     <!-- VIEW 2: AUTH GATE - SIGNUP (INDIVIDUAL OR BUSINESS) -->
     <div id="signupView" class="view-section">
       <div class="signup-premium-card">
+        <!-- Back Navigation Button -->
+        <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 18px;">
+          <button type="button" id="btnSignupBack" onclick="handleSignupBack()" class="nav-btn" style="padding: 7px 14px; font-size: 12px; font-weight: 700; border-radius: 12px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; background: #F8FAFC; color: #475569; border: 1.5px solid #E2E8F0; transition: all 0.2s ease;">
+            ← Back to Marketplace
+          </button>
+        </div>
+
         <!-- Top Branded Header -->
         <div class="signup-header">
           <div class="signup-badge">
@@ -1968,9 +1975,14 @@
             </button>
           </form>
 
-          <div class="auth-toggle-box">
+          <div class="auth-toggle-box" id="signupAuthToggleBox">
             <span>Already have a Halljar account?</span>
             <a onclick="showView('login')" class="auth-signin-link">Sign In Here →</a>
+          </div>
+          <div id="signupCancelIndividualWrap" style="display: none; text-align: center; margin-top: 14px;">
+            <a onclick="showView('market')" style="font-size: 13px; font-weight: 700; color: #64748B; cursor: pointer; text-decoration: underline; display: inline-flex; align-items: center; gap: 4px;">
+              ← Cancel & Return to Marketplace
+            </a>
           </div>
         </div>
 
@@ -2950,6 +2962,30 @@
       }
     }
 
+    function handleSignupBack() {
+      if (currentUser) {
+        showView('market');
+      } else {
+        showView('login');
+      }
+    }
+
+    function updateSignupBackButton() {
+      const btn = document.getElementById('btnSignupBack');
+      const cancelWrap = document.getElementById('signupCancelIndividualWrap');
+      const authToggle = document.getElementById('signupAuthToggleBox');
+
+      if (currentUser) {
+        if (btn) btn.textContent = '← Back to Marketplace';
+        if (cancelWrap) cancelWrap.style.display = 'block';
+        if (authToggle) authToggle.style.display = 'none';
+      } else {
+        if (btn) btn.textContent = '← Back to Sign In';
+        if (cancelWrap) cancelWrap.style.display = 'none';
+        if (authToggle) authToggle.style.display = 'flex';
+      }
+    }
+
     // Individual to Business Registration Flow
     function openRegisterBusinessFromIndividual() {
       // 1. Switch to Business account type
@@ -2981,6 +3017,7 @@
         }
       }
 
+      updateSignupBackButton();
       showView('signup');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -2996,6 +3033,7 @@
       if (sub) sub.textContent = 'Access verified stores, order hot food & essentials, or sell to local estate residents.';
 
       setAccountType('INDIVIDUAL');
+      updateSignupBackButton();
       showView('signup');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -3082,6 +3120,9 @@
       const target = document.getElementById(viewId + 'View');
       if (target) target.classList.add('active');
 
+      if (viewId === 'signup') {
+        updateSignupBackButton();
+      }
       if (viewId === 'market') {
         loadSupermarkets();
         fetchListings();
