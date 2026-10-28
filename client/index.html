@@ -59,7 +59,7 @@
     .brand-logo { font-size: 22px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
     .warewa-tag { font-size: 11px; background: #DCFCE7; color: #15803D; font-weight: 700; padding: 2px 8px; border-radius: 12px; }
     
-    .nav-tabs { display: flex; gap: 8px; align-items: center; }
+    .nav-tabs { display: flex; gap: 8px; align-items: center; justify-content: flex-end; margin-left: auto; }
     .nav-btn {
       padding: 8px 14px;
       border-radius: 20px;
@@ -1520,7 +1520,7 @@
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
         <button class="nav-btn" onclick="showView('market')">← Back to Marketplace</button>
         <div style="display: flex; gap: 8px;">
-          <button class="nav-btn" onclick="openEditStoreModal()">✏️ Edit Store Profile</button>
+          
           <button class="nav-btn" style="background: var(--primary); color: white; font-weight: 700; border: none;" onclick="viewMyStoreAsBuyer()">👁️ View as Buyer</button>
         </div>
       </div>
@@ -2330,11 +2330,11 @@
       }
 
       if (currentUser) {
+        const displayName = (currentStore && currentStore.storeName) ? currentStore.storeName : currentUser.fullName;
         container.innerHTML = `
-          ${isVendor ? `<button class="nav-btn vendor-dash-glass-btn" onclick="openDashboard()">📊 View Dashboard</button>` : `<button class="nav-btn" onclick="showView('signup')">+ Register Business</button>`}
-          <div class="user-pill">
-            <span>👤 ${currentUser.fullName.split(' ')[0]}</span>
-            <a onclick="logout()" style="color:#EF4444; margin-left:6px; cursor:pointer;">Logout</a>
+          ${isVendor ? `<button class="nav-btn vendor-dash-glass-btn" style="padding: 6px 11px; font-size: 11px; font-weight: 700; border-radius: 16px; margin-left: auto; white-space: nowrap;" onclick="openDashboard()">📊 View Dashboard</button>` : `<button class="nav-btn" onclick="showView('signup')">+ Register Business</button>`}
+          <div class="user-pill" style="padding: 5px 11px; font-size: 12px; font-weight: 700; white-space: nowrap; max-width: 160px; overflow: hidden; text-overflow: ellipsis; margin-left: 4px;" title="${displayName}">
+            <span>👤 ${displayName}</span>
           </div>
         `;
       } else {
