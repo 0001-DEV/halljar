@@ -1801,7 +1801,10 @@
           </div>
           <div class="form-group">
             <label>Password</label>
-            <input type="password" id="loginPassword" placeholder="••••••••" required>
+            <div style="position: relative; display: flex; align-items: center;">
+              <input type="password" id="loginPassword" placeholder="••••••••" style="padding-right: 44px;" required>
+              <button type="button" onclick="togglePasswordVisibility('loginPassword', this)" style="position: absolute; right: 10px; background: none; border: none; font-size: 18px; cursor: pointer; padding: 4px; line-height: 1; user-select: none; opacity: 0.75;" title="Show/Hide Password">👁️</button>
+            </div>
             <div style="text-align: right; margin-top: 5px;">
               <a onclick="openForgotPasswordModal()" style="font-size: 12px; color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline;">Forgot Password?</a>
             </div>
@@ -1961,11 +1964,23 @@
               <div class="section-box-header">
                 <span>🔒 Security</span>
               </div>
-              <div class="form-group" style="margin-bottom: 0;">
+              <div class="form-group">
                 <label for="signPassword">Create Password</label>
-                <div class="input-with-icon">
+                <div class="input-with-icon" style="position: relative;">
                   <span class="field-icon">🔑</span>
-                  <input type="password" id="signPassword" placeholder="Create a secure password" minlength="4" required>
+                  <input type="password" id="signPassword" placeholder="Create a secure password" minlength="4" oninput="validatePasswordMatch()" style="padding-right: 44px;" required>
+                  <button type="button" onclick="togglePasswordVisibility('signPassword', this)" style="position: absolute; right: 10px; background: none; border: none; font-size: 18px; cursor: pointer; padding: 4px; line-height: 1; user-select: none; opacity: 0.75;" title="Show/Hide Password">👁️</button>
+                </div>
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="signPasswordConfirm">Confirm Password</label>
+                <div class="input-with-icon" style="position: relative;">
+                  <span class="field-icon">🔒</span>
+                  <input type="password" id="signPasswordConfirm" placeholder="Re-enter your password" minlength="4" oninput="validatePasswordMatch()" style="padding-right: 44px;" required>
+                  <button type="button" onclick="togglePasswordVisibility('signPasswordConfirm', this)" style="position: absolute; right: 10px; background: none; border: none; font-size: 18px; cursor: pointer; padding: 4px; line-height: 1; user-select: none; opacity: 0.75;" title="Show/Hide Password">👁️</button>
+                </div>
+                <div id="passwordMatchError" style="display: none; font-size: 11px; font-weight: 700; color: #E11D48; margin-top: 4px;">
+                  ⚠️ Passwords do not match
                 </div>
               </div>
             </div>
@@ -2558,7 +2573,10 @@
         </div>
         <div class="form-group">
           <label>Enter New Password</label>
-          <input type="password" id="forgotNewPassword" placeholder="••••••••" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px;">
+          <div style="position: relative; display: flex; align-items: center;">
+            <input type="password" id="forgotNewPassword" placeholder="••••••••" style="width: 100%; padding: 10px 44px 10px 10px; border: 1px solid var(--border); border-radius: 8px;">
+            <button type="button" onclick="togglePasswordVisibility('forgotNewPassword', this)" style="position: absolute; right: 10px; background: none; border: none; font-size: 18px; cursor: pointer; padding: 4px; line-height: 1; user-select: none; opacity: 0.75;" title="Show/Hide Password">👁️</button>
+          </div>
         </div>
         <button type="button" class="btn-full" onclick="handleResetPasswordSubmit()">
           🔐 Save New Password & Login
@@ -3133,6 +3151,47 @@
     }
 
     
+    // Eye toggle for password visibility
+    function togglePasswordVisibility(inputId, btnEl) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        if (btnEl) {
+          btnEl.textContent = '🙈';
+          btnEl.title = 'Hide Password';
+        }
+      } else {
+        input.type = 'password';
+        if (btnEl) {
+          btnEl.textContent = '👁️';
+          btnEl.title = 'Show Password';
+        }
+      }
+    }
+
+    // Realtime signup password match validation
+    function validatePasswordMatch() {
+      const p1 = document.getElementById('signPassword')?.value || '';
+      const p2 = document.getElementById('signPasswordConfirm')?.value || '';
+      const errEl = document.getElementById('passwordMatchError');
+      const inputConfirm = document.getElementById('signPasswordConfirm');
+      if (!p2) {
+        if (errEl) errEl.style.display = 'none';
+        if (inputConfirm) inputConfirm.style.borderColor = '#CBD5E1';
+        return true;
+      }
+      if (p1 !== p2) {
+        if (errEl) errEl.style.display = 'block';
+        if (inputConfirm) inputConfirm.style.borderColor = '#E11D48';
+        return false;
+      } else {
+        if (errEl) errEl.style.display = 'none';
+        if (inputConfirm) inputConfirm.style.borderColor = '#22C55E';
+        return true;
+      }
+    }
+
     // Simulated SMS Banner Notification
     function showSimulatedSmsBanner(phone, code) {
       let banner = document.getElementById('smsNotificationBanner');
@@ -3338,11 +3397,20 @@
 
     async function handleSignup(e) {
       e.preventDefault();
+      const password = document.getElementById('signPassword').value;
+      const confirmPassword = document.getElementById('signPasswordConfirm')?.value || '';
+
+      if (confirmPassword && password !== confirmPassword) {
+        alert('⚠️ Passwords do not match. Please ensure both password fields are identical.');
+        document.getElementById('signPasswordConfirm').focus();
+        return;
+      }
+
       const payload = {
         accountType: currentAccountType,
         fullName: document.getElementById('signFullName').value.trim(),
         phoneNumber: document.getElementById('signPhone').value.trim(),
-        password: document.getElementById('signPassword').value,
+        password,
         estateId: document.getElementById('signEstateSelect').value,
         businessName: document.getElementById('signBizName').value.trim(),
         businessCategory: document.getElementById('signBizCategory').value,
