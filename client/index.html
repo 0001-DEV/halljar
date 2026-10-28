@@ -1738,6 +1738,34 @@
       opacity: 0.85 !important;
       transition: transform 0.05s ease, opacity 0.05s ease !important;
     }
+
+    /* Top-Right Corner Notification Badge for All Chats */
+    .chat-badge-top-right {
+      position: absolute;
+      top: -7px;
+      right: -7px;
+      background: #EF4444; /* Vivid Notification Red */
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 900;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(239, 68, 68, 0.45);
+      border: 2px solid #FFFFFF;
+      line-height: 1;
+      pointer-events: none;
+      animation: pulseBadge 2.2s infinite ease-in-out;
+      z-index: 10;
+    }
+    @keyframes pulseBadge {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
   </style>
 </head>
 <body>
@@ -2058,8 +2086,8 @@
       <div class="section-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
         <span>🏪 Top Businesses & Stores</span>
         <!-- Customer Inquiries Button for Vendors (Beside Top Businesses & Stores) -->
-        <button id="btnCustomerInquiriesTrigger" class="nav-btn" style="display: none; background: #0F766E; color: white; font-weight: 700; border: none; font-size: 12px; padding: 6px 14px; border-radius: 20px; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(15, 118, 110, 0.25);" onclick="openCustomerChatsModal()">
-          💬 All Chats <span id="customerChatsCountBadge" style="background: #F97316; color: white; font-size: 10px; padding: 1px 6px; border-radius: 10px; display: none;">0</span>
+        <button id="btnCustomerInquiriesTrigger" class="nav-btn" style="display: none; background: #0F766E; color: white; font-weight: 700; border: none; font-size: 12px; padding: 6px 14px; border-radius: 20px; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(15, 118, 110, 0.25); position: relative; overflow: visible;" onclick="openAllChatsPage()">
+          💬 All Chats <span id="customerChatsCountBadge" class="chat-badge-top-right" style="display: none;">0</span>
         </button>
       </div>
 
@@ -2337,9 +2365,14 @@
     <div id="allChatsView" class="view-section">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
         <button class="nav-btn" onclick="showView('market')">← Back to Marketplace</button>
-        <button class="nav-btn" onclick="loadVendorChats(currentStore?.id)" style="display: inline-flex; align-items: center; gap: 6px;">
-          🔄 Refresh Chats
-        </button>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button class="nav-btn" onclick="markAllVendorChatsAsRead()" style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600;">
+            ✓ Mark All Read
+          </button>
+          <button class="nav-btn" onclick="loadVendorChats(currentStore?.id)" style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700;">
+            🔄 Refresh Chats
+          </button>
+        </div>
       </div>
 
       <div style="background: white; border: 1px solid var(--border); border-radius: 16px; padding: 22px 20px; margin-bottom: 22px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
@@ -2887,6 +2920,79 @@
       }
     }
 
+    // Badge updater for All Chats (displays number of people who messaged)
+    function updateAllChatsBadges(count) {
+      const badges = [
+        document.getElementById('customerChatsCountBadge'),
+        document.getElementById('headerChatsCountBadge')
+      ];
+
+      badges.forEach(b => {
+        if (!b) return;
+        if (count > 0) {
+          b.textContent = count > 99 ? '99+' : count;
+          b.style.display = 'inline-flex';
+        } else {
+          b.textContent = '0';
+          b.style.display = 'none';
+        }
+      });
+    }
+
+    function calculateAndSetBadge(convs) {
+      if (!convs || !convs.length) {
+        updateAllChatsBadges(0);
+        return;
+      }
+
+      const readTimestamps = JSON.parse(localStorage.getItem('halljar_vendor_read_timestamps') || '{}');
+      let unreadPeople = 0;
+
+      convs.forEach(c => {
+        if (c.messageCount > 0) {
+          const lastRead = readTimestamps[c.id];
+          if (!lastRead || new Date(c.updatedAt).getTime() > new Date(lastRead).getTime()) {
+            unreadPeople++;
+          }
+        }
+      });
+
+      updateAllChatsBadges(unreadPeople);
+    }
+
+    async function checkVendorUnreadChats(storeId) {
+      if (!storeId && currentStore) storeId = currentStore.id;
+      if (!storeId) {
+        updateAllChatsBadges(0);
+        return;
+      }
+      try {
+        const res = await fetch(`${API_BASE}/stores/${storeId}/conversations`);
+        if (!res.ok) return;
+        const convs = await res.json();
+        calculateAndSetBadge(convs);
+      } catch (e) {
+        console.warn('Failed to check unread vendor chats:', e);
+      }
+    }
+
+    function markAllVendorChatsAsRead() {
+      if (!currentStore) return;
+      const readTimestamps = JSON.parse(localStorage.getItem('halljar_vendor_read_timestamps') || '{}');
+      const now = new Date().toISOString();
+      const cards = document.querySelectorAll('#allChatsContainer .vendor-chat-card, #dashVendorChatsContainer .vendor-chat-card');
+      cards.forEach(card => {
+        const onclickAttr = card.getAttribute('onclick') || '';
+        const match = onclickAttr.match(/openVendorConversation\('([^']+)'/);
+        if (match && match[1]) {
+          readTimestamps[match[1]] = now;
+        }
+      });
+      localStorage.setItem('halljar_vendor_read_timestamps', JSON.stringify(readTimestamps));
+      updateAllChatsBadges(0);
+      loadVendorChats(currentStore.id, true);
+    }
+
     // WebSocket setup with resilient reconnection & graceful fallback for Vercel Serverless
     let ws = null;
     function initWebSocket() {
@@ -2925,6 +3031,10 @@
         // If vendor dashboard is visible and current store is active, refresh chats
         if (currentStore && document.getElementById('dashboardView') && document.getElementById('dashboardView').classList.contains('active')) {
           loadVendorChats(currentStore.id);
+        }
+        // Update All Chats badges with new incoming message count
+        if (currentStore) {
+          checkVendorUnreadChats(currentStore.id);
         }
       } else if (data.type === 'MESSAGE_EDITED') {
         if (data.conversationId === activeConversationId) {
@@ -2984,6 +3094,9 @@
         showView('market');
         loadSupermarkets();
         fetchListings();
+        if (currentStore || (currentUser && currentUser.role === 'SELLER')) {
+          checkVendorUnreadChats(currentStore ? currentStore.id : null);
+        }
       }
     }
 
@@ -3075,7 +3188,13 @@
       if (currentUser) {
         container.innerHTML = `
           ${isVendor ? 
-            `<button class="nav-btn vendor-dash-glass-btn" style="padding: 5px 10px; font-size: 11px; font-weight: 700; border-radius: 14px; margin-left: auto; white-space: nowrap; width: fit-content;" onclick="openDashboard()">View Dashboard</button>` : 
+            `<div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+               <button class="nav-btn" id="headerAllChatsBtn" style="padding: 5px 12px; font-size: 11px; font-weight: 700; border-radius: 14px; background: #0F766E; color: white; border: none; display: inline-flex; align-items: center; gap: 5px; position: relative; overflow: visible;" onclick="openAllChatsPage()">
+                 💬 All Chats
+                 <span id="headerChatsCountBadge" class="chat-badge-top-right" style="display: none;">0</span>
+               </button>
+               <button class="nav-btn vendor-dash-glass-btn" style="padding: 5px 10px; font-size: 11px; font-weight: 700; border-radius: 14px; white-space: nowrap; width: fit-content;" onclick="openDashboard()">View Dashboard</button>
+             </div>` : 
             `<div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
                <button class="nav-btn" style="padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 12px; background: #0F766E; color: white;" onclick="openRegisterBusinessFromIndividual()">+ Register Business</button>
                <button class="nav-btn" style="padding: 6px 10px; font-size: 11px; font-weight: 700; color: #E11D48; border: 1px solid #FECDD3; background: #FFF1F2; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;" onclick="logout()">🚪 Log Out</button>
@@ -3384,10 +3503,10 @@
         // Request notification permission on successful login
         requestNotificationPermission();
 
-        // If logged in as business/seller or has an active store, take directly to My Dashboard!
+        // If logged in as business/seller or has an active store, check new chats badge immediately!
         const isBusiness = currentLoginAccountType === 'BUSINESS' || currentUser.role === 'SELLER' || !!currentStore;
         if (isBusiness) {
-          
+          if (currentStore) checkVendorUnreadChats(currentStore.id);
           await openDashboard();
         } else {
           showView('market');
@@ -4485,6 +4604,12 @@
     }
 
     async function openVendorConversation(convId, buyerName, buyerPhone, itemTitle) {
+      // Mark this conversation as read
+      const readTimestamps = JSON.parse(localStorage.getItem('halljar_vendor_read_timestamps') || '{}');
+      readTimestamps[convId] = new Date().toISOString();
+      localStorage.setItem('halljar_vendor_read_timestamps', JSON.stringify(readTimestamps));
+      if (currentStore) checkVendorUnreadChats(currentStore.id);
+
       closeCustomerChatsModal();
       activeConversationId = convId;
       activeChatStoreId = currentStore ? currentStore.id : null;
