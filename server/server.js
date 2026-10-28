@@ -575,7 +575,148 @@ function saveDB() {
 
 // --- REST API ENDPOINTS ---
 
-// Auth: Register (Individual or Business)
+// In-memory OTP Store for phone verification and password reset
+const OTP_STORE = new Map();
+const PENDING_REGISTRATIONS = new Map();
+
+// Auth: Step 1 - Send Phone Verification Code for Signup
+app.post('/api/auth/register-otp', (req, res) => {
+  const {
+    accountType,
+    fullName,
+    phoneNumber,
+    password,
+    estateId,
+    unit,
+    businessName,
+    businessCategory,
+    openTime,
+    closeTime
+  } = req.body;
+
+  if (!fullName || !phoneNumber || !password) {
+    return res.status(400).json({ error: 'Full name, phone number, and password are required.' });
+  }
+
+  const normPhone = (p) => (p || '').replace(/\D/g, '').replace(/^234/, '0');
+  const targetPhoneNorm = normPhone(phoneNumber);
+
+  if (targetPhoneNorm.length < 8) {
+    return res.status(400).json({ error: 'Please enter a valid Nigerian phone number.' });
+  }
+
+  const existing = DB.users.find(u => normPhone(u.phoneNumber) === targetPhoneNorm);
+  if (existing) {
+    return res.status(400).json({ error: `⚠️ An account with phone number "${phoneNumber}" already exists. Please log in or choose another number.` });
+  }
+
+  const isBusiness = accountType === 'BUSINESS';
+  if (isBusiness && businessName) {
+    const bNorm = businessName.trim().toLowerCase();
+    const existingStore = DB.stores.find(s => s.storeName && s.storeName.trim().toLowerCase() === bNorm);
+    if (existingStore) {
+      return res.status(400).json({ error: `⚠️ A company named "${businessName.trim()}" already exists. Please choose a different company name.` });
+    }
+  }
+
+  // Generate 6-digit verification code
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  PENDING_REGISTRATIONS.set(targetPhoneNorm, {
+    data: req.body,
+    code,
+    expiresAt: Date.now() + 10 * 60 * 1000
+  });
+
+  console.log(`[SIGNUP PHONE VERIFICATION OTP] Generated code ${code} for ${fullName} (${phoneNumber})`);
+
+  res.json({
+    success: true,
+    message: `Verification code sent to ${phoneNumber}. Use code: ${code}`,
+    code
+  });
+});
+
+// Auth: Step 2 - Verify Phone Code and Complete Account Registration
+app.post('/api/auth/verify-register-otp', (req, res) => {
+  const { phoneNumber, code } = req.body;
+  if (!phoneNumber || !code) {
+    return res.status(400).json({ error: 'Phone number and verification code are required.' });
+  }
+
+  const normPhone = (p) => (p || '').replace(/\D/g, '').replace(/^234/, '0');
+  const targetPhoneNorm = normPhone(phoneNumber);
+
+  const pending = PENDING_REGISTRATIONS.get(targetPhoneNorm);
+  if (!pending || pending.code !== code.trim()) {
+    return res.status(400).json({ error: 'Invalid or expired verification code. Please check and try again.' });
+  }
+
+  const {
+    accountType,
+    fullName,
+    password,
+    estateId,
+    unit,
+    businessName,
+    businessCategory,
+    openTime,
+    closeTime
+  } = pending.data;
+
+  const isBusiness = accountType === 'BUSINESS';
+  const userId = 'usr_' + Date.now();
+  const newUser = {
+    id: userId,
+    fullName,
+    phoneNumber,
+    password,
+    role: isBusiness ? 'SELLER' : 'BUYER',
+    estateId: estateId || 'est_warewa',
+    unit: unit || ''
+  };
+  DB.users.push(newUser);
+
+  let newStore = null;
+  if (isBusiness) {
+    const storeId = 'store_' + Date.now();
+    newStore = {
+      id: storeId,
+      userId,
+      storeName: businessName || `${fullName}'s Store`,
+      logo: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=150&auto=format&fit=crop&q=80',
+      cover: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=1200&auto=format&fit=crop&q=80',
+      coverPhoto: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=1200&auto=format&fit=crop&q=80',
+      category: businessCategory || 'Supermarket',
+      sellerTier: 'RESIDENT',
+      estateId: estateId || 'est_citiview',
+      estateUnit: unit || 'In-Estate Shop',
+      ratingAvg: 5.0,
+      ratingCount: 0,
+      verifiedKYC: true,
+      openTime: openTime || '08:00',
+      closeTime: closeTime || '21:00',
+      bio: `${businessName || fullName} in ${estateId || 'estate'}.`
+    };
+    DB.stores.unshift(newStore);
+  }
+
+  saveDB();
+  PENDING_REGISTRATIONS.delete(targetPhoneNorm);
+
+  res.json({
+    success: true,
+    user: {
+      id: newUser.id,
+      fullName: newUser.fullName,
+      phoneNumber: newUser.phoneNumber,
+      role: newUser.role,
+      estateId: newUser.estateId
+    },
+    store: newStore
+  });
+});
+
+// Auth: Direct Register (Fallback)
 app.post('/api/auth/register', (req, res) => {
   const {
     accountType, // 'INDIVIDUAL' or 'BUSINESS'
@@ -704,9 +845,6 @@ app.post('/api/auth/login', (req, res) => {
     store: store || null
   });
 });
-
-// In-memory OTP Store for phone verification and password reset
-const OTP_STORE = new Map();
 
 // Auth: Request Password Reset Code
 app.post('/api/auth/forgot-password', (req, res) => {
@@ -911,6 +1049,7 @@ app.post('/api/stores/:storeId/rate', (req, res) => {
 });
 
 function getStoreCoverPhoto(store) {
+  if (store.cover) return store.cover;
   if (store.coverPhoto) return store.coverPhoto;
   const name = (store.storeName || '').toLowerCase();
   const cat = (store.category || '').toLowerCase();
@@ -1144,11 +1283,22 @@ app.patch('/api/stores/:storeId', (req, res) => {
   if (openTime) store.openTime = openTime;
   if (closeTime) store.closeTime = closeTime;
   if (logo) store.logo = logo;
-  if (cover) store.cover = cover;
+  if (cover) {
+    store.cover = cover;
+    store.coverPhoto = cover;
+  }
 
   saveDB();
 
-  res.json({ success: true, store, isOpen: isStoreOpen(store.openTime, store.closeTime) });
+  res.json({
+    success: true,
+    store: {
+      ...store,
+      cover: store.cover || store.coverPhoto,
+      coverPhoto: getStoreCoverPhoto(store)
+    },
+    isOpen: isStoreOpen(store.openTime, store.closeTime)
+  });
 });
 
 // Update Store Operating Hours

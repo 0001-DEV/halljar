@@ -379,41 +379,35 @@
       text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
     }
     #dashboardView {
-      background: rgba(15, 23, 42, 0.92);
-      backdrop-filter: blur(24px) saturate(200%);
-      -webkit-backdrop-filter: blur(24px) saturate(200%);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.15);
-      padding: 24px 18px;
-      border-radius: 24px;
-      max-width: 740px;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      padding: 24px 20px;
+      border-radius: 20px;
+      max-width: 760px;
       margin: 0 auto;
-      color: #F8FAFC;
+      color: var(--text);
     }
     .glass-card {
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: #F8FAFC;
+      border: 1px solid var(--border);
       border-radius: var(--radius);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
       padding: 24px;
       margin-bottom: 22px;
-      color: #F8FAFC;
+      color: var(--text);
     }
     .dashboard-header-bar {
-      background: rgba(30, 41, 59, 0.72);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: #F8FAFC;
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 18px 20px;
       margin-bottom: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-      color: #F8FAFC;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      color: var(--text);
     }
     .dash-metrics-grid {
       display: grid;
@@ -422,67 +416,64 @@
       margin-bottom: 24px;
     }
     .dash-metric-card {
-      background: rgba(30, 41, 59, 0.65);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: #F8FAFC;
+      border: 1px solid var(--border);
       border-radius: 14px;
       padding: 16px;
       text-align: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
-      color: #F8FAFC;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      color: var(--text);
     }
     .dash-metric-num {
       font-size: 24px;
       font-weight: 800;
-      color: #38BDF8;
+      color: var(--primary);
     }
     .dash-metric-lbl {
       font-size: 11px;
       font-weight: 700;
-      color: #94A3B8;
+      color: var(--text-muted);
       text-transform: uppercase;
       margin-top: 2px;
     }
     .dash-card-section {
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: #FFFFFF;
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 22px;
       margin-bottom: 22px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-      color: #F8FAFC;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+      color: var(--text);
     }
     #dashboardView input[type="text"],
     #dashboardView input[type="number"],
     #dashboardView input[type="time"],
     #dashboardView select {
-      background: rgba(15, 23, 42, 0.8) !important;
-      border: 1px solid rgba(255, 255, 255, 0.18) !important;
-      color: #F8FAFC !important;
+      background: #FFFFFF !important;
+      border: 1px solid var(--border) !important;
+      color: var(--text) !important;
     }
     #dashboardView label {
-      color: #CBD5E1 !important;
+      color: #334155 !important;
     }
     #dashboardView .photo-upload-box {
-      background: rgba(15, 23, 42, 0.5) !important;
-      border: 2px dashed rgba(255, 255, 255, 0.25) !important;
-      color: #CBD5E1 !important;
+      background: #F8FAFC !important;
+      border: 2px dashed #CBD5E1 !important;
+      color: var(--text-muted) !important;
     }
     #dashboardView .vendor-item-row {
-      background: rgba(15, 23, 42, 0.45);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      color: #F8FAFC;
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
     }
     #dashboardView .vendor-chat-card {
-      background: rgba(15, 23, 42, 0.45);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      color: #F8FAFC;
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
     }
     #dashboardView .vendor-chat-card:hover {
-      background: rgba(30, 41, 59, 0.85);
+      background: #F8FAFC;
+    }
     }
     .vendor-item-row {
       display: flex;
@@ -1210,82 +1201,108 @@
         <h2>Create an Account</h2>
         <p>Choose your account type below to get started in Warewa.</p>
 
-        <!-- Account Type Switcher: Individual vs Business -->
-        <div class="account-type-tabs">
-          <div class="type-tab active" id="tabIndividual" onclick="setAccountType('INDIVIDUAL')">
-            👤 Individual / Buyer
-          </div>
-          <div class="type-tab" id="tabBusiness" onclick="setAccountType('BUSINESS')">
-            🏬 Business / Supermarket
-          </div>
-        </div>
-
-        <form onsubmit="handleSignup(event)">
-          <!-- Common Fields -->
-          <div class="form-group">
-            <label id="lblFullName">Your Full Name</label>
-            <input type="text" id="signFullName" placeholder="e.g. Samuel Adekunle" required>
-          </div>
-          <div class="form-group">
-            <label>Phone Number (WhatsApp Preferred)</label>
-            <input type="tel" id="signPhone" placeholder="+234 80 1234 5678" required>
-          </div>
-          <div class="form-group">
-            <label>Location</label>
-            <select id="signEstateSelect">
-              <option value="est_citiview">Citi-View Estate</option>
-              <option value="est_warewa">Warewa</option>
-              <option value="est_arepo">Arepo</option>
-              <option value="est_opic">Opic</option>
-              <option value="est_ibafo">Ibafo</option>
-            </select>
-          </div>
-
-          <!-- Business Only Fields (Shown when Business is selected) -->
-          <div id="businessFieldsGroup" style="display: none; background: #F8FAFC; border: 1.5px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 16px;">
-            <div style="font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 10px; text-transform: uppercase;">
-              🏬 Store & Operating Information
+        <!-- Step 1: Registration Form -->
+        <div id="signupStepForm">
+          <!-- Account Type Switcher: Individual vs Business -->
+          <div class="account-type-tabs">
+            <div class="type-tab active" id="tabIndividual" onclick="setAccountType('INDIVIDUAL')">
+              👤 Individual / Buyer
             </div>
-
-            <div class="form-group">
-              <label>Business / Brand Name</label>
-              <input type="text" id="signBizName" class="force-caps-input" oninput="this.value = this.value.toUpperCase()" placeholder="e.g. AMAKA BAKES OR DEJI TECH LAB">
+            <div class="type-tab" id="tabBusiness" onclick="setAccountType('BUSINESS')">
+              🏬 Business / Supermarket
             </div>
+          </div>
 
+          <form onsubmit="handleSignup(event)">
+            <!-- Common Fields -->
             <div class="form-group">
-              <label>Business Category</label>
-              <select id="signBizCategory">
-                <option value="Food & Bakery">Food, Pastries & Bakery</option>
-                <option value="Electronics">Electronics & Gadget Repairs</option>
-                <option value="Fashion & Beauty">Fashion, Perfumes & Beauty</option>
-                <option value="Home & Laundry Services">Laundry & Home Services</option>
-                <option value="Supermarket">Supermarket & Provisions</option>
+              <label id="lblFullName">Your Full Name</label>
+              <input type="text" id="signFullName" placeholder="e.g. Samuel Adekunle" required>
+            </div>
+            <div class="form-group">
+              <label>Phone Number (WhatsApp Preferred)</label>
+              <input type="tel" id="signPhone" placeholder="+234 80 1234 5678" required>
+            </div>
+            <div class="form-group">
+              <label>Location</label>
+              <select id="signEstateSelect">
+                <option value="est_citiview">Citi-View Estate</option>
+                <option value="est_warewa">Warewa</option>
+                <option value="est_arepo">Arepo</option>
+                <option value="est_opic">Opic</option>
+                <option value="est_ibafo">Ibafo</option>
               </select>
             </div>
 
-            <div style="display: flex; gap: 10px;">
-              <div class="form-group" style="flex: 1; margin-bottom: 0;">
-                <label>Opening Time</label>
-                <input type="time" id="signOpenTime" value="08:00">
+            <!-- Business Only Fields (Shown when Business is selected) -->
+            <div id="businessFieldsGroup" style="display: none; background: #F8FAFC; border: 1.5px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 16px;">
+              <div style="font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 10px; text-transform: uppercase;">
+                🏬 Store & Operating Information
               </div>
-              <div class="form-group" style="flex: 1; margin-bottom: 0;">
-                <label>Closing Time</label>
-                <input type="time" id="signCloseTime" value="21:00">
+
+              <div class="form-group">
+                <label>Business / Brand Name</label>
+                <input type="text" id="signBizName" class="force-caps-input" oninput="this.value = this.value.toUpperCase()" placeholder="e.g. AMAKA BAKES OR DEJI TECH LAB">
+              </div>
+
+              <div class="form-group">
+                <label>Business Category</label>
+                <select id="signBizCategory">
+                  <option value="Food & Bakery">Food, Pastries & Bakery</option>
+                  <option value="Electronics">Electronics & Gadget Repairs</option>
+                  <option value="Fashion & Beauty">Fashion, Perfumes & Beauty</option>
+                  <option value="Home & Laundry Services">Laundry & Home Services</option>
+                  <option value="Supermarket">Supermarket & Provisions</option>
+                </select>
+              </div>
+
+              <div style="display: flex; gap: 10px;">
+                <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                  <label>Opening Time</label>
+                  <input type="time" id="signOpenTime" value="08:00">
+                </div>
+                <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                  <label>Closing Time</label>
+                  <input type="time" id="signCloseTime" value="21:00">
+                </div>
               </div>
             </div>
+
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="signPassword" placeholder="Create a password" required>
+            </div>
+
+            <button type="submit" class="btn-full" id="btnSubmitSignup">📲 Send Verification Code</button>
+          </form>
+
+          <div class="auth-toggle">
+            Already have an account? <a onclick="showView('login')">Sign In Here</a>
           </div>
-
-          <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="signPassword" placeholder="Create a password" required>
-          </div>
-
-          <button type="submit" class="btn-full" id="btnSubmitSignup">Create Account</button>
-        </form>
-
-        <div class="auth-toggle">
-          Already have an account? <a onclick="showView('login')">Sign In Here</a>
         </div>
+
+        <!-- Step 2: Phone Verification Code -->
+        <div id="signupStepOtp" style="display: none;">
+          <div style="background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF; padding: 12px; border-radius: 10px; font-size: 13px; margin-bottom: 16px;" id="signupOtpNotice">
+            📲 A 6-digit confirmation code has been generated to verify your phone number is valid.
+          </div>
+
+          <form onsubmit="handleVerifySignupOtp(event)">
+            <div class="form-group">
+              <label>Enter 6-Digit Phone Verification Code</label>
+              <input type="text" id="signupOtpCode" placeholder="123456" maxlength="6" style="width: 100%; padding: 12px; border: 1.5px solid var(--primary); border-radius: 10px; letter-spacing: 6px; font-weight: 800; text-align: center; font-size: 20px;" required>
+            </div>
+            <button type="submit" class="btn-full" id="btnVerifySignup" style="font-size: 15px; padding: 13px;">
+              ✅ Verify Code & Activate Account
+            </button>
+            <div style="margin-top: 14px; text-align: center;">
+              <a onclick="backToSignupForm()" style="font-size: 12px; color: var(--text-muted); cursor: pointer; text-decoration: underline;">
+                ← Change phone number or details
+              </a>
+            </div>
+          </form>
+        </div>
+
       </div>
     </div>
 
@@ -1293,8 +1310,12 @@
     <div id="marketView" class="view-section">
 
       <!-- Top Verified Businesses & In-Estate Vendors (Compact Narrow Logo Bar) -->
-      <div class="section-title">
+      <div class="section-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
         <span>🏪 Top Businesses & Stores</span>
+        <!-- Customer Inquiries Button for Vendors (Beside Top Businesses & Stores) -->
+        <button id="btnCustomerInquiriesTrigger" class="nav-btn" style="display: none; background: #0F766E; color: white; font-weight: 700; border: none; font-size: 12px; padding: 6px 14px; border-radius: 20px; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(15, 118, 110, 0.25);" onclick="openCustomerChatsModal()">
+          💬 Customer Inquiries <span id="customerChatsCountBadge" style="background: #F97316; color: white; font-size: 10px; padding: 1px 6px; border-radius: 10px; display: none;">0</span>
+        </button>
       </div>
 
       <div class="supermarket-logos-row" id="supermarketsContainer">
@@ -1404,25 +1425,25 @@
       </div>
     </div>
 
-    <!-- VIEW 5: VENDOR DASHBOARD & INVENTORY MANAGER (Black Glassmorphism UI) -->
+    <!-- VIEW 5: VENDOR DASHBOARD & INVENTORY MANAGER (White & Light Gray UI) -->
     <div id="dashboardView" class="view-section">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
-        <button class="nav-btn" style="background: rgba(255,255,255,0.12); color: white; border-color: rgba(255,255,255,0.2);" onclick="showView('market')">← Back to Marketplace</button>
+        <button class="nav-btn" onclick="showView('market')">← Back to Marketplace</button>
         <div style="display: flex; gap: 8px;">
-          <button class="nav-btn" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: white;" onclick="openEditStoreModal()">✏️ Edit Store Profile</button>
+          <button class="nav-btn" onclick="openEditStoreModal()">✏️ Edit Store Profile</button>
           <button class="nav-btn" style="background: var(--primary); color: white; font-weight: 700; border: none;" onclick="viewMyStoreAsBuyer()">👁️ View as Buyer</button>
         </div>
       </div>
 
       <!-- Storefront Visual Branding: Cover & DP (Real-time Upload) -->
-      <div class="dash-cover-dp-box" style="position: relative; border-radius: 16px; overflow: hidden; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); background: rgba(30, 41, 59, 0.65);">
+      <div class="dash-cover-dp-box" style="position: relative; border-radius: 16px; overflow: hidden; margin-bottom: 20px; border: 1px solid var(--border); background: #FFFFFF; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
         <!-- Cover Banner Image -->
-        <div style="height: 140px; width: 100%; position: relative; background: linear-gradient(135deg, #0F766E, #1E293B);">
+        <div style="height: 140px; width: 100%; position: relative; background: linear-gradient(135deg, #0F766E, #115E59);">
           <img id="dashCoverImg" src="" style="width: 100%; height: 100%; object-fit: cover; display: none;" alt="Store Cover">
-          <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(15,23,42,0.85));"></div>
+          <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(15,23,42,0.45));"></div>
           <!-- Upload Cover Button -->
           <input type="file" id="dashCoverFileInput" accept="image/*" style="display: none;" onchange="handleStoreCoverUpload(event)">
-          <button type="button" class="nav-btn" onclick="document.getElementById('dashCoverFileInput').click()" style="position: absolute; top: 12px; right: 12px; font-size: 11px; padding: 5px 12px; background: rgba(15, 23, 42, 0.75); color: white; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(8px);">
+          <button type="button" class="nav-btn" onclick="document.getElementById('dashCoverFileInput').click()" style="position: absolute; top: 12px; right: 12px; font-size: 11px; padding: 5px 12px; background: rgba(255, 255, 255, 0.9); color: #0F172A; border: 1px solid rgba(0,0,0,0.12); backdrop-filter: blur(8px); font-weight: 700;">
             📷 <span id="dashCoverBtnText">Set Cover Photo</span>
           </button>
         </div>
@@ -1431,7 +1452,7 @@
         <div style="padding: 14px 18px; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-top: -36px; position: relative;">
           <div style="display: flex; align-items: flex-end; gap: 14px;">
             <!-- DP / Logo Avatar with Upload trigger -->
-            <div style="position: relative; width: 72px; height: 72px; border-radius: 50%; border: 3px solid #1E293B; background: #0F766E; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); cursor: pointer;" onclick="document.getElementById('dashLogoFileInput').click()" title="Click to upload Display Picture (DP / Logo)">
+            <div style="position: relative; width: 72px; height: 72px; border-radius: 50%; border: 3px solid white; background: #0F766E; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: pointer;" onclick="document.getElementById('dashLogoFileInput').click()" title="Click to upload Display Picture (DP / Logo)">
               <img id="dashLogoImg" src="" style="width: 100%; height: 100%; object-fit: cover; display: none;" alt="Store DP">
               <div id="dashLogoPlaceholder" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 22px;">
                 🏪
@@ -1444,22 +1465,22 @@
 
             <div style="padding-bottom: 4px;">
               <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 10px; font-weight: 800; color: #4ADE80; background: rgba(74, 222, 128, 0.15); border: 1px solid rgba(74, 222, 128, 0.3); padding: 2px 8px; border-radius: 8px;">● VENDOR ACCOUNT ACTIVE</span>
+                <span style="font-size: 10px; font-weight: 800; color: #15803D; background: #DCFCE7; border: 1px solid #86EFAC; padding: 2px 8px; border-radius: 8px;">● VENDOR ACCOUNT ACTIVE</span>
                 <span id="dashLiveStatusBadge" class="store-time-badge status-open" style="font-size: 11px; padding: 2px 8px;">● OPEN</span>
               </div>
-              <h1 id="dashStoreName" style="font-size: 22px; font-weight: 800; color: #F8FAFC; margin-top: 4px; margin-bottom: 2px;">My Store</h1>
-              <p id="dashStoreLocation" style="font-size: 12px; color: #94A3B8; margin-bottom: 0;">Citi-View Estate</p>
+              <h1 id="dashStoreName" style="font-size: 22px; font-weight: 800; color: var(--text); margin-top: 4px; margin-bottom: 2px;">My Store</h1>
+              <p id="dashStoreLocation" style="font-size: 12px; color: var(--text-muted); margin-bottom: 0;">Citi-View Estate</p>
             </div>
           </div>
 
           <div style="display: flex; gap: 8px; padding-bottom: 4px;">
-            <button class="nav-btn" style="font-size: 11px; padding: 6px 12px; background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: white;" onclick="document.getElementById('dashLogoFileInput').click()">📷 Set DP</button>
-            <button class="nav-btn" style="font-size: 11px; padding: 6px 12px; background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: white;" onclick="openEditStoreModal()">✏️ Edit Profile</button>
+            <button class="nav-btn" style="font-size: 11px; padding: 6px 12px;" onclick="document.getElementById('dashLogoFileInput').click()">📷 Set DP</button>
+            <button class="nav-btn" style="font-size: 11px; padding: 6px 12px;" onclick="openEditStoreModal()">✏️ Edit Profile</button>
           </div>
         </div>
 
         <!-- Blank / First Open Onboarding Banner -->
-        <div id="dashBlankOnboardAlert" style="display: none; background: rgba(56, 189, 248, 0.15); border-top: 1px solid rgba(56, 189, 248, 0.3); color: #BAE6FD; padding: 10px 18px; font-size: 12px; align-items: center; justify-content: space-between; gap: 10px;">
+        <div id="dashBlankOnboardAlert" style="display: none; background: #F0F9FF; border-top: 1px solid #BAE6FD; color: #0369A1; padding: 10px 18px; font-size: 12px; align-items: center; justify-content: space-between; gap: 10px;">
           <span>✨ <strong>Store setup:</strong> Upload a Cover photo and profile logo (DP) so buyers recognize your business in the estate!</span>
           <button class="nav-btn" style="font-size: 10px; padding: 3px 8px; background: #0284C7; color: white; border: none;" onclick="document.getElementById('dashCoverFileInput').click()">Set Cover</button>
         </div>
@@ -1542,20 +1563,6 @@
           <span style="font-size: 12px; color: var(--text-muted);" id="dashShelfCount">0 items live</span>
         </div>
         <div id="dashInventoryContainer" style="border: 1px solid var(--border); border-radius: 12px; overflow: hidden;"></div>
-      </div>
-
-      <!-- Customer Chats & Inquiries Inbox (Where vendor sees chats from everyone) -->
-      <div class="dash-card-section" id="dashChatsCard">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-          <div>
-            <h3 style="font-size: 17px; font-weight: 800;">💬 Customer Inquiries & Chats</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 0;">Live messages and inquiries from estate residents and buyers across your products.</p>
-          </div>
-          <button class="nav-btn" style="font-size: 12px; padding: 4px 10px;" onclick="loadVendorChats(currentStore?.id)">🔄 Refresh Chats</button>
-        </div>
-        <div id="dashVendorChatsContainer" style="border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: white;">
-          <div style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 13px;">Loading incoming inquiries...</div>
-        </div>
       </div>
 
       <!-- Store Operating Hours Setting -->
@@ -1804,6 +1811,27 @@
         <button type="button" class="btn-full" onclick="handleResetPasswordSubmit()">
           🔐 Save New Password & Login
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: VENDOR CUSTOMER INQUIRIES & CHATS -->
+  <div class="quick-modal-overlay" id="customerChatsModal">
+    <div class="quick-modal-box" style="max-width: 580px; width: 95%; max-height: 85vh; display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <div>
+          <h3 style="font-size: 18px; font-weight: 800; color: var(--primary-dark); margin: 0;">💬 Customer Inquiries & Chats</h3>
+          <p style="font-size: 12px; color: var(--text-muted); margin: 2px 0 0 0;">Live messages and inquiries from estate residents and buyers across your products.</p>
+        </div>
+        <button onclick="closeCustomerChatsModal()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted);">✕</button>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
+        <button class="nav-btn" style="font-size: 12px; padding: 4px 12px;" onclick="loadVendorChats(currentStore?.id)">🔄 Refresh Chats</button>
+      </div>
+
+      <div id="dashVendorChatsContainer" style="border: 1px solid var(--border); border-radius: 12px; overflow-y: auto; max-height: 55vh; background: white;">
+        <div style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 13px;">Loading incoming inquiries...</div>
       </div>
     </div>
   </div>
@@ -2173,8 +2201,14 @@
     function renderAuthHeader() {
       const container = document.getElementById('navHeaderActions');
       const installPill = `<button class="nav-btn" onclick="showInstallPrompt()" style="background:#0F766E; color:white; border:none; display:inline-flex; align-items:center; gap:4px; font-weight:700;">📲 App</button>`;
+      const isVendor = currentUser && ((currentUser.role === 'SELLER') || !!currentStore || (currentUser.fullName && currentUser.fullName.toLowerCase().includes('love')));
+      
+      const inquiriesTrigger = document.getElementById('btnCustomerInquiriesTrigger');
+      if (inquiriesTrigger) {
+        inquiriesTrigger.style.display = isVendor ? 'inline-flex' : 'none';
+      }
+
       if (currentUser) {
-        const isVendor = (currentUser.role === 'SELLER') || !!currentStore || (currentUser.fullName && currentUser.fullName.toLowerCase().includes('love'));
         container.innerHTML = `
           ${installPill}
           ${isVendor ? `<button class="nav-btn vendor-dash-glass-btn" onclick="openDashboard()">📊 My Dashboard</button>` : `<button class="nav-btn" onclick="showView('signup')">+ Register Business</button>`}
@@ -2190,6 +2224,19 @@
           <button class="nav-btn" onclick="showView('signup')">Sign Up</button>
         `;
       }
+    }
+
+    function openCustomerChatsModal() {
+      if (!currentStore) {
+        alert('Please log in with a business account to view incoming customer inquiries.');
+        return;
+      }
+      loadVendorChats(currentStore.id);
+      document.getElementById('customerChatsModal').classList.add('active');
+    }
+
+    function closeCustomerChatsModal() {
+      document.getElementById('customerChatsModal').classList.remove('active');
     }
 
     function setAccountType(type) {
@@ -2308,25 +2355,65 @@
       }
     }
 
-    // 2. AUTH: Signup (Individual or Business)
+    // 2. AUTH: 2-Step Signup with Phone Number Verification OTP
+    let pendingSignupPhone = '';
+
     async function handleSignup(e) {
       e.preventDefault();
       const payload = {
         accountType: currentAccountType,
-        fullName: document.getElementById('signFullName').value,
-        phoneNumber: document.getElementById('signPhone').value,
+        fullName: document.getElementById('signFullName').value.trim(),
+        phoneNumber: document.getElementById('signPhone').value.trim(),
         password: document.getElementById('signPassword').value,
         estateId: document.getElementById('signEstateSelect').value,
-        businessName: document.getElementById('signBizName').value,
+        businessName: document.getElementById('signBizName').value.trim(),
         businessCategory: document.getElementById('signBizCategory').value,
         openTime: document.getElementById('signOpenTime').value,
         closeTime: document.getElementById('signCloseTime').value
       };
 
-      const res = await fetch(`${API_BASE}/auth/register`, {
+      pendingSignupPhone = payload.phoneNumber;
+
+      const res = await fetch(`${API_BASE}/auth/register-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        document.getElementById('signupStepForm').style.display = 'none';
+        document.getElementById('signupStepOtp').style.display = 'block';
+        document.getElementById('signupOtpNotice').innerHTML = `
+          📲 <strong>Phone Verification Code:</strong> We generated a 6-digit code to confirm <strong>${payload.phoneNumber}</strong> is a valid phone number.<br><br>
+          🔑 <strong>Your Code:</strong> <span style="font-size: 17px; font-weight: 800; color: #0F766E;">${data.code}</span>
+        `;
+        if (data.code) {
+          document.getElementById('signupOtpCode').value = data.code;
+        }
+        alert(`📲 Phone verification code generated for ${payload.phoneNumber}: ${data.code}\nEnter this code to confirm your phone number is valid.`);
+      } else {
+        alert(data.error || 'Failed to send verification code. Please check your details.');
+      }
+    }
+
+    function backToSignupForm() {
+      document.getElementById('signupStepForm').style.display = 'block';
+      document.getElementById('signupStepOtp').style.display = 'none';
+    }
+
+    async function handleVerifySignupOtp(e) {
+      e.preventDefault();
+      const code = document.getElementById('signupOtpCode').value.trim();
+      if (!pendingSignupPhone || !code) {
+        alert('Please enter your 6-digit verification code.');
+        return;
+      }
+
+      const res = await fetch(`${API_BASE}/auth/verify-register-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phoneNumber: pendingSignupPhone, code })
       });
       const data = await res.json();
 
@@ -2337,24 +2424,26 @@
         if (currentStore) localStorage.setItem('halljar_store', JSON.stringify(currentStore));
         renderAuthHeader();
 
+        // Reset forms
+        backToSignupForm();
+
         if (currentStore) {
-          // Sync location selector to the newly registered business's estate
           const locSelect = document.getElementById('locationSelect');
           if (locSelect && currentStore.estateId) {
             locSelect.value = currentStore.estateId;
           }
-          alert(`🎉 Congratulations! "${currentStore.storeName}" is now registered. Add your products now!`);
+          alert(`🎉 Phone verified successfully! Welcome to Halljar. "${currentStore.storeName}" is now active!`);
           openDashboard();
           loadSupermarkets();
           fetchListings();
         } else {
-          alert('🎉 Account created successfully!');
+          alert('🎉 Phone verified successfully! Welcome to Halljar.');
           showView('market');
           loadSupermarkets();
           fetchListings();
         }
       } else {
-        alert(data.error || 'Signup failed');
+        alert(data.error || 'Verification failed. Please check the code.');
       }
     }
 
@@ -2407,7 +2496,7 @@
 
         // 1. Cover Photo & Real DP
         const coverEl = document.getElementById('catStoreCoverImg');
-        if (coverEl) coverEl.src = data.store.coverPhoto || 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=1200&auto=format&fit=crop&q=80';
+        if (coverEl) coverEl.src = data.store.cover || data.store.coverPhoto || 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=1200&auto=format&fit=crop&q=80';
         
         const logoEl = document.getElementById('catStoreLogoImg');
         if (logoEl) logoEl.src = data.store.logo || 'https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=150&auto=format&fit=crop&q=80';
@@ -2426,18 +2515,26 @@
         const reviewCountEl = document.getElementById('catStoreReviewCount');
         if (reviewCountEl) reviewCountEl.textContent = `(${data.store.ratingCount || 35}+ ratings)`;
 
+        const isOwner = (currentStore && currentStore.id === storeId) || (currentUser && data.store.userId === currentUser.id);
+
         // 5. Open Till Status Pill
         const openTillPill = document.getElementById('catOpenTillPill');
+        const storeChatBtn = document.getElementById('btnStoreChat');
         if (openTillPill) {
           if (data.store.isOpen) {
             openTillPill.className = 'chowdeck-meta-pill status-open';
             openTillPill.innerHTML = `🟢 Open till ${data.store.closeTime || '21:30'}`;
-            document.getElementById('btnStoreChat').disabled = false;
+            if (storeChatBtn) storeChatBtn.disabled = false;
           } else {
             openTillPill.className = 'chowdeck-meta-pill status-closed';
             openTillPill.innerHTML = `🔴 Closed • Opens at ${data.store.openTime || '08:00'}`;
-            document.getElementById('btnStoreChat').disabled = true;
+            if (storeChatBtn) storeChatBtn.disabled = true;
           }
+        }
+
+        // Hide Chat Store option if viewing own business
+        if (storeChatBtn) {
+          storeChatBtn.style.display = isOwner ? 'none' : 'inline-flex';
         }
 
         // 6. Preparation Time Pill
@@ -2452,7 +2549,6 @@
         const storeSearch = document.getElementById('storeSearchInput');
         if (storeSearch) storeSearch.value = '';
 
-        const isOwner = currentStore && currentStore.id === storeId;
         const selfAddBtn = document.getElementById('btnVendorSelfAdd');
         if (selfAddBtn) selfAddBtn.style.display = isOwner ? 'inline-block' : 'none';
 
@@ -2560,7 +2656,13 @@
         const reviewsCount = item.reviewsCount || '24';
         let actionButtonHtml = '';
 
-        if (!store.isOpen) {
+        if (isOwner) {
+          actionButtonHtml = `
+            <button class="nav-btn" style="font-size: 11px; padding: 6px 12px; background: #F1F5F9; font-weight: 700; color: #334155;" onclick="openEditProductModal('${item.id}')">
+              ✏️ Edit
+            </button>
+          `;
+        } else if (!store.isOpen) {
           actionButtonHtml = `<button class="chowdeck-add-btn" disabled>Closed</button>`;
         } else if (qty > 0) {
           actionButtonHtml = `
@@ -2681,8 +2783,12 @@
         const isOpen = item.store.isOpen;
         const qty = getCartItemQty(item.id);
 
+        const isMyStore = (currentStore && currentStore.id === item.store.id) || (currentUser && item.store.userId === currentUser.id);
+
         let cartBtnHtml = '';
-        if (!isOpen) {
+        if (isMyStore) {
+          cartBtnHtml = `<button class="nav-btn" style="flex:1; padding:8px 6px; font-size:11px; background:#F1F5F9; color:#475569; font-weight:700; border:1px solid var(--border);" onclick="openDashboard()">📊 My Store</button>`;
+        } else if (!isOpen) {
           cartBtnHtml = `<button class="btn-add-cart" disabled>Closed</button>`;
         } else if (qty > 0) {
           cartBtnHtml = `
@@ -3131,8 +3237,9 @@
           // Populate cover photo
           const coverImg = document.getElementById('dashCoverImg');
           const coverBtnText = document.getElementById('dashCoverBtnText');
-          if (data.store.cover) {
-            coverImg.src = data.store.cover;
+          const effectiveCover = data.store.cover || data.store.coverPhoto;
+          if (effectiveCover) {
+            coverImg.src = effectiveCover;
             coverImg.style.display = 'block';
             if (coverBtnText) coverBtnText.textContent = 'Change Cover';
           } else {
@@ -3275,6 +3382,7 @@
     }
 
     async function openVendorConversation(convId, buyerName, buyerPhone, itemTitle) {
+      closeCustomerChatsModal();
       activeConversationId = convId;
       activeChatStoreId = currentStore ? currentStore.id : null;
 
@@ -3503,13 +3611,27 @@
           const data = await res.json();
           currentStore = data.store;
           localStorage.setItem('halljar_store', JSON.stringify(currentStore));
+          
+          // Update Dashboard Cover
           const img = document.getElementById('dashCoverImg');
-          img.src = coverData;
-          img.style.display = 'block';
-          document.getElementById('dashCoverBtnText').textContent = 'Change Cover';
+          if (img) {
+            img.src = coverData;
+            img.style.display = 'block';
+          }
+          const btnTxt = document.getElementById('dashCoverBtnText');
+          if (btnTxt) btnTxt.textContent = 'Change Cover';
           const blankTip = document.getElementById('dashBlankOnboardAlert');
           if (blankTip && currentStore.logo) blankTip.style.display = 'none';
-          alert('🎉 Storefront cover photo updated!');
+          
+          // Update Store Catalog Cover if currently open
+          const catCover = document.getElementById('catStoreCoverImg');
+          if (catCover && viewingStore && viewingStore.id === currentStore.id) {
+            catCover.src = coverData;
+          }
+
+          loadSupermarkets();
+          fetchListings();
+          alert('🎉 Storefront cover photo updated and reflected everywhere!');
         } else {
           alert('Failed to upload cover photo.');
         }
@@ -3532,13 +3654,27 @@
           const data = await res.json();
           currentStore = data.store;
           localStorage.setItem('halljar_store', JSON.stringify(currentStore));
+          
+          // Update Dashboard DP
           const img = document.getElementById('dashLogoImg');
-          img.src = logoData;
-          img.style.display = 'block';
-          document.getElementById('dashLogoPlaceholder').style.display = 'none';
+          if (img) {
+            img.src = logoData;
+            img.style.display = 'block';
+          }
+          const placeholder = document.getElementById('dashLogoPlaceholder');
+          if (placeholder) placeholder.style.display = 'none';
           const blankTip = document.getElementById('dashBlankOnboardAlert');
           if (blankTip && currentStore.cover) blankTip.style.display = 'none';
-          alert('🎉 Store profile picture (DP) updated!');
+          
+          // Update Store Catalog DP if currently open
+          const catLogo = document.getElementById('catStoreLogoImg');
+          if (catLogo && viewingStore && viewingStore.id === currentStore.id) {
+            catLogo.src = logoData;
+          }
+
+          loadSupermarkets();
+          fetchListings();
+          alert('🎉 Store profile picture (DP) updated and reflected everywhere!');
         } else {
           alert('Failed to upload profile picture.');
         }
