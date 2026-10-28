@@ -2950,6 +2950,56 @@
       }
     }
 
+    // Individual to Business Registration Flow
+    function openRegisterBusinessFromIndividual() {
+      // 1. Switch to Business account type
+      setAccountType('BUSINESS');
+
+      // 2. Hide the account selector tab so Shopper / Resident option is NOT visible
+      const selector = document.querySelector('.signup-account-selector');
+      if (selector) selector.style.display = 'none';
+
+      // 3. Update header titles to reflect Business registration from an active user
+      const heading = document.querySelector('#signupView .signup-heading');
+      if (heading) heading.textContent = 'Register Business & Open Store';
+      const sub = document.querySelector('#signupView .signup-subheading');
+      if (sub) sub.textContent = 'Set up your merchant profile to sell to estate residents on Halljar.';
+
+      // 4. Pre-fill fields from current individual user
+      if (currentUser) {
+        if (currentUser.fullName) {
+          const fn = document.getElementById('signFullName');
+          if (fn && (!fn.value || fn.value === '')) fn.value = currentUser.fullName;
+        }
+        if (currentUser.phoneNumber) {
+          const ph = document.getElementById('signPhone');
+          if (ph && (!ph.value || ph.value === '')) ph.value = currentUser.phoneNumber;
+        }
+        if (currentUser.estateId) {
+          const est = document.getElementById('signEstateSelect');
+          if (est) est.value = currentUser.estateId;
+        }
+      }
+
+      showView('signup');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Standard Public Signup (Shows both Shopper / Resident and Merchant options)
+    function openStandardSignup() {
+      const selector = document.querySelector('.signup-account-selector');
+      if (selector) selector.style.display = 'block';
+
+      const heading = document.querySelector('#signupView .signup-heading');
+      if (heading) heading.textContent = 'Create your Account';
+      const sub = document.querySelector('#signupView .signup-subheading');
+      if (sub) sub.textContent = 'Access verified stores, order hot food & essentials, or sell to local estate residents.';
+
+      setAccountType('INDIVIDUAL');
+      showView('signup');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     function renderAuthHeader() {
       const container = document.getElementById('navHeaderActions');
       const isVendor = currentUser && ((currentUser.role === 'SELLER') || !!currentStore || (currentUser.fullName && currentUser.fullName.toLowerCase().includes('love')));
@@ -2961,12 +3011,18 @@
 
       if (currentUser) {
         container.innerHTML = `
-          ${isVendor ? `<button class="nav-btn vendor-dash-glass-btn" style="padding: 5px 10px; font-size: 11px; font-weight: 700; border-radius: 14px; margin-left: auto; white-space: nowrap; width: fit-content;" onclick="openDashboard()">View Dashboard</button>` : `<button class="nav-btn" style="margin-left: auto;" onclick="showView('signup')">+ Register Business</button>`}
+          ${isVendor ? 
+            `<button class="nav-btn vendor-dash-glass-btn" style="padding: 5px 10px; font-size: 11px; font-weight: 700; border-radius: 14px; margin-left: auto; white-space: nowrap; width: fit-content;" onclick="openDashboard()">View Dashboard</button>` : 
+            `<div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+               <button class="nav-btn" style="padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 12px; background: #0F766E; color: white;" onclick="openRegisterBusinessFromIndividual()">+ Register Business</button>
+               <button class="nav-btn" style="padding: 6px 10px; font-size: 11px; font-weight: 700; color: #E11D48; border: 1px solid #FECDD3; background: #FFF1F2; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;" onclick="logout()">🚪 Log Out</button>
+             </div>`
+          }
         `;
       } else {
         container.innerHTML = `
           <button class="nav-btn active" onclick="showView('login')">🔑 Log In</button>
-          <button class="nav-btn" onclick="showView('signup')">Sign Up</button>
+          <button class="nav-btn" onclick="openStandardSignup()">Sign Up</button>
         `;
       }
     }
@@ -3301,7 +3357,7 @@
       const res = await fetch(`${API_BASE}/auth/verify-register-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phoneNumber: pendingSignupPhone, code })
+        body: JSON.stringify({ phoneNumber: pendingSignupPhone, code, accountType: currentAccountType })
       });
       const data = await res.json();
 

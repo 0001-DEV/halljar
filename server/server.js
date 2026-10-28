@@ -606,12 +606,22 @@ app.post('/api/auth/register-otp', (req, res) => {
     return res.status(400).json({ error: 'Please enter a valid Nigerian phone number.' });
   }
 
-  const existing = DB.users.find(u => normPhone(u.phoneNumber) === targetPhoneNorm);
-  if (existing) {
-    return res.status(400).json({ error: `⚠️ An account with phone number "${phoneNumber}" already exists. Please log in or choose another number.` });
+  const isBusiness = accountType === 'BUSINESS';
+  const targetRole = isBusiness ? 'SELLER' : 'BUYER';
+
+  // Allow one number to have both an Individual (BUYER) and a Business (SELLER) account!
+  const existingSameType = DB.users.find(u => {
+    if (normPhone(u.phoneNumber) !== targetPhoneNorm) return false;
+    const uRole = u.role || 'BUYER';
+    return uRole === targetRole;
+  });
+
+  if (existingSameType) {
+    return res.status(400).json({
+      error: `⚠️ A ${isBusiness ? 'Business / Merchant' : 'Individual / Buyer'} account with phone number "${phoneNumber}" already exists. Please sign in with your ${isBusiness ? 'Business' : 'Individual'} account.`
+    });
   }
 
-  const isBusiness = accountType === 'BUSINESS';
   if (isBusiness && businessName) {
     const bNorm = businessName.trim().toLowerCase();
     const existingStore = DB.stores.find(s => s.storeName && s.storeName.trim().toLowerCase() === bNorm);
@@ -622,7 +632,8 @@ app.post('/api/auth/register-otp', (req, res) => {
 
   // Generate 6-digit verification code
   const code = Math.floor(100000 + Math.random() * 900000).toString();
-  PENDING_REGISTRATIONS.set(targetPhoneNorm, {
+  const pendingKey = `${targetPhoneNorm}_${targetRole}`;
+  PENDING_REGISTRATIONS.set(pendingKey, {
     data: req.body,
     code,
     expiresAt: Date.now() + 10 * 60 * 1000
@@ -639,15 +650,21 @@ app.post('/api/auth/register-otp', (req, res) => {
 
 // Auth: Step 2 - Verify Phone Code and Complete Account Registration
 app.post('/api/auth/verify-register-otp', (req, res) => {
-  const { phoneNumber, code } = req.body;
+  const { phoneNumber, code, accountType: reqAccountType } = req.body;
   if (!phoneNumber || !code) {
     return res.status(400).json({ error: 'Phone number and verification code are required.' });
   }
 
   const normPhone = (p) => (p || '').replace(/\D/g, '').replace(/^234/, '0');
   const targetPhoneNorm = normPhone(phoneNumber);
+  const targetRole = reqAccountType === 'BUSINESS' ? 'SELLER' : 'BUYER';
 
-  const pending = PENDING_REGISTRATIONS.get(targetPhoneNorm);
+  const pendingKey = `${targetPhoneNorm}_${targetRole}`;
+  let pending = PENDING_REGISTRATIONS.get(pendingKey);
+  if (!pending) {
+    pending = PENDING_REGISTRATIONS.get(targetPhoneNorm);
+  }
+
   if (!pending || pending.code !== code.trim()) {
     return res.status(400).json({ error: 'Invalid or expired verification code. Please check and try again.' });
   }
@@ -702,6 +719,7 @@ app.post('/api/auth/verify-register-otp', (req, res) => {
   }
 
   saveDB();
+  PENDING_REGISTRATIONS.delete(pendingKey);
   PENDING_REGISTRATIONS.delete(targetPhoneNorm);
 
   res.json({
@@ -812,8 +830,10 @@ app.post('/api/auth/login', (req, res) => {
   const normPhone = (p) => (p || '').replace(/\D/g, '').replace(/^234/, '0');
   const targetPhoneNorm = normPhone(phoneNumber);
   
-  // Match by phoneNumber, normalized digits, fullName, storeName, or 'love'
-  const user = DB.users.find(u => {
+  const targetRole = accountType === 'BUSINESS' ? 'SELLER' : 'BUYER';
+  
+  // Find all users matching phone, name, love, or store
+  const matchedUsers = DB.users.filter(u => {
     const matchPhone = (u.phoneNumber && u.phoneNumber.toLowerCase() === pNorm) || (targetPhoneNorm && normPhone(u.phoneNumber) === targetPhoneNorm);
     const matchName = u.fullName && u.fullName.toLowerCase() === pNorm;
     const matchLove = pNorm === 'love' && (u.fullName.toLowerCase().includes('love') || (u.phoneNumber && u.phoneNumber.toLowerCase().includes('love')));
@@ -824,8 +844,19 @@ app.post('/api/auth/login', (req, res) => {
     return true;
   });
 
-  if (!user) {
+  if (!matchedUsers || matchedUsers.length === 0) {
     return res.status(401).json({ error: 'Invalid phone number or password.' });
+  }
+
+  // If a phone has both an Individual (BUYER) and a Business (SELLER) account,
+  // pick the one matching the requested login accountType!
+  let user = matchedUsers.find(u => (u.role || 'BUYER') === targetRole);
+  if (!user && accountType === 'BUSINESS') {
+    // If logging into business, check if any matched user has an associated store
+    user = matchedUsers.find(u => DB.stores.some(s => s.userId === u.id));
+  }
+  if (!user) {
+    user = matchedUsers[0];
   }
 
   // If user is logging in as Business, ensure their role is SELLER
