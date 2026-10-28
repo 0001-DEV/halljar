@@ -1168,6 +1168,8 @@ app.get('/api/listings', (req, res) => {
       store: {
         id: store.id,
         storeName: store.storeName,
+        logo: store.logo || null,
+        cover: store.cover || null,
         sellerTier: store.sellerTier,
         ratingAvg: store.ratingAvg,
         ratingCount: store.ratingCount,
