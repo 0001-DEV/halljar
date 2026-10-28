@@ -2345,7 +2345,7 @@
 
       if (currentUser) {
         container.innerHTML = `
-          ${isVendor ? `<button class="nav-btn vendor-dash-glass-btn" style="padding: 7px 15px; font-size: 12px; font-weight: 700; border-radius: 20px; margin-left: auto; white-space: nowrap;" onclick="openDashboard()">📊 View Dashboard</button>` : `<button class="nav-btn" style="margin-left: auto;" onclick="showView('signup')">+ Register Business</button>`}
+          ${isVendor ? `<button class="nav-btn vendor-dash-glass-btn" style="padding: 5px 10px; font-size: 11px; font-weight: 700; border-radius: 14px; margin-left: auto; white-space: nowrap; width: fit-content;" onclick="openDashboard()">View Dashboard</button>` : `<button class="nav-btn" style="margin-left: auto;" onclick="showView('signup')">+ Register Business</button>`}
         `;
       } else {
         container.innerHTML = `
@@ -2961,8 +2961,13 @@
         // Display the DP of the business as the primary image for In-Stock Items Today
         const cardDisplayImg = storeLogo;
 
+        // Check if item belongs to a vendor business (user's own vendor store or estate vendor business)
+        const isMyStore = (currentStore && item.store && currentStore.id === item.store.id) || (currentUser && item.store && item.store.userId === currentUser.id);
+        const isVendorBiz = isMyStore || (item.store && (item.store.sellerTier === 'INDIVIDUAL' || item.store.sellerTier === 'VENDOR'));
+        const blackBorderCardStyle = isVendorBiz ? 'border: 2px solid #000000 !important; box-shadow: 0 2px 8px rgba(0,0,0,0.14);' : '';
+
         return `
-          <div class="listing-card">
+          <div class="listing-card" style="${blackBorderCardStyle}">
             <div style="cursor: pointer;" onclick="openStoreCatalog('${storeId}', '${item.id}')">
               <img src="${cardDisplayImg}" class="card-img" alt="${escapeQuotes(storeName)}" style="object-fit: cover;">
             </div>
