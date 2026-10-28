@@ -1728,6 +1728,12 @@
       color: var(--primary);
       text-decoration: underline;
     }
+    /* Instant Touch Feedback on all buttons */
+    button:active, .nav-btn:active, .type-tab:active, .vendor-dash-glass-btn:active {
+      transform: scale(0.96) !important;
+      opacity: 0.85 !important;
+      transition: transform 0.05s ease, opacity 0.05s ease !important;
+    }
   </style>
 </head>
 <body>
@@ -4225,7 +4231,24 @@
         return;
       }
 
-      // 2. Recover store from server if missing in localStorage
+      // 2. INSTANT SWITCH: Open Dashboard view immediately (0ms delay)
+      showView('dashboard');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+
+      // Optimistic instant render from cached store data
+      if (currentStore) {
+        if (document.getElementById('dashStoreName')) document.getElementById('dashStoreName').textContent = currentStore.storeName;
+        if (document.getElementById('dashVendorUserPhone') && currentUser) {
+          document.getElementById('dashVendorUserPhone').textContent = currentUser.phoneNumber || currentUser.fullName;
+        }
+        if (document.getElementById('dashStoreLocation')) {
+          document.getElementById('dashStoreLocation').textContent = `${currentStore.estateName || 'Warewa'} • ${currentStore.category || 'Supermarket'}`;
+        }
+        if (document.getElementById('dashOpenTime')) document.getElementById('dashOpenTime').value = currentStore.openTime || '08:00';
+        if (document.getElementById('dashCloseTime')) document.getElementById('dashCloseTime').value = currentStore.closeTime || '21:00';
+      }
+
+      // 3. Recover store from server in background if missing in localStorage
       if (!currentStore) {
         try {
           const uRes = await fetch(`${API_BASE}/users/${currentUser.id}/store`);
@@ -4392,14 +4415,11 @@
         }
 
         if (currentStore) {
-          await loadVendorChats(currentStore.id);
+          loadVendorChats(currentStore.id, true);
         }
       } catch (err) {
         console.error('Error rendering dashboard:', err);
       }
-
-      // Always switch view to the dashboard!
-      showView('dashboard');
     }
 
     async function loadVendorChats(storeId, isSilent = false) {
