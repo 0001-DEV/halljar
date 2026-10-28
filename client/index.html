@@ -1231,9 +1231,149 @@
         overflow-y: auto !important;
       }
     }
+
+    /* Instant Click Tactile Feedback */
+    button:active, .nav-btn:active, .supermarket-logo-pill:active, .listing-card:active {
+      transform: scale(0.97) !important;
+      transition: transform 0.08s ease !important;
+    }
+
+    /* Animated Halljar Intro Splash Screen */
+    .splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at center, #115E59 0%, #0F766E 65%, #042F2E 100%);
+      z-index: 999999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      cursor: pointer;
+      transition: opacity 0.45s ease, visibility 0.45s ease;
+    }
+    .splash-stage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      height: 90px;
+    }
+    .push-group {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+    .push-left {
+      animation: pushFromLeft 0.85s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+    .push-right {
+      animation: pushFromRight 0.85s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+    .pusher-avatar {
+      font-size: 36px;
+      display: inline-block;
+      user-select: none;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+    }
+    .left-avatar {
+      margin-right: 4px;
+      animation: avatarDissolve 0.45s 1.05s forwards;
+    }
+    .right-avatar {
+      margin-left: 4px;
+      transform: scaleX(-1);
+      animation: rightAvatarDissolve 0.45s 1.05s forwards;
+    }
+    .splash-text-part {
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      color: #FFFFFF;
+      text-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      animation: textGlowMorph 0.55s 1.25s forwards;
+    }
+    .splash-tagline {
+      margin-top: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.85);
+      opacity: 0;
+      animation: taglineFadeIn 0.5s 1.2s forwards;
+    }
+    .splash-skip-hint {
+      position: absolute;
+      bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.55);
+      letter-spacing: 0.5px;
+    }
+
+    @keyframes pushFromLeft {
+      0% { transform: translateX(-160px); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes pushFromRight {
+      0% { transform: translateX(160px); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes avatarDissolve {
+      0% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0px); }
+      50% { transform: scale(1.4) translateY(-6px); opacity: 0.5; filter: blur(3px); }
+      100% { transform: scale(2) translateY(-12px); opacity: 0; filter: blur(8px); display: none; }
+    }
+    @keyframes rightAvatarDissolve {
+      0% { transform: scaleX(-1) scale(1) translateY(0); opacity: 1; filter: blur(0px); }
+      50% { transform: scaleX(-1) scale(1.4) translateY(-6px); opacity: 0.5; filter: blur(3px); }
+      100% { transform: scaleX(-1) scale(2) translateY(-12px); opacity: 0; filter: blur(8px); display: none; }
+    }
+    @keyframes textGlowMorph {
+      0% {
+        color: #FFFFFF;
+        text-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      }
+      50% {
+        color: #FEF08A;
+        transform: scale(1.06);
+        text-shadow: 0 0 25px rgba(254, 240, 138, 0.95), 0 0 45px rgba(234, 179, 8, 0.65);
+      }
+      100% {
+        color: #FACC15;
+        transform: scale(1);
+        text-shadow: 0 0 20px rgba(250, 204, 21, 0.85), 0 2px 10px rgba(0,0,0,0.3);
+      }
+    }
+    @keyframes taglineFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
+
+  <!-- Animated Halljar Intro Splash Screen -->
+  <div id="halljarSplashScreen" class="splash-screen" onclick="dismissSplashScreen()">
+    <div class="splash-stage">
+      <!-- Left side: Avatar pushing 'Hall' -->
+      <div class="push-group push-left">
+        <span class="pusher-avatar left-avatar">🏃‍♂️</span>
+        <span class="splash-text-part">Hall</span>
+      </div>
+
+      <!-- Right side: 'jar' being pushed by Avatar from the right -->
+      <div class="push-group push-right">
+        <span class="splash-text-part">jar</span>
+        <span class="pusher-avatar right-avatar">🏃‍♀️</span>
+      </div>
+    </div>
+    <div class="splash-tagline">Citi-View & Estate Marketplace</div>
+    <div class="splash-skip-hint">Tap anywhere to skip</div>
+  </div>
 
   <!-- Top Header Navigation -->
   <header>
@@ -2037,6 +2177,18 @@
   </div>
 
   <script>
+    function dismissSplashScreen() {
+      const splash = document.getElementById('halljarSplashScreen');
+      if (splash && splash.style.display !== 'none') {
+        splash.style.opacity = '0';
+        splash.style.pointerEvents = 'none';
+        setTimeout(() => {
+          splash.style.display = 'none';
+        }, 450);
+      }
+    }
+    // Auto-dismiss splash screen after animation completes
+    setTimeout(dismissSplashScreen, 2150);
     const API_BASE = '/api';
     let currentUser = JSON.parse(localStorage.getItem('halljar_user') || 'null');
     let currentStore = JSON.parse(localStorage.getItem('halljar_store') || 'null');
@@ -2419,6 +2571,12 @@
       cart = [];
       updateCartBar();
       renderAuthHeader();
+      // Dismiss any open overlays immediately
+      const chatBox = document.getElementById('chatOverlay');
+      if (chatBox) chatBox.style.display = 'none';
+      const custChatsModal = document.getElementById('customerChatsModal');
+      if (custChatsModal) custChatsModal.classList.remove('active');
+      window.scrollTo({ top: 0, behavior: 'instant' });
       showView('login');
     }
 
@@ -2476,7 +2634,7 @@
         // If logged in as business/seller or has an active store, take directly to My Dashboard!
         const isBusiness = currentLoginAccountType === 'BUSINESS' || currentUser.role === 'SELLER' || !!currentStore;
         if (isBusiness) {
-          alert(`👋 Welcome back, ${currentUser.fullName}! Opening your store dashboard.`);
+          
           await openDashboard();
         } else {
           showView('market');
