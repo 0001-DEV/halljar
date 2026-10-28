@@ -1477,9 +1477,13 @@
       color: #64748B;
       margin-bottom: 8px;
     }
-    #signEstateSelect, #signEstateSelect option {
+    #signEstateSelect, #signEstateSelect option,
+    #signBizCategory, #signBizCategory option,
+    #signOpenTime, #signCloseTime,
+    #signBizName {
       color: #000000 !important;
       -webkit-text-fill-color: #000000 !important;
+      font-weight: 600;
     }
     #signupView .account-type-tabs {
       background: #F8FAFC;
@@ -1928,38 +1932,35 @@
                 <label for="signBizName">Business / Brand Name</label>
                 <div class="input-with-icon">
                   <span class="field-icon">🏷️</span>
-                  <input type="text" id="signBizName" class="force-caps-input" oninput="this.value = this.value.toUpperCase()" placeholder="e.g. AMAKA BAKES OR DEJI TECH LAB">
+                  <input type="text" id="signBizName" class="force-caps-input" oninput="this.value = this.value.toUpperCase()" placeholder="e.g. AMAKA BAKES OR DEJI TECH LAB" style="color: #000000 !important; -webkit-text-fill-color: #000000 !important; font-weight: 700;">
                 </div>
                 <span class="field-hint">Will be displayed in UPPERCASE to buyers in the marketplace.</span>
               </div>
 
               <div class="form-group">
-                <label for="signBizCategory">Business Category</label>
-                <div class="input-with-icon">
-                  <span class="field-icon">🗂️</span>
-                  <select id="signBizCategory">
-                    <option value="Food & Bakery">Food, Pastries & Bakery</option>
-                    <option value="Electronics">Electronics & Gadget Repairs</option>
-                    <option value="Fashion & Beauty">Fashion, Perfumes & Beauty</option>
-                    <option value="Home & Laundry Services">Laundry & Home Services</option>
-                    <option value="Supermarket">Supermarket & Provisions</option>
+                <label for="signBizCategory" style="font-weight: 700; color: #1E293B;">Business Category</label>
+                <div>
+                  <select id="signBizCategory" style="width: 100%; padding: 11px 14px; border: 1.5px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 600; color: #000000 !important; -webkit-text-fill-color: #000000 !important; background: #FFFFFF; outline: none;">
+                    <option value="Food & Bakery" style="color: #000000;">Food, Pastries & Bakery</option>
+                    <option value="Electronics" style="color: #000000;">Electronics & Gadget Repairs</option>
+                    <option value="Fashion & Beauty" style="color: #000000;">Fashion, Perfumes & Beauty</option>
+                    <option value="Home & Laundry Services" style="color: #000000;">Laundry & Home Services</option>
+                    <option value="Supermarket" style="color: #000000;">Supermarket & Provisions</option>
                   </select>
                 </div>
               </div>
 
               <div class="time-range-group">
                 <div class="form-group" style="margin-bottom: 0;">
-                  <label for="signOpenTime">Opening Time</label>
-                  <div class="input-with-icon">
-                    <span class="field-icon">⏰</span>
-                    <input type="time" id="signOpenTime" value="08:00">
+                  <label for="signOpenTime" style="font-weight: 700; color: #1E293B;">Opening Time</label>
+                  <div>
+                    <input type="time" id="signOpenTime" value="08:00" style="width: 100%; padding: 11px 12px; border: 1.5px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 600; color: #000000 !important; -webkit-text-fill-color: #000000 !important; background: #FFFFFF; outline: none;">
                   </div>
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
-                  <label for="signCloseTime">Closing Time</label>
-                  <div class="input-with-icon">
-                    <span class="field-icon">🌙</span>
-                    <input type="time" id="signCloseTime" value="21:00">
+                  <label for="signCloseTime" style="font-weight: 700; color: #1E293B;">Closing Time</label>
+                  <div>
+                    <input type="time" id="signCloseTime" value="21:00" style="width: 100%; padding: 11px 12px; border: 1.5px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 600; color: #000000 !important; -webkit-text-fill-color: #000000 !important; background: #FFFFFF; outline: none;">
                   </div>
                 </div>
               </div>
