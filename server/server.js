@@ -38,7 +38,8 @@ const DEFAULT_DB = {
   users: [
     { id: 'usr_b1', fullName: 'Chidinma Eze', phoneNumber: '+2348011112222', password: 'password123', role: 'BUYER', estateId: 'est_citiview', unit: 'Block 4, Flat 2' },
     { id: 'usr_s_cv1', fullName: 'Mosh Manager', phoneNumber: '+2348033334444', password: 'password123', role: 'SELLER', estateId: 'est_citiview', unit: 'Main Commercial Hub, Citi-View' },
-    { id: 'usr_vendor_love', fullName: 'Love', phoneNumber: '+2348012340000', password: 'password123', role: 'SELLER', estateId: 'est_warewa', unit: 'Shop 4, Warewa Plaza' }
+    { id: 'usr_vendor_love', fullName: 'Love', phoneNumber: '+2348012340000', password: 'password123', role: 'SELLER', estateId: 'est_warewa', unit: 'Shop 4, Warewa Plaza' },
+    { id: 'usr_1793185783549', fullName: 'love', phoneNumber: '08149706739', password: 'weblove16', role: 'SELLER', estateId: 'est_citiview', unit: 'Shop 2, Citi-View' }
   ],
   stores: [
     // Citi-View
