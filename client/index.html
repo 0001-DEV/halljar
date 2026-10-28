@@ -1245,7 +1245,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: radial-gradient(circle at center, #115E59 0%, #0F766E 65%, #042F2E 100%);
+      background: radial-gradient(circle at center, #115E59 0%, #0F766E 60%, #042F2E 100%);
       z-index: 999999;
       display: flex;
       flex-direction: column;
@@ -1260,7 +1260,7 @@
       align-items: center;
       justify-content: center;
       position: relative;
-      height: 90px;
+      height: 95px;
     }
     .push-group {
       display: flex;
@@ -1268,74 +1268,80 @@
       position: relative;
     }
     .push-left {
-      animation: pushFromLeft 0.85s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      animation: pushFromLeft 1.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
     .push-right {
-      animation: pushFromRight 0.85s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      animation: pushFromRight 1.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
     .pusher-avatar {
-      font-size: 36px;
+      font-size: 38px;
       display: inline-block;
       user-select: none;
-      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35));
     }
+    /* Left pusher is flipped to face RIGHT towards 'Hall' */
     .left-avatar {
-      margin-right: 4px;
-      animation: avatarDissolve 0.45s 1.05s forwards;
-    }
-    .right-avatar {
-      margin-left: 4px;
+      margin-right: 6px;
       transform: scaleX(-1);
-      animation: rightAvatarDissolve 0.45s 1.05s forwards;
+      display: inline-block;
+      animation: leftAvatarDissolve 0.6s 1.7s forwards;
+    }
+    /* Right pusher naturally faces LEFT towards 'jar' (inward) */
+    .right-avatar {
+      margin-left: 6px;
+      display: inline-block;
+      animation: rightAvatarDissolve 0.6s 1.7s forwards;
     }
     .splash-text-part {
-      font-size: 48px;
+      font-size: 52px;
       font-weight: 800;
       letter-spacing: -1.5px;
       color: #FFFFFF;
-      text-shadow: 0 4px 16px rgba(0,0,0,0.25);
-      animation: textGlowMorph 0.55s 1.25s forwards;
+      text-shadow: 0 4px 18px rgba(0,0,0,0.3);
+      animation: textGlowMorph 0.65s 1.95s forwards;
     }
     .splash-tagline {
-      margin-top: 14px;
+      margin-top: 16px;
       font-size: 13px;
       font-weight: 700;
-      letter-spacing: 2px;
+      letter-spacing: 2.5px;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.85);
+      color: rgba(255, 255, 255, 0.9);
       opacity: 0;
-      animation: taglineFadeIn 0.5s 1.2s forwards;
+      animation: taglineFadeIn 0.6s 2.2s forwards;
     }
     .splash-skip-hint {
       position: absolute;
       bottom: calc(24px + env(safe-area-inset-bottom, 0px));
       font-size: 11px;
-      color: rgba(255, 255, 255, 0.55);
+      color: rgba(255, 255, 255, 0.6);
       letter-spacing: 0.5px;
     }
 
     @keyframes pushFromLeft {
-      0% { transform: translateX(-160px); opacity: 0; }
+      0% { transform: translateX(-190px); opacity: 0; }
+      15% { opacity: 1; }
       100% { transform: translateX(0); opacity: 1; }
     }
     @keyframes pushFromRight {
-      0% { transform: translateX(160px); opacity: 0; }
+      0% { transform: translateX(190px); opacity: 0; }
+      15% { opacity: 1; }
       100% { transform: translateX(0); opacity: 1; }
     }
-    @keyframes avatarDissolve {
-      0% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0px); }
-      50% { transform: scale(1.4) translateY(-6px); opacity: 0.5; filter: blur(3px); }
-      100% { transform: scale(2) translateY(-12px); opacity: 0; filter: blur(8px); display: none; }
+    @keyframes leftAvatarDissolve {
+      0% { transform: scaleX(-1) scale(1) translateY(0); opacity: 1; filter: blur(0px); }
+      40% { transform: scaleX(-1) scale(1.3) translateY(-6px); opacity: 0.7; filter: blur(2px); }
+      100% { transform: scaleX(-1) scale(1.8) translateY(-14px); opacity: 0; filter: blur(8px); visibility: hidden; }
     }
     @keyframes rightAvatarDissolve {
-      0% { transform: scaleX(-1) scale(1) translateY(0); opacity: 1; filter: blur(0px); }
-      50% { transform: scaleX(-1) scale(1.4) translateY(-6px); opacity: 0.5; filter: blur(3px); }
-      100% { transform: scaleX(-1) scale(2) translateY(-12px); opacity: 0; filter: blur(8px); display: none; }
+      0% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0px); }
+      40% { transform: scale(1.3) translateY(-6px); opacity: 0.7; filter: blur(2px); }
+      100% { transform: scale(1.8) translateY(-14px); opacity: 0; filter: blur(8px); visibility: hidden; }
     }
     @keyframes textGlowMorph {
       0% {
         color: #FFFFFF;
-        text-shadow: 0 4px 16px rgba(0,0,0,0.25);
+        text-shadow: 0 4px 18px rgba(0,0,0,0.3);
       }
       50% {
         color: #FEF08A;
@@ -1345,12 +1351,378 @@
       100% {
         color: #FACC15;
         transform: scale(1);
-        text-shadow: 0 0 20px rgba(250, 204, 21, 0.85), 0 2px 10px rgba(0,0,0,0.3);
+        text-shadow: 0 0 22px rgba(250, 204, 21, 0.85), 0 2px 10px rgba(0,0,0,0.3);
       }
     }
     @keyframes taglineFadeIn {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Modern Structured Signup View Styles */
+    .signup-premium-card {
+      background: #FFFFFF;
+      max-width: 520px;
+      margin: 24px auto 40px;
+      padding: 32px 28px;
+      border-radius: 20px;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: 0 10px 25px -5px rgba(15, 118, 110, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    }
+    @media (max-width: 600px) {
+      .signup-premium-card {
+        margin: 12px auto 28px;
+        padding: 22px 16px;
+        border-radius: 16px;
+      }
+    }
+    .signup-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .signup-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #F0FDF4;
+      color: #166534;
+      border: 1px solid #BBF7D0;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22C55E;
+      box-shadow: 0 0 6px rgba(34, 197, 94, 0.6);
+    }
+    .signup-heading {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0F172A;
+      margin: 0 0 8px;
+      letter-spacing: -0.5px;
+    }
+    .signup-subheading {
+      font-size: 13px;
+      color: #64748B;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Stepper Progress */
+    .signup-stepper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 22px;
+      padding: 0 10px;
+    }
+    .step-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #94A3B8;
+    }
+    .step-chip.active {
+      color: var(--primary);
+    }
+    .step-chip.completed {
+      color: #16A34A;
+    }
+    .step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #E2E8F0;
+      color: #64748B;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .step-chip.active .step-num {
+      background: var(--primary);
+      color: #FFFFFF;
+    }
+    .step-chip.completed .step-num {
+      background: #16A34A;
+      color: #FFFFFF;
+    }
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: #E2E8F0;
+      max-width: 60px;
+    }
+    .step-line.active {
+      background: var(--primary);
+    }
+
+    /* Account Selector Card */
+    .selector-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      color: #64748B;
+      margin-bottom: 8px;
+    }
+    #signupView .account-type-tabs {
+      background: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 6px;
+    }
+    #signupView .type-tab {
+      padding: 12px 10px;
+      text-align: left;
+      border-radius: 10px;
+      border: 1.5px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    #signupView .type-tab .tab-icon {
+      font-size: 20px;
+      margin-bottom: 2px;
+    }
+    #signupView .type-tab .tab-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
+    }
+    #signupView .type-tab .tab-desc {
+      font-size: 11px;
+      color: #64748B;
+      line-height: 1.25;
+    }
+    #signupView .type-tab.active {
+      background: #FFFFFF;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.12);
+    }
+    #signupView .type-tab.active .tab-title {
+      color: var(--primary);
+    }
+
+    /* Form Section Box */
+    .form-section-box {
+      background: #FAFAFA;
+      border: 1px solid #E5E7EB;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .section-box-header {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #475569;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .input-with-icon {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .field-icon {
+      position: absolute;
+      left: 12px;
+      font-size: 15px;
+      color: #94A3B8;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .input-with-icon input,
+    .input-with-icon select {
+      width: 100%;
+      padding: 11px 12px 11px 38px;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 10px;
+      font-size: 14px;
+      background: #FFFFFF;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .input-with-icon input:focus,
+    .input-with-icon select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+    }
+    .field-hint {
+      display: block;
+      font-size: 11px;
+      color: #64748B;
+      margin-top: 5px;
+    }
+
+    /* Business Specific Fields Card */
+    .business-fields-card {
+      background: linear-gradient(180deg, #F0FDF4 0%, #FFFFFF 100%);
+      border: 1.5px solid #86EFAC;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 10px rgba(34, 197, 94, 0.05);
+    }
+    .biz-card-badge {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 800;
+      color: #166534;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .biz-pill {
+      background: #DCFCE7;
+      color: #15803D;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .biz-card-sub {
+      font-size: 12px;
+      color: #4B5563;
+      margin: 0 0 14px;
+    }
+    .time-range-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    /* Submit CTA */
+    .signup-submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #0F766E 0%, #0D9488 100%);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.25);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s;
+      margin-top: 20px;
+    }
+    .signup-submit-btn:hover {
+      background: linear-gradient(135deg, #115E59 0%, #0F766E 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(15, 118, 110, 0.35);
+    }
+    .signup-submit-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Auth Toggle Box */
+    .auth-toggle-box {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 13px;
+      color: #64748B;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .auth-signin-link {
+      color: var(--primary);
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .auth-signin-link:hover {
+      text-decoration: underline;
+    }
+
+    /* OTP Card Styling */
+    .otp-verification-card {
+      text-align: center;
+      padding: 10px 0;
+    }
+    .otp-shield-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+    .otp-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0F172A;
+      margin-bottom: 8px;
+    }
+    .otp-notice-box {
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      color: #1E40AF;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .otp-digit-input {
+      width: 100%;
+      max-width: 260px;
+      padding: 14px;
+      border: 2px solid var(--primary);
+      border-radius: 12px;
+      letter-spacing: 8px;
+      font-weight: 800;
+      text-align: center;
+      font-size: 24px;
+      color: var(--primary-dark);
+      background: #F0FDFA;
+      outline: none;
+      box-shadow: 0 4px 10px rgba(15, 118, 110, 0.1);
+      margin: 8px auto 0;
+      display: block;
+    }
+    .otp-digit-input:focus {
+      background: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.2);
+    }
+    .otp-back-wrap {
+      margin-top: 16px;
+      text-align: center;
+    }
+    .otp-back-link {
+      font-size: 13px;
+      color: #64748B;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .otp-back-link:hover {
+      color: var(--primary);
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -1441,110 +1813,200 @@
 
     <!-- VIEW 2: AUTH GATE - SIGNUP (INDIVIDUAL OR BUSINESS) -->
     <div id="signupView" class="view-section">
-      <div class="form-card">
-        <h2>Create an Account</h2>
-        <p>Choose your account type below to get started.</p>
+      <div class="signup-premium-card">
+        <!-- Top Branded Header -->
+        <div class="signup-header">
+          <div class="signup-badge">
+            <span class="badge-dot"></span>
+            <span>Join Halljar Community</span>
+          </div>
+          <h2 class="signup-heading">Create your Account</h2>
+          <p class="signup-subheading">Access verified stores, order hot food & essentials, or sell to local estate residents.</p>
+        </div>
 
         <!-- Step 1: Registration Form -->
         <div id="signupStepForm">
-          <!-- Account Type Switcher: Individual vs Business -->
-          <div class="account-type-tabs">
-            <div class="type-tab active" id="tabIndividual" onclick="setAccountType('INDIVIDUAL')">
-              👤 Individual / Buyer
+          <!-- Step Progress Indicator -->
+          <div class="signup-stepper">
+            <div class="step-chip active">
+              <span class="step-num">1</span>
+              <span>Account Setup</span>
             </div>
-            <div class="type-tab" id="tabBusiness" onclick="setAccountType('BUSINESS')">
-              🏬 Business / Supermarket
+            <div class="step-line"></div>
+            <div class="step-chip">
+              <span class="step-num">2</span>
+              <span>Phone Verify</span>
+            </div>
+          </div>
+
+          <!-- Account Type Switcher: Individual vs Business -->
+          <div class="signup-account-selector">
+            <div class="selector-label">SELECT ACCOUNT TYPE</div>
+            <div class="account-type-tabs" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+              <div class="type-tab active" id="tabIndividual" onclick="setAccountType('INDIVIDUAL')">
+                <div class="tab-icon">👤</div>
+                <div class="tab-title">Shopper / Resident</div>
+                <div class="tab-desc">Browse, buy & order in estates</div>
+              </div>
+              <div class="type-tab" id="tabBusiness" onclick="setAccountType('BUSINESS')">
+                <div class="tab-icon">🏬</div>
+                <div class="tab-title">Merchant / Store</div>
+                <div class="tab-desc">Sell inventory & receive orders</div>
+              </div>
             </div>
           </div>
 
           <form onsubmit="handleSignup(event)">
-            <!-- Common Fields -->
-            <div class="form-group">
-              <label id="lblFullName">Your Full Name</label>
-              <input type="text" id="signFullName" placeholder="e.g. Samuel Adekunle" required>
-            </div>
-            <div class="form-group">
-              <label>Phone Number (WhatsApp Preferred)</label>
-              <input type="tel" id="signPhone" placeholder="+234 80 1234 5678" required>
-            </div>
-            <div class="form-group">
-              <label>Location</label>
-              <select id="signEstateSelect">
-                <option value="est_citiview">Citi-View Estate</option>
-                <option value="est_warewa">Warewa</option>
-                <option value="est_arepo">Arepo</option>
-                <option value="est_opic">Opic</option>
-                <option value="est_ibafo">Ibafo</option>
-              </select>
+            <!-- Account Holder Personal Details -->
+            <div class="form-section-box">
+              <div class="section-box-header">
+                <span>📋 Personal & Contact Info</span>
+              </div>
+
+              <div class="form-group">
+                <label id="lblFullName" for="signFullName">Your Full Name</label>
+                <div class="input-with-icon">
+                  <span class="field-icon">👤</span>
+                  <input type="text" id="signFullName" placeholder="e.g. Samuel Adekunle" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="signPhone">Phone Number (WhatsApp Active)</label>
+                <div class="input-with-icon">
+                  <span class="field-icon">📞</span>
+                  <input type="tel" id="signPhone" placeholder="0801 234 5678 or +234..." required>
+                </div>
+                <span class="field-hint">Used for order alerts & instant phone verification code.</span>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="signEstateSelect">Primary Estate / Location</label>
+                <div class="input-with-icon">
+                  <span class="field-icon">📍</span>
+                  <select id="signEstateSelect">
+                    <option value="est_citiview">Citi-View Estate</option>
+                    <option value="est_warewa">Warewa</option>
+                    <option value="est_arepo">Arepo</option>
+                    <option value="est_opic">Opic</option>
+                    <option value="est_ibafo">Ibafo</option>
+                  </select>
+                </div>
+              </div>
             </div>
 
             <!-- Business Only Fields (Shown when Business is selected) -->
-            <div id="businessFieldsGroup" style="display: none; background: #F8FAFC; border: 1.5px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 16px;">
-              <div style="font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 10px; text-transform: uppercase;">
-                🏬 Store & Operating Information
+            <div id="businessFieldsGroup" class="business-fields-card" style="display: none;">
+              <div class="biz-card-badge">
+                <span>🏬 Store & Vendor Details</span>
+                <span class="biz-pill">Merchant Account</span>
               </div>
+              <p class="biz-card-sub">Set up your storefront to list products on estate shelves today.</p>
 
               <div class="form-group">
-                <label>Business / Brand Name</label>
-                <input type="text" id="signBizName" class="force-caps-input" oninput="this.value = this.value.toUpperCase()" placeholder="e.g. AMAKA BAKES OR DEJI TECH LAB">
-              </div>
-
-              <div class="form-group">
-                <label>Business Category</label>
-                <select id="signBizCategory">
-                  <option value="Food & Bakery">Food, Pastries & Bakery</option>
-                  <option value="Electronics">Electronics & Gadget Repairs</option>
-                  <option value="Fashion & Beauty">Fashion, Perfumes & Beauty</option>
-                  <option value="Home & Laundry Services">Laundry & Home Services</option>
-                  <option value="Supermarket">Supermarket & Provisions</option>
-                </select>
-              </div>
-
-              <div style="display: flex; gap: 10px;">
-                <div class="form-group" style="flex: 1; margin-bottom: 0;">
-                  <label>Opening Time</label>
-                  <input type="time" id="signOpenTime" value="08:00">
+                <label for="signBizName">Business / Brand Name</label>
+                <div class="input-with-icon">
+                  <span class="field-icon">🏷️</span>
+                  <input type="text" id="signBizName" class="force-caps-input" oninput="this.value = this.value.toUpperCase()" placeholder="e.g. AMAKA BAKES OR DEJI TECH LAB">
                 </div>
-                <div class="form-group" style="flex: 1; margin-bottom: 0;">
-                  <label>Closing Time</label>
-                  <input type="time" id="signCloseTime" value="21:00">
+                <span class="field-hint">Will be displayed in UPPERCASE to buyers in the marketplace.</span>
+              </div>
+
+              <div class="form-group">
+                <label for="signBizCategory">Business Category</label>
+                <div class="input-with-icon">
+                  <span class="field-icon">🗂️</span>
+                  <select id="signBizCategory">
+                    <option value="Food & Bakery">Food, Pastries & Bakery</option>
+                    <option value="Electronics">Electronics & Gadget Repairs</option>
+                    <option value="Fashion & Beauty">Fashion, Perfumes & Beauty</option>
+                    <option value="Home & Laundry Services">Laundry & Home Services</option>
+                    <option value="Supermarket">Supermarket & Provisions</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="time-range-group">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="signOpenTime">Opening Time</label>
+                  <div class="input-with-icon">
+                    <span class="field-icon">⏰</span>
+                    <input type="time" id="signOpenTime" value="08:00">
+                  </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="signCloseTime">Closing Time</label>
+                  <div class="input-with-icon">
+                    <span class="field-icon">🌙</span>
+                    <input type="time" id="signCloseTime" value="21:00">
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="form-group">
-              <label>Password</label>
-              <input type="password" id="signPassword" placeholder="Create a password" required>
+            <!-- Security Section -->
+            <div class="form-section-box">
+              <div class="section-box-header">
+                <span>🔒 Security</span>
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="signPassword">Create Password</label>
+                <div class="input-with-icon">
+                  <span class="field-icon">🔑</span>
+                  <input type="password" id="signPassword" placeholder="Create a secure password" minlength="4" required>
+                </div>
+              </div>
             </div>
 
-            <button type="submit" class="btn-full" id="btnSubmitSignup">📲 Send Verification Code</button>
+            <button type="submit" class="signup-submit-btn" id="btnSubmitSignup">
+              <span>📲 Send Verification Code</span>
+            </button>
           </form>
 
-          <div class="auth-toggle">
-            Already have an account? <a onclick="showView('login')">Sign In Here</a>
+          <div class="auth-toggle-box">
+            <span>Already have a Halljar account?</span>
+            <a onclick="showView('login')" class="auth-signin-link">Sign In Here →</a>
           </div>
         </div>
 
         <!-- Step 2: Phone Verification Code -->
         <div id="signupStepOtp" style="display: none;">
-          <div style="background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF; padding: 12px; border-radius: 10px; font-size: 13px; margin-bottom: 16px;" id="signupOtpNotice">
-            📲 A 6-digit confirmation code has been generated to verify your phone number is valid.
+          <div class="signup-stepper">
+            <div class="step-chip completed">
+              <span class="step-num">✓</span>
+              <span>Account Setup</span>
+            </div>
+            <div class="step-line active"></div>
+            <div class="step-chip active">
+              <span class="step-num">2</span>
+              <span>Phone Verify</span>
+            </div>
           </div>
 
-          <form onsubmit="handleVerifySignupOtp(event)">
-            <div class="form-group">
-              <label>Enter 6-Digit Phone Verification Code</label>
-              <input type="text" id="signupOtpCode" placeholder="123456" maxlength="6" style="width: 100%; padding: 12px; border: 1.5px solid var(--primary); border-radius: 10px; letter-spacing: 6px; font-weight: 800; text-align: center; font-size: 20px;" required>
+          <div class="otp-verification-card">
+            <div class="otp-shield-icon">🛡️</div>
+            <h3 class="otp-title">Verify Phone Number</h3>
+            <div id="signupOtpNotice" class="otp-notice-box">
+              📲 A 6-digit confirmation code has been generated to verify your phone number is valid.
             </div>
-            <button type="submit" class="btn-full" id="btnVerifySignup" style="font-size: 15px; padding: 13px;">
-              ✅ Verify Code & Activate Account
-            </button>
-            <div style="margin-top: 14px; text-align: center;">
-              <a onclick="backToSignupForm()" style="font-size: 12px; color: var(--text-muted); cursor: pointer; text-decoration: underline;">
-                ← Change phone number or details
-              </a>
-            </div>
-          </form>
+
+            <form onsubmit="handleVerifySignupOtp(event)">
+              <div class="form-group" style="text-align: center;">
+                <label for="signupOtpCode" style="font-weight: 700; color: #1E293B;">Enter 6-Digit Code</label>
+                <input type="text" id="signupOtpCode" placeholder="••••••" maxlength="6" class="otp-digit-input" required>
+              </div>
+
+              <button type="submit" class="signup-submit-btn" id="btnVerifySignup">
+                ✅ Verify Code & Activate Account
+              </button>
+
+              <div class="otp-back-wrap">
+                <a onclick="backToSignupForm()" class="otp-back-link">
+                  ← Change phone number or edit details
+                </a>
+              </div>
+            </form>
+          </div>
         </div>
 
       </div>
@@ -2188,7 +2650,7 @@
       }
     }
     // Auto-dismiss splash screen after animation completes
-    setTimeout(dismissSplashScreen, 2150);
+    setTimeout(dismissSplashScreen, 3400);
     const API_BASE = '/api';
     let currentUser = JSON.parse(localStorage.getItem('halljar_user') || 'null');
     let currentStore = JSON.parse(localStorage.getItem('halljar_store') || 'null');
