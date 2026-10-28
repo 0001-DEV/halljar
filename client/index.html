@@ -1067,28 +1067,47 @@
       .container {
         padding: 12px 8px;
       }
+      .search-row {
+        flex-direction: column !important;
+        gap: 8px !important;
+      }
+      .search-input, .estate-select {
+        width: 100% !important;
+      }
       .listings-grid {
         grid-template-columns: repeat(2, 1fr) !important;
-        gap: 10px !important;
+        gap: 8px !important;
       }
       .card-img {
-        height: 125px !important;
+        height: 120px !important;
       }
       .card-body {
-        padding: 10px !important;
+        padding: 8px !important;
       }
       .card-title {
         font-size: 12px !important;
         margin-bottom: 4px !important;
         line-height: 1.25 !important;
+        height: 30px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
       }
       .card-price {
-        font-size: 14px !important;
-        margin-bottom: 8px !important;
+        font-size: 13px !important;
+        margin-bottom: 6px !important;
       }
-      .btn-add-cart {
-        padding: 7px 4px !important;
+      .btn-row {
+        flex-direction: column !important;
+        gap: 4px !important;
+      }
+      .btn-row .btn-add-cart, .btn-row .nav-btn, .btn-row .btn-direct-chat {
+        width: 100% !important;
+        padding: 6px 4px !important;
         font-size: 11px !important;
+        text-align: center !important;
+        justify-content: center !important;
       }
       .floating-cart-bar {
         width: calc(100% - 20px) !important;
@@ -1127,6 +1146,62 @@
       }
       .dash-metrics-grid {
         grid-template-columns: repeat(2, 1fr) !important;
+      }
+      .chowdeck-store-card {
+        border-radius: 14px !important;
+        margin-bottom: 14px !important;
+      }
+      .chowdeck-cover-container {
+        height: 160px !important;
+      }
+      .dash-cover-dp-box > div:first-child {
+        height: 170px !important;
+      }
+      .chowdeck-dp-wrapper {
+        width: 64px !important;
+        height: 64px !important;
+        margin-top: -32px !important;
+        border-radius: 14px !important;
+      }
+      .chowdeck-store-body {
+        padding: 0 12px 14px 12px !important;
+      }
+      #catStoreTitle {
+        font-size: 18px !important;
+      }
+      .chowdeck-item-card {
+        padding: 10px 8px !important;
+        gap: 10px !important;
+      }
+      .chowdeck-thumb {
+        width: 60px !important;
+        height: 60px !important;
+      }
+      .vendor-item-row {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+        padding: 12px 10px !important;
+      }
+      .vendor-action-group {
+        display: flex !important;
+        justify-content: space-between !important;
+        gap: 6px !important;
+        width: 100% !important;
+      }
+      .vendor-action-btn {
+        flex: 1 !important;
+        text-align: center !important;
+        padding: 8px 6px !important;
+        font-size: 11px !important;
+      }
+      .quick-modal-box, .edit-store-modal-box {
+        width: 95% !important;
+        max-width: 95% !important;
+        padding: 16px 14px !important;
+        border-radius: 16px !important;
+        max-height: 90vh !important;
+        overflow-y: auto !important;
       }
     }
   </style>
@@ -2202,7 +2277,6 @@
 
     function renderAuthHeader() {
       const container = document.getElementById('navHeaderActions');
-      const installPill = `<button class="nav-btn" onclick="showInstallPrompt()" style="background:#0F766E; color:white; border:none; display:inline-flex; align-items:center; gap:4px; font-weight:700;">📲 App</button>`;
       const isVendor = currentUser && ((currentUser.role === 'SELLER') || !!currentStore || (currentUser.fullName && currentUser.fullName.toLowerCase().includes('love')));
       
       const inquiriesTrigger = document.getElementById('btnCustomerInquiriesTrigger');
@@ -2212,7 +2286,6 @@
 
       if (currentUser) {
         container.innerHTML = `
-          ${installPill}
           ${isVendor ? `<button class="nav-btn vendor-dash-glass-btn" onclick="openDashboard()">📊 My Dashboard</button>` : `<button class="nav-btn" onclick="showView('signup')">+ Register Business</button>`}
           <div class="user-pill">
             <span>👤 ${currentUser.fullName.split(' ')[0]}</span>
@@ -2221,7 +2294,6 @@
         `;
       } else {
         container.innerHTML = `
-          ${installPill}
           <button class="nav-btn active" onclick="showView('login')">🔑 Log In</button>
           <button class="nav-btn" onclick="showView('signup')">Sign Up</button>
         `;
@@ -2768,19 +2840,23 @@
 
     // 5. IN-STOCK ITEMS TODAY (Cross-business items with click-to-scroll to exact item)
     async function fetchListings() {
-      const searchEl = document.getElementById('searchInput');
-      const search = searchEl ? searchEl.value : '';
-      const locationEl = document.getElementById('locationSelect');
-      const estateId = locationEl ? locationEl.value : 'est_citiview';
-      const url = new URL(`${API_BASE}/listings`);
-      if (search) url.searchParams.append('search', search);
-      if (estateId) url.searchParams.append('estateId', estateId);
-
       try {
-        const res = await fetch(url);
+        const searchEl = document.getElementById('searchInput');
+        const search = searchEl ? searchEl.value.trim() : '';
+        const locationEl = document.getElementById('locationSelect');
+        const estateId = locationEl ? locationEl.value : 'est_citiview';
+
+        const params = new URLSearchParams();
+        if (search) params.append('search', search);
+        if (estateId) params.append('estateId', estateId);
+
+        const queryString = params.toString() ? `?${params.toString()}` : '';
+        const res = await fetch(`${API_BASE}/listings${queryString}`);
         if (res.ok) {
           currentMarketListings = await res.json();
           renderMarketListings(currentMarketListings);
+        } else {
+          console.warn('Failed to fetch listings, status:', res.status);
         }
       } catch (err) {
         console.error('Error fetching listings:', err);
@@ -3318,7 +3394,7 @@
                     <div style="font-weight: 800; color: var(--primary); font-size: 13px; margin-top: 2px;">₦${Number(item.price).toLocaleString()}</div>
                   </div>
                 </div>
-                <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                <div class="vendor-action-group" style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
                   <button class="vendor-action-btn vendor-btn-edit" onclick="openEditProductModal('${item.id}')" title="Edit this product">
                     ✏️ Edit
                   </button>
