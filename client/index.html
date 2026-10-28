@@ -1477,6 +1477,10 @@
       color: #64748B;
       margin-bottom: 8px;
     }
+    #signEstateSelect, #signEstateSelect option {
+      color: #000000 !important;
+      -webkit-text-fill-color: #000000 !important;
+    }
     #signupView .account-type-tabs {
       background: #F8FAFC;
       border: 1.5px solid #E2E8F0;
@@ -1881,15 +1885,16 @@
               </div>
 
               <div class="form-group" style="margin-bottom: 0;">
-                <label for="signEstateSelect">Primary Estate / Location</label>
-                <div class="input-with-icon">
-                  <span class="field-icon">📍</span>
-                  <select id="signEstateSelect">
-                    <option value="est_citiview">Citi-View Estate</option>
-                    <option value="est_warewa">Warewa</option>
-                    <option value="est_arepo">Arepo</option>
-                    <option value="est_opic">Opic</option>
-                    <option value="est_ibafo">Ibafo</option>
+                <label for="signEstateSelect" style="display: flex; align-items: center; gap: 6px; font-weight: 700; color: #1E293B;">
+                  <span style="font-size: 16px;">📍</span> Primary Estate / Location
+                </label>
+                <div>
+                  <select id="signEstateSelect" style="width: 100%; padding: 11px 14px; border: 1.5px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 600; color: #000000 !important; -webkit-text-fill-color: #000000 !important; background: #FFFFFF; outline: none;">
+                    <option value="est_citiview" style="color: #000000;">Citi-View Estate</option>
+                    <option value="est_warewa" style="color: #000000;">Warewa</option>
+                    <option value="est_arepo" style="color: #000000;">Arepo</option>
+                    <option value="est_opic" style="color: #000000;">Opic</option>
+                    <option value="est_ibafo" style="color: #000000;">Ibafo</option>
                   </select>
                 </div>
               </div>
@@ -2280,11 +2285,16 @@
         </div>
       </div>
 
-      <!-- Logout Option at Bottom of Dashboard -->
-      <div style="margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;">
-        <button class="nav-btn" onclick="logout()" style="width: 100%; max-width: 320px; padding: 12px 20px; background: #FFF1F2; color: #E11D48; border: 1px solid #FECDD3; font-weight: 700; border-radius: 12px; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
-          🚪 Log Out from Account
-        </button>
+      <!-- Logout and Delete Account Options at Bottom of Dashboard -->
+      <div style="margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;">
+        <div style="display: flex; gap: 12px; justify-content: center; align-items: center; width: 100%; max-width: 480px; flex-wrap: wrap;">
+          <button class="nav-btn" onclick="logout()" style="flex: 1; min-width: 150px; padding: 12px 18px; background: #F1F5F9; color: #334155; border: 1px solid #CBD5E1; font-weight: 700; border-radius: 12px; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: all 0.2s;">
+            🚪 Log Out
+          </button>
+          <button class="nav-btn" onclick="openDeleteAccountModal()" style="flex: 1; min-width: 150px; padding: 12px 18px; background: #FFF1F2; color: #E11D48; border: 1px solid #FECDD3; font-weight: 700; border-radius: 12px; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: all 0.2s;">
+            🗑️ Delete Account
+          </button>
+        </div>
         <p style="font-size: 11px; color: var(--text-muted); margin: 0;">Signed in as <span id="dashVendorUserPhone"></span> • Halljar Estate Commerce</p>
       </div>
     </div>
@@ -3025,6 +3035,124 @@
       }
     }
 
+    
+    // Simulated SMS Banner Notification
+    function showSimulatedSmsBanner(phone, code) {
+      let banner = document.getElementById('smsNotificationBanner');
+      if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'smsNotificationBanner';
+        banner.style.cssText = 'position: fixed; top: 18px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #0F172A; color: #FFFFFF; padding: 14px 18px; border-radius: 16px; box-shadow: 0 12px 30px rgba(0,0,0,0.35); z-index: 9999999; display: flex; align-items: center; gap: 12px; max-width: 90vw; width: 420px; border: 1px solid rgba(255,255,255,0.15); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; opacity: 0;';
+        document.body.appendChild(banner);
+      }
+      banner.innerHTML = `
+        <div style="font-size: 24px;">💬</div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between;">
+            <span>SMS Message • ${phone}</span>
+            <span>Just Now</span>
+          </div>
+          <div style="font-size: 13px; font-weight: 600; color: #F8FAFC; margin-top: 2px;">
+            Halljar Code: <strong style="color: #38BDF8; letter-spacing: 3px; font-size: 16px;">${code}</strong> (valid 10 mins)
+          </div>
+        </div>
+      `;
+      requestAnimationFrame(() => {
+        banner.style.opacity = '1';
+        banner.style.transform = 'translateX(-50%) translateY(0)';
+      });
+      setTimeout(() => {
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateX(-50%) translateY(-100px)';
+      }, 9000);
+    }
+
+    // Account Deletion Flow
+    let currentDeleteWord = '';
+    const DELETE_CONFIRMATION_WORDS = [
+      'DELETE-MY-ACCOUNT',
+      'REMOVE-PERMANENTLY',
+      'HALLJAR-CONFIRM-ERASE',
+      'GOODBYE-FOREVER',
+      'CANCEL-AND-DELETE',
+      'PERMANENT-REMOVAL'
+    ];
+
+    function openDeleteAccountModal() {
+      if (!currentUser) return;
+      const modal = document.getElementById('deleteAccountModal');
+      if (!modal) return;
+      currentDeleteWord = DELETE_CONFIRMATION_WORDS[Math.floor(Math.random() * DELETE_CONFIRMATION_WORDS.length)];
+      document.getElementById('deleteRandomWordDisplay').textContent = currentDeleteWord;
+      const input = document.getElementById('deleteConfirmationInput');
+      input.value = '';
+      const btn = document.getElementById('btnConfirmDeleteAccount');
+      btn.disabled = true;
+      btn.style.background = '#FDA4AF';
+      btn.style.cursor = 'not-allowed';
+      btn.style.boxShadow = 'none';
+      btn.textContent = 'Delete Account';
+      modal.style.display = 'flex';
+      setTimeout(() => input.focus(), 100);
+    }
+
+    function closeDeleteAccountModal() {
+      const modal = document.getElementById('deleteAccountModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function checkDeleteWordMatch() {
+      const input = document.getElementById('deleteConfirmationInput');
+      const btn = document.getElementById('btnConfirmDeleteAccount');
+      if (!input || !btn) return;
+      if (input.value.trim().toUpperCase() === currentDeleteWord.toUpperCase()) {
+        btn.disabled = false;
+        btn.style.background = '#E11D48';
+        btn.style.cursor = 'pointer';
+        btn.style.boxShadow = '0 4px 12px rgba(225, 29, 72, 0.35)';
+      } else {
+        btn.disabled = true;
+        btn.style.background = '#FDA4AF';
+        btn.style.cursor = 'not-allowed';
+        btn.style.boxShadow = 'none';
+      }
+    }
+
+    async function executeDeleteAccount() {
+      if (!currentUser) return;
+      const input = document.getElementById('deleteConfirmationInput');
+      if (input.value.trim().toUpperCase() !== currentDeleteWord.toUpperCase()) {
+        alert('Please type the exact confirmation word displayed on screen.');
+        return;
+      }
+
+      const btn = document.getElementById('btnConfirmDeleteAccount');
+      btn.disabled = true;
+      btn.textContent = 'Deleting...';
+
+      try {
+        const res = await fetch(`${API_BASE}/auth/delete-account`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: currentUser.id, phoneNumber: currentUser.phoneNumber })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          closeDeleteAccountModal();
+          alert('🗑️ Your account and all associated store data have been permanently deleted.');
+          logout();
+        } else {
+          alert(data.error || 'Failed to delete account. Please try again.');
+          btn.disabled = false;
+          btn.textContent = 'Delete Account';
+        }
+      } catch (err) {
+        alert('Error connecting to server. Please try again.');
+        btn.disabled = false;
+        btn.textContent = 'Delete Account';
+      }
+    }
+
     function logout() {
       localStorage.removeItem('halljar_user');
       localStorage.removeItem('halljar_store');
@@ -3137,14 +3265,21 @@
       if (res.ok) {
         document.getElementById('signupStepForm').style.display = 'none';
         document.getElementById('signupStepOtp').style.display = 'block';
+        
+        // Clear code input so the user must manually input the code received
+        document.getElementById('signupOtpCode').value = '';
+        
         document.getElementById('signupOtpNotice').innerHTML = `
-          📲 <strong>Phone Verification Code:</strong> We generated a 6-digit code to confirm <strong>${payload.phoneNumber}</strong> is a valid phone number.<br><br>
-          🔑 <strong>Your Code:</strong> <span style="font-size: 17px; font-weight: 800; color: #0F766E;">${data.code}</span>
+          📲 <strong>Verification Code Sent:</strong> A 6-digit verification code has been dispatched via SMS to <strong>${payload.phoneNumber}</strong>.<br>
+          Please check your SMS messages and input the code below to activate your account.
         `;
-        if (data.code) {
-          document.getElementById('signupOtpCode').value = data.code;
-        }
-        alert(`📲 Phone verification code generated for ${payload.phoneNumber}: ${data.code}\nEnter this code to confirm your phone number is valid.`);
+        
+        // Show simulated incoming SMS notification banner to the user's phone number
+        showSimulatedSmsBanner(payload.phoneNumber, data.code);
+        setTimeout(() => {
+          const otpInput = document.getElementById('signupOtpCode');
+          if (otpInput) otpInput.focus();
+        }, 150);
       } else {
         alert(data.error || 'Failed to send verification code. Please check your details.');
       }
@@ -4532,5 +4667,36 @@
 
     init();
   </script>
+  <!-- Modal: Delete Account Confirmation with Random Word Verification -->
+  <div id="deleteAccountModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 999999; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(4px);">
+    <div style="background: white; border-radius: 20px; max-width: 440px; width: 100%; padding: 26px 22px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.25); border: 1.5px solid #FECDD3;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+        <span style="font-size: 28px;">⚠️</span>
+        <h3 style="font-size: 18px; font-weight: 800; color: #991B1B; margin: 0;">Are you sure you want to delete your account?</h3>
+      </div>
+      <p style="font-size: 13px; color: #64748B; line-height: 1.5; margin: 0 0 16px;">
+        This action is permanent and cannot be undone. All your account details, store profile, product inventory, and customer chats will be erased.
+      </p>
+      
+      <div style="background: #FFF1F2; border: 1px dashed #F43F5E; border-radius: 12px; padding: 12px; text-align: center; margin-bottom: 16px;">
+        <div style="font-size: 11px; font-weight: 700; color: #9F1239; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">To confirm deletion, type this exact word:</div>
+        <div id="deleteRandomWordDisplay" style="font-size: 18px; font-weight: 900; letter-spacing: 2px; color: #BE123C; user-select: all; font-family: monospace;"></div>
+      </div>
+
+      <div style="margin-bottom: 18px;">
+        <input type="text" id="deleteConfirmationInput" oninput="checkDeleteWordMatch()" placeholder="Type the random word above" style="width: 100%; padding: 12px; border: 1.5px solid #CBD5E1; border-radius: 10px; font-size: 14px; text-align: center; font-weight: 700; outline: none;">
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button onclick="closeDeleteAccountModal()" style="flex: 1; padding: 12px; border: 1px solid #CBD5E1; background: #F8FAFC; color: #475569; font-weight: 700; border-radius: 10px; cursor: pointer;">
+          Cancel
+        </button>
+        <button id="btnConfirmDeleteAccount" onclick="executeDeleteAccount()" disabled style="flex: 1; padding: 12px; border: none; background: #FDA4AF; color: white; font-weight: 700; border-radius: 10px; cursor: not-allowed; transition: all 0.2s;">
+          Delete Account
+        </button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

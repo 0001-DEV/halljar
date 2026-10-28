@@ -910,6 +910,38 @@ app.post('/api/auth/reset-password', (req, res) => {
   });
 });
 
+// Auth: Delete Account
+app.post('/api/auth/delete-account', (req, res) => {
+  const { userId, phoneNumber } = req.body;
+  if (!userId && !phoneNumber) {
+    return res.status(400).json({ error: 'User ID or Phone number required.' });
+  }
+
+  const userIndex = DB.users.findIndex(u => (userId && u.id === userId) || (phoneNumber && u.phoneNumber === phoneNumber));
+  if (userIndex === -1) {
+    return res.status(404).json({ error: 'User account not found.' });
+  }
+
+  const user = DB.users[userIndex];
+  const uId = user.id;
+
+  // Remove store if user is a vendor
+  const storeIndex = DB.stores.findIndex(s => s.userId === uId || (user.phoneNumber && s.phone === user.phoneNumber));
+  if (storeIndex !== -1) {
+    const store = DB.stores[storeIndex];
+    // Remove all listings belonging to this store
+    DB.listings = DB.listings.filter(l => l.storeId !== store.id);
+    DB.stores.splice(storeIndex, 1);
+  }
+
+  // Remove user
+  DB.users.splice(userIndex, 1);
+  saveDB();
+
+  console.log(`[AUTH] Permanently deleted account for user ${user.fullName} (${user.phoneNumber})`);
+  res.json({ success: true, message: 'Account and associated store data deleted permanently.' });
+});
+
 // Helper: Get user's store
 app.get('/api/users/:userId/store', (req, res) => {
   const { userId } = req.params;
