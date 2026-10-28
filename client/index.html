@@ -1,0 +1,3618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0F766E">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Halljar">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=192&auto=format&fit=crop&q=80">
+  <title>Halljar - Warewa Marketplace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0F766E;
+      --primary-light: #CCFBF1;
+      --primary-dark: #115E59;
+      --accent: #F97316;
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --text: #0F172A;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --closed-red: #EF4444;
+      --closed-bg: #FEE2E2;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: calc(85px + env(safe-area-inset-bottom, 0px));
+      overscroll-behavior-y: none;
+    }
+
+    /* Top Navigation Header */
+    header {
+      background: #FFFFFF;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo-group { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .brand-logo { font-size: 22px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
+    .warewa-tag { font-size: 11px; background: #DCFCE7; color: #15803D; font-weight: 700; padding: 2px 8px; border-radius: 12px; }
+    
+    .nav-tabs { display: flex; gap: 8px; align-items: center; }
+    .nav-btn {
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: white;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #F1F5F9;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* Container */
+    .container { max-width: 860px; margin: 0 auto; padding: 20px 16px; }
+
+    /* Views */
+    .view-section { display: none; }
+    .view-section.active { display: block; }
+
+    /* Account Type Switcher on Auth */
+    .account-type-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      background: #F1F5F9;
+      padding: 4px;
+      border-radius: 10px;
+      margin-bottom: 18px;
+    }
+    .type-tab {
+      padding: 9px;
+      text-align: center;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--text-muted);
+    }
+    .type-tab.active {
+      background: white;
+      color: var(--primary-dark);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    }
+
+    /* Top Supermarkets Horizontal Logo Row (Ultra Compact & Narrow) */
+    .section-title { font-size: 14px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+    .supermarket-logos-row {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 16px;
+    }
+    .supermarket-logo-pill {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 5px 8px 5px 6px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+      max-width: 170px;
+    }
+    .supermarket-logo-pill:hover, .supermarket-logo-pill.active {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+    @keyframes slideDown {
+      from { transform: translate(-50%, -20px); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
+    }
+    .store-star-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      font-size: 10px;
+      font-weight: 800;
+      color: #D97706;
+      background: #FEF3C7;
+      padding: 1px 4px;
+      border-radius: 6px;
+    }
+    .rating-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 120;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+    .rating-modal-overlay.active { display: flex; }
+    .rating-modal-box {
+      background: white;
+      width: 90%;
+      max-width: 380px;
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15);
+    }
+    .star-selector {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      font-size: 32px;
+      margin: 16px 0;
+      cursor: pointer;
+    }
+    .star-selector span {
+      transition: transform 0.15s, color 0.15s;
+      color: #D1D5DB;
+    }
+    .star-selector span.selected, .star-selector span:hover {
+      color: #F59E0B;
+      transform: scale(1.15);
+    }
+    .supermarket-logo-img {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #E2E8F0;
+    }
+    .supermarket-logo-name {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+    .store-time-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .dot-open { background: #10B981; }
+    .dot-closed { background: var(--closed-red); }
+
+    /* Chowdeck-style Horizontal Store Menu Items List */
+    .menu-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .chowdeck-item-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.15s;
+    }
+    .chowdeck-item-card.highlighted {
+      border: 2px solid var(--accent);
+      background: #FFFBEB;
+      animation: pulseHighlight 2s ease-out;
+    }
+    @keyframes pulseHighlight {
+      0% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+    .chowdeck-thumb {
+      width: 68px;
+      height: 68px;
+      border-radius: 10px;
+      object-fit: cover;
+      background: #F1F5F9;
+      flex-shrink: 0;
+    }
+    .chowdeck-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .chowdeck-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .chowdeck-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .chowdeck-price {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .chowdeck-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .chowdeck-add-btn {
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1px solid #FCD34D;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s;
+    }
+    .chowdeck-add-btn:hover {
+      background: #FDE68A;
+    }
+    /* Chowdeck-style Stepper / Counter (+ 1 -) */
+    .chowdeck-counter {
+      display: inline-flex;
+      align-items: center;
+      background: #FEF3C7;
+      border: 1px solid #FCD34D;
+      border-radius: 20px;
+      padding: 2px 6px;
+      gap: 6px;
+    }
+    .counter-btn {
+      background: white;
+      border: 1px solid #FCD34D;
+      color: #92400E;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s;
+    }
+    .counter-btn:hover {
+      background: #FDE68A;
+    }
+    .counter-qty {
+      font-size: 13px;
+      font-weight: 800;
+      color: #92400E;
+      min-width: 16px;
+      text-align: center;
+    }
+
+    /* Vendor Dashboard Glassmorphism Styling */
+    .vendor-dash-glass-btn {
+      background: rgba(15, 118, 110, 0.15) !important;
+      backdrop-filter: blur(14px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(14px) saturate(180%) !important;
+      border: 1.5px solid rgba(15, 118, 110, 0.4) !important;
+      color: #0F766E !important;
+      font-weight: 800 !important;
+      border-radius: 24px !important;
+      padding: 8px 18px !important;
+      cursor: pointer !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      box-shadow: 0 4px 16px rgba(15, 118, 110, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.8) !important;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+    }
+    .vendor-dash-glass-btn:hover {
+      background: rgba(15, 118, 110, 0.25) !important;
+      border-color: rgba(15, 118, 110, 0.6) !important;
+      box-shadow: 0 6px 22px rgba(15, 118, 110, 0.22), inset 0 1px 2px rgba(255, 255, 255, 0.95) !important;
+      transform: translateY(-1px);
+    }
+    .glass-vendor-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(18px) saturate(180%);
+      -webkit-backdrop-filter: blur(18px) saturate(180%);
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 8px 32px 0 rgba(15, 118, 110, 0.14), inset 0 1px 2px 0 rgba(255, 255, 255, 0.95);
+      padding: 8px 22px;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #0F766E;
+      text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
+    }
+    #dashboardView {
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(24px) saturate(200%);
+      -webkit-backdrop-filter: blur(24px) saturate(200%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+      padding: 24px 18px;
+      border-radius: 24px;
+      max-width: 740px;
+      margin: 0 auto;
+      color: #F8FAFC;
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      padding: 24px;
+      margin-bottom: 22px;
+      color: #F8FAFC;
+    }
+    .dashboard-header-bar {
+      background: rgba(30, 41, 59, 0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      color: #F8FAFC;
+    }
+    .dash-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .dash-metric-card {
+      background: rgba(30, 41, 59, 0.65);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+      color: #F8FAFC;
+    }
+    .dash-metric-num {
+      font-size: 24px;
+      font-weight: 800;
+      color: #38BDF8;
+    }
+    .dash-metric-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      color: #94A3B8;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .dash-card-section {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      padding: 22px;
+      margin-bottom: 22px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      color: #F8FAFC;
+    }
+    #dashboardView input[type="text"],
+    #dashboardView input[type="number"],
+    #dashboardView input[type="time"],
+    #dashboardView select {
+      background: rgba(15, 23, 42, 0.8) !important;
+      border: 1px solid rgba(255, 255, 255, 0.18) !important;
+      color: #F8FAFC !important;
+    }
+    #dashboardView label {
+      color: #CBD5E1 !important;
+    }
+    #dashboardView .photo-upload-box {
+      background: rgba(15, 23, 42, 0.5) !important;
+      border: 2px dashed rgba(255, 255, 255, 0.25) !important;
+      color: #CBD5E1 !important;
+    }
+    #dashboardView .vendor-item-row {
+      background: rgba(15, 23, 42, 0.45);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      color: #F8FAFC;
+    }
+    #dashboardView .vendor-chat-card {
+      background: rgba(15, 23, 42, 0.45);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      color: #F8FAFC;
+    }
+    #dashboardView .vendor-chat-card:hover {
+      background: rgba(30, 41, 59, 0.85);
+    }
+    .vendor-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+      gap: 12px;
+    }
+    .vendor-item-row:last-child { border-bottom: none; }
+    .vendor-item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+    .vendor-item-thumb {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #F1F5F9;
+      flex-shrink: 0;
+    }
+    .vendor-action-btn {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: white;
+      transition: all 0.15s;
+    }
+    .vendor-btn-stock { background: #DCFCE7; color: #15803D; border-color: #86EFAC; }
+    .vendor-btn-sold { background: #FEE2E2; color: #DC2626; border-color: #FCA5A5; }
+    .vendor-btn-edit { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
+    .vendor-btn-del { color: #DC2626; border-color: #FCA5A5; }
+    .quick-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+    .quick-modal-overlay.active { display: flex; }
+    .quick-modal-box {
+      background: white;
+      width: 92%;
+      max-width: 440px;
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15);
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      background: white;
+      padding: 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .search-row { display: flex; gap: 10px; }
+    .search-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+    }
+    .estate-select {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 13px;
+      background: white;
+      outline: none;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    /* Products Grid */
+    .listings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 16px;
+    }
+    .listing-card {
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .listing-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.07); }
+    .card-img { width: 100%; height: 170px; object-fit: cover; background: #E2E8F0; }
+    .card-body { padding: 14px; display: flex; flex-direction: column; flex: 1; justify-content: space-between; }
+    .badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      width: fit-content;
+    }
+    .card-store-link {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+      cursor: pointer;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; line-height: 1.3; }
+    .card-price { font-size: 17px; font-weight: 800; color: var(--primary); margin-bottom: 12px; }
+    .btn-row { display: flex; gap: 6px; }
+    
+    .btn-add-cart {
+      flex: 1;
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1px solid #FCD34D;
+      padding: 9px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .btn-add-cart:disabled {
+      background: #E2E8F0;
+      color: #94A3B8;
+      border-color: #CBD5E1;
+      cursor: not-allowed;
+    }
+
+    .btn-direct-chat {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .btn-direct-chat:disabled {
+      background: #E2E8F0;
+      color: #94A3B8;
+      cursor: not-allowed;
+    }
+
+    /* Chowdeck Store Display Styles */
+    .chowdeck-store-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    .chowdeck-cover-container {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      background: #E2E8F0;
+      overflow: hidden;
+    }
+    .chowdeck-cover-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .chowdeck-cover-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.45) 100%);
+    }
+    .chowdeck-store-body {
+      padding: 0 20px 20px 20px;
+      position: relative;
+    }
+    .chowdeck-dp-wrapper {
+      position: relative;
+      margin-top: -42px;
+      width: 80px;
+      height: 80px;
+      border-radius: 18px;
+      background: white;
+      padding: 3px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      z-index: 5;
+      display: inline-block;
+    }
+    .chowdeck-dp-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 15px;
+      object-fit: cover;
+      display: block;
+      background: #F1F5F9;
+    }
+    .chowdeck-verified-tag {
+      background: #E0F2FE;
+      color: #0284C7;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .chowdeck-meta-row {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 6px;
+      align-items: center;
+      margin-top: 8px;
+      padding-bottom: 2px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .chowdeck-meta-row::-webkit-scrollbar { display: none; }
+    .chowdeck-meta-pill {
+      background: #F1F5F9;
+      color: #334155;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .chowdeck-meta-pill.rating-pill {
+      background: #FEF3C7;
+      color: #92400E;
+      font-weight: 700;
+    }
+    .chowdeck-meta-pill.status-open {
+      background: #DCFCE7;
+      color: #15803D;
+      font-weight: 700;
+    }
+    .chowdeck-meta-pill.status-closed {
+      background: #FEE2E2;
+      color: #B91C1C;
+      font-weight: 700;
+    }
+
+    /* Chowdeck Category Filter Tabs: Place for All, Place for other options */
+    .chowdeck-category-nav-wrapper {
+      margin-bottom: 14px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .chowdeck-category-nav-wrapper::-webkit-scrollbar { display: none; }
+    .chowdeck-category-tabs {
+      display: flex;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .cat-tab-pill {
+      background: white;
+      border: 1px solid var(--border);
+      color: #4B5563;
+      padding: 8px 18px;
+      border-radius: 24px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .cat-tab-pill:hover {
+      background: #F8FAFC;
+      border-color: #CBD5E1;
+      color: #1E293B;
+      transform: translateY(-1px);
+    }
+    .cat-tab-pill.active {
+      background: #0F766E;
+      color: white;
+      border-color: #0F766E;
+      box-shadow: 0 4px 14px rgba(15, 118, 110, 0.25);
+    }
+    .cat-tab-pill .tab-count {
+      font-size: 11px;
+      background: rgba(0, 0, 0, 0.07);
+      padding: 1px 7px;
+      border-radius: 10px;
+    }
+    .cat-tab-pill.active .tab-count {
+      background: rgba(255, 255, 255, 0.25);
+      color: white;
+    }
+
+    /* Store Profile Header */
+    .store-profile-header {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .store-profile-header h1 { font-size: 24px; font-weight: 800; color: var(--primary-dark); margin-bottom: 4px; }
+    .store-hours-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 12px;
+      margin-top: 8px;
+    }
+
+    /* Floating Cart Bar */
+    .floating-cart-bar {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 600px;
+      background: #111827;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 30px;
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 90;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+    .cart-summary { font-size: 13px; font-weight: 600; }
+    .cart-checkout-btn {
+      background: #10B981;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* Forms */
+    .form-card {
+      background: white;
+      padding: 28px 24px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      max-width: 500px;
+      margin: 30px auto;
+    }
+    .form-card h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    .form-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 11px 13px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+    }
+    .btn-full {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .auth-toggle { text-align: center; margin-top: 16px; font-size: 13px; color: var(--text-muted); }
+    .auth-toggle a { color: var(--primary); font-weight: 700; text-decoration: none; cursor: pointer; }
+
+    /* Photo Upload Box */
+    .photo-upload-box {
+      border: 2px dashed #CBD5E1;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      background: #F8FAFC;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+    .photo-preview { width: 100%; max-height: 180px; object-fit: cover; border-radius: 8px; margin-top: 10px; display: none; }
+
+    /* In-App Chat Modal */
+    .chat-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+    .chat-overlay.active { display: flex; }
+    .chat-box {
+      background: white;
+      width: 95%;
+      max-width: 500px;
+      height: 85vh;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+    }
+    .chat-header {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chat-order-card {
+      background: #FEF3C7;
+      border-bottom: 1px solid #FDE68A;
+      padding: 10px 16px;
+      font-size: 12px;
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .msg-bubble {
+      max-width: 82%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.4;
+      position: relative;
+    }
+    .msg-buyer { align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 2px; }
+    .msg-seller { align-self: flex-start; background: #F1F5F9; color: var(--text); border-bottom-left-radius: 2px; }
+    .msg-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+      font-size: 10px;
+      opacity: 0.85;
+      justify-content: flex-end;
+    }
+    .msg-action-btn {
+      color: inherit;
+      text-decoration: underline;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size: 10px;
+      padding: 0;
+    }
+    .chat-quick-actions {
+      display: flex;
+      gap: 6px;
+      padding: 8px 16px;
+      background: #F8FAFC;
+      border-top: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .quick-chip {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      color: var(--primary-dark);
+    }
+    .chat-input-bar {
+      display: flex;
+      padding: 12px;
+      gap: 8px;
+      border-top: 1px solid var(--border);
+      background: white;
+    }
+    .chat-input-bar input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 13px;
+      outline: none;
+    }
+    .btn-send {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .force-caps-input {
+      text-transform: uppercase !important;
+    }
+    .vendor-chat-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s ease;
+      cursor: pointer;
+    }
+    .vendor-chat-card:hover {
+      background: #F8FAFC;
+    }
+    .vendor-chat-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0F766E, #14B8A6);
+      color: white;
+      font-weight: 800;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(15, 118, 110, 0.2);
+    }
+    .vendor-chat-meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Mobile App & Cross-Device Responsive Styles */
+    @media (max-width: 640px) {
+      header {
+        padding: 10px 12px;
+        gap: 6px;
+      }
+      .brand-logo {
+        font-size: 18px;
+      }
+      .nav-tabs {
+        gap: 5px;
+      }
+      .nav-btn {
+        padding: 6px 10px;
+        font-size: 11px;
+      }
+      .container {
+        padding: 12px 8px;
+      }
+      .listings-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+      }
+      .card-img {
+        height: 125px !important;
+      }
+      .card-body {
+        padding: 10px !important;
+      }
+      .card-title {
+        font-size: 12px !important;
+        margin-bottom: 4px !important;
+        line-height: 1.25 !important;
+      }
+      .card-price {
+        font-size: 14px !important;
+        margin-bottom: 8px !important;
+      }
+      .btn-add-cart {
+        padding: 7px 4px !important;
+        font-size: 11px !important;
+      }
+      .floating-cart-bar {
+        width: calc(100% - 20px) !important;
+        bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+        padding: 10px 14px !important;
+      }
+      .cart-summary {
+        font-size: 12px !important;
+      }
+      .cart-checkout-btn {
+        padding: 7px 12px !important;
+        font-size: 12px !important;
+      }
+      .chat-box {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+      }
+      .form-card {
+        padding: 20px 14px !important;
+        margin: 10px auto !important;
+      }
+      .form-group input, .form-group select {
+        font-size: 16px !important; /* Prevents auto-zoom on iOS Safari */
+      }
+      #dashboardView {
+        padding: 16px 10px !important;
+        border-radius: 16px !important;
+      }
+      .dashboard-header-bar {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+        padding: 14px !important;
+      }
+      .dash-metrics-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header Navigation -->
+  <header>
+    <div class="logo-group" onclick="navToHome()">
+      <span style="font-size: 24px;">🏛️</span>
+      <span class="brand-logo">Halljar</span>
+    </div>
+    <div class="nav-tabs" id="navHeaderActions">
+      <!-- Injected depending on Auth state -->
+    </div>
+  </header>
+
+  <!-- Real-time Mobile Push Alert Toast -->
+  <div id="phoneNotificationToast" style="display:none; position:fixed; top:14px; left:50%; transform:translateX(-50%); z-index:9999; background:rgba(15, 23, 42, 0.95); backdrop-filter:blur(10px); color:white; padding:12px 18px; border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,0.35); max-width:92%; width:400px; animation:slideDown 0.3s ease; border:1px solid rgba(255,255,255,0.15);">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+      <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+        <span style="font-size:24px;">🔔</span>
+        <div style="min-width:0;">
+          <div style="font-size:12px; font-weight:800; color:#38BDF8;" id="toastTitle">New Customer Inquiry</div>
+          <div style="font-size:11px; color:#E2E8F0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="toastMessage">Hello, is this item available?</div>
+        </div>
+      </div>
+      <button id="toastActionBtn" style="background:#0F766E; color:white; border:none; border-radius:8px; padding:6px 12px; font-size:11px; font-weight:700; cursor:pointer; flex-shrink:0;">Reply</button>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- VIEW 1: AUTH GATE - LOGIN -->
+    <div id="loginView" class="view-section">
+      <div class="form-card">
+        <h2 id="loginTitle">Sign In to Halljar Warewa</h2>
+        <p id="loginSubtitle">Access Bokku, Mosh, Giant Supermarkets & local stores in Warewa.</p>
+
+        <!-- Account Type Switcher for Login: Individual vs Business -->
+        <div class="account-type-tabs" style="margin-bottom: 16px;">
+          <div class="type-tab active" id="loginTabIndividual" onclick="setLoginAccountType('INDIVIDUAL')">
+            👤 Resident / Buyer
+          </div>
+          <div class="type-tab" id="loginTabBusiness" onclick="setLoginAccountType('BUSINESS')">
+            🏬 Business / Seller
+          </div>
+        </div>
+
+        <form onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label id="lblLoginIdentifier">Phone Number</label>
+            <input type="text" id="loginPhone" placeholder="+234 80 1111 2222" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" placeholder="••••••••" required>
+            <div style="text-align: right; margin-top: 5px;">
+              <a onclick="openForgotPasswordModal()" style="font-size: 12px; color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline;">Forgot Password?</a>
+            </div>
+          </div>
+          <button type="submit" class="btn-full" id="btnLoginSubmit">Sign In to Continue</button>
+        </form>
+
+        <div class="auth-toggle">
+          New to Halljar Warewa? <a onclick="showView('signup')">Sign Up Here (Individual or Business)</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 2: AUTH GATE - SIGNUP (INDIVIDUAL OR BUSINESS) -->
+    <div id="signupView" class="view-section">
+      <div class="form-card">
+        <h2>Create an Account</h2>
+        <p>Choose your account type below to get started in Warewa.</p>
+
+        <!-- Account Type Switcher: Individual vs Business -->
+        <div class="account-type-tabs">
+          <div class="type-tab active" id="tabIndividual" onclick="setAccountType('INDIVIDUAL')">
+            👤 Individual / Buyer
+          </div>
+          <div class="type-tab" id="tabBusiness" onclick="setAccountType('BUSINESS')">
+            🏬 Business / Supermarket
+          </div>
+        </div>
+
+        <form onsubmit="handleSignup(event)">
+          <!-- Common Fields -->
+          <div class="form-group">
+            <label id="lblFullName">Your Full Name</label>
+            <input type="text" id="signFullName" placeholder="e.g. Samuel Adekunle" required>
+          </div>
+          <div class="form-group">
+            <label>Phone Number (WhatsApp Preferred)</label>
+            <input type="tel" id="signPhone" placeholder="+234 80 1234 5678" required>
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <select id="signEstateSelect">
+              <option value="est_citiview">Citi-View Estate</option>
+              <option value="est_warewa">Warewa</option>
+              <option value="est_arepo">Arepo</option>
+              <option value="est_opic">Opic</option>
+              <option value="est_ibafo">Ibafo</option>
+            </select>
+          </div>
+
+          <!-- Business Only Fields (Shown when Business is selected) -->
+          <div id="businessFieldsGroup" style="display: none; background: #F8FAFC; border: 1.5px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 16px;">
+            <div style="font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 10px; text-transform: uppercase;">
+              🏬 Store & Operating Information
+            </div>
+
+            <div class="form-group">
+              <label>Business / Brand Name</label>
+              <input type="text" id="signBizName" class="force-caps-input" oninput="this.value = this.value.toUpperCase()" placeholder="e.g. AMAKA BAKES OR DEJI TECH LAB">
+            </div>
+
+            <div class="form-group">
+              <label>Business Category</label>
+              <select id="signBizCategory">
+                <option value="Food & Bakery">Food, Pastries & Bakery</option>
+                <option value="Electronics">Electronics & Gadget Repairs</option>
+                <option value="Fashion & Beauty">Fashion, Perfumes & Beauty</option>
+                <option value="Home & Laundry Services">Laundry & Home Services</option>
+                <option value="Supermarket">Supermarket & Provisions</option>
+              </select>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+              <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                <label>Opening Time</label>
+                <input type="time" id="signOpenTime" value="08:00">
+              </div>
+              <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                <label>Closing Time</label>
+                <input type="time" id="signCloseTime" value="21:00">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="signPassword" placeholder="Create a password" required>
+          </div>
+
+          <button type="submit" class="btn-full" id="btnSubmitSignup">Create Account</button>
+        </form>
+
+        <div class="auth-toggle">
+          Already have an account? <a onclick="showView('login')">Sign In Here</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: MAIN MARKETPLACE -->
+    <div id="marketView" class="view-section">
+
+      <!-- Top Verified Businesses & In-Estate Vendors (Compact Narrow Logo Bar) -->
+      <div class="section-title">
+        <span>🏪 Top Businesses & Stores</span>
+      </div>
+
+      <div class="supermarket-logos-row" id="supermarketsContainer">
+        <!-- Compact logo pills loaded dynamically -->
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="filter-bar">
+        <div class="search-row">
+          <input type="text" id="searchInput" class="search-input" placeholder="Search bakes, gadgets, fashion, provisions, repairs..." oninput="fetchListings()">
+          <select id="locationSelect" class="estate-select" onchange="onLocationChanged()">
+            <option value="est_citiview">🏡 Citi-View Estate</option>
+            <option value="est_warewa">📍 Warewa</option>
+            <option value="est_arepo">📍 Arepo</option>
+            <option value="est_opic">📍 Opic</option>
+            <option value="est_ibafo">📍 Ibafo</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section-title">
+        <span>🔥 In-Stock Items Today</span>
+      </div>
+      <div class="listings-grid" id="marketListingsContainer">
+        <!-- Products -->
+      </div>
+    </div>
+
+    <!-- VIEW 4: STORE PROFILE & FULL INVENTORY (Chowdeck Display UI) -->
+    <div id="storeCatalogView" class="view-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <button class="nav-btn" onclick="showView('market')">← Back to Marketplace</button>
+        <!-- Self-service Item Lister Button for Vendor -->
+        <button class="nav-btn" id="btnVendorSelfAdd" style="display:none; background: #DCFCE7; color: #15803D; font-weight: 700; border-color: #86EFAC;" onclick="openQuickAddModal()">
+          + Add New Item to This Store
+        </button>
+      </div>
+
+      <!-- Chowdeck Store Hero Card (Cover Photo + Real DP + Badges) -->
+      <div class="chowdeck-store-card">
+        <!-- Cover Photo with gradient overlay -->
+        <div class="chowdeck-cover-container">
+          <img id="catStoreCoverImg" src="" class="chowdeck-cover-img" alt="Store Cover">
+          <div class="chowdeck-cover-overlay"></div>
+        </div>
+
+        <!-- Store Header Info Body -->
+        <div class="chowdeck-store-body">
+          <!-- Real DP / Avatar overlapping cover photo -->
+          <div class="chowdeck-dp-wrapper">
+            <img id="catStoreLogoImg" src="" class="chowdeck-dp-img" alt="Store DP">
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px; margin-top: 10px;">
+            <div style="flex: 1; min-width: 250px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <h1 id="catStoreTitle" style="font-size: 24px; font-weight: 800; color: #111827; margin: 0; line-height: 1.2;">Store Name</h1>
+                <span class="chowdeck-verified-tag" id="catVerifiedBadge">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                  Verified Business
+                </span>
+              </div>
+              <p id="catStoreBio" style="font-size: 13px; color: #64748B; margin-top: 6px; margin-bottom: 12px; line-height: 1.4;"></p>
+
+              <!-- Chowdeck Meta Badges Row: Ratings, Open Till, Prep Time, Location -->
+              <div class="chowdeck-meta-row">
+                <div class="chowdeck-meta-pill rating-pill">
+                  ⭐ <strong id="catStoreRating">5.0</strong> <span id="catStoreReviewCount" style="color: #92400E; font-size: 11px;">(42)</span>
+                </div>
+                <div class="chowdeck-meta-pill status-open" id="catOpenTillPill">
+                  🟢 Open till 10:00 PM
+                </div>
+                <div class="chowdeck-meta-pill" id="catPrepTimePill">
+                  ⏱️ 15–25 mins prep
+                </div>
+                <div class="chowdeck-meta-pill" id="catLocationPill">
+                  📍 Citi-View Estate
+                </div>
+              </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <button class="btn-direct-chat" id="btnStoreChat" onclick="initiateStoreDirectChat()" style="background: #0F766E; color: white; padding: 10px 18px; border-radius: 24px; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);">
+                💬 Chat Store
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chowdeck Category Filter Tabs: Place for All, Place for other options -->
+      <div class="chowdeck-category-nav-wrapper">
+        <div class="chowdeck-category-tabs" id="storeCategoryTabs">
+          <!-- Injected dynamically: All (X), Option 1, Option 2, ... -->
+        </div>
+      </div>
+
+      <!-- In-Store Search Bar -->
+      <div style="margin-bottom: 14px;">
+        <input type="text" id="storeSearchInput" class="search-input" style="width: 100%;" placeholder="Search items in this store..." oninput="filterStoreItems()">
+      </div>
+      
+      <!-- Chowdeck-Style Horizontal List of Items -->
+      <div class="menu-items-list" id="storeItemsContainer">
+        <!-- Products displayed horizontally: Photo on left, Name/Rating/Price/Desc, Add button on right -->
+      </div>
+    </div>
+
+    <!-- VIEW 5: VENDOR DASHBOARD & INVENTORY MANAGER (Black Glassmorphism UI) -->
+    <div id="dashboardView" class="view-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+        <button class="nav-btn" style="background: rgba(255,255,255,0.12); color: white; border-color: rgba(255,255,255,0.2);" onclick="showView('market')">← Back to Marketplace</button>
+        <div style="display: flex; gap: 8px;">
+          <button class="nav-btn" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: white;" onclick="openEditStoreModal()">✏️ Edit Store Profile</button>
+          <button class="nav-btn" style="background: var(--primary); color: white; font-weight: 700; border: none;" onclick="viewMyStoreAsBuyer()">👁️ View as Buyer</button>
+        </div>
+      </div>
+
+      <!-- Storefront Visual Branding: Cover & DP (Real-time Upload) -->
+      <div class="dash-cover-dp-box" style="position: relative; border-radius: 16px; overflow: hidden; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15); background: rgba(30, 41, 59, 0.65);">
+        <!-- Cover Banner Image -->
+        <div style="height: 140px; width: 100%; position: relative; background: linear-gradient(135deg, #0F766E, #1E293B);">
+          <img id="dashCoverImg" src="" style="width: 100%; height: 100%; object-fit: cover; display: none;" alt="Store Cover">
+          <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(15,23,42,0.85));"></div>
+          <!-- Upload Cover Button -->
+          <input type="file" id="dashCoverFileInput" accept="image/*" style="display: none;" onchange="handleStoreCoverUpload(event)">
+          <button type="button" class="nav-btn" onclick="document.getElementById('dashCoverFileInput').click()" style="position: absolute; top: 12px; right: 12px; font-size: 11px; padding: 5px 12px; background: rgba(15, 23, 42, 0.75); color: white; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(8px);">
+            📷 <span id="dashCoverBtnText">Set Cover Photo</span>
+          </button>
+        </div>
+
+        <!-- Store DP & Details Bar -->
+        <div style="padding: 14px 18px; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-top: -36px; position: relative;">
+          <div style="display: flex; align-items: flex-end; gap: 14px;">
+            <!-- DP / Logo Avatar with Upload trigger -->
+            <div style="position: relative; width: 72px; height: 72px; border-radius: 50%; border: 3px solid #1E293B; background: #0F766E; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); cursor: pointer;" onclick="document.getElementById('dashLogoFileInput').click()" title="Click to upload Display Picture (DP / Logo)">
+              <img id="dashLogoImg" src="" style="width: 100%; height: 100%; object-fit: cover; display: none;" alt="Store DP">
+              <div id="dashLogoPlaceholder" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 22px;">
+                🏪
+              </div>
+              <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0'">
+                <span style="font-size: 16px; color: white;">📷</span>
+              </div>
+            </div>
+            <input type="file" id="dashLogoFileInput" accept="image/*" style="display: none;" onchange="handleStoreLogoUpload(event)">
+
+            <div style="padding-bottom: 4px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 10px; font-weight: 800; color: #4ADE80; background: rgba(74, 222, 128, 0.15); border: 1px solid rgba(74, 222, 128, 0.3); padding: 2px 8px; border-radius: 8px;">● VENDOR ACCOUNT ACTIVE</span>
+                <span id="dashLiveStatusBadge" class="store-time-badge status-open" style="font-size: 11px; padding: 2px 8px;">● OPEN</span>
+              </div>
+              <h1 id="dashStoreName" style="font-size: 22px; font-weight: 800; color: #F8FAFC; margin-top: 4px; margin-bottom: 2px;">My Store</h1>
+              <p id="dashStoreLocation" style="font-size: 12px; color: #94A3B8; margin-bottom: 0;">Citi-View Estate</p>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 8px; padding-bottom: 4px;">
+            <button class="nav-btn" style="font-size: 11px; padding: 6px 12px; background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: white;" onclick="document.getElementById('dashLogoFileInput').click()">📷 Set DP</button>
+            <button class="nav-btn" style="font-size: 11px; padding: 6px 12px; background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: white;" onclick="openEditStoreModal()">✏️ Edit Profile</button>
+          </div>
+        </div>
+
+        <!-- Blank / First Open Onboarding Banner -->
+        <div id="dashBlankOnboardAlert" style="display: none; background: rgba(56, 189, 248, 0.15); border-top: 1px solid rgba(56, 189, 248, 0.3); color: #BAE6FD; padding: 10px 18px; font-size: 12px; align-items: center; justify-content: space-between; gap: 10px;">
+          <span>✨ <strong>Store setup:</strong> Upload a Cover photo and profile logo (DP) so buyers recognize your business in the estate!</span>
+          <button class="nav-btn" style="font-size: 10px; padding: 3px 8px; background: #0284C7; color: white; border: none;" onclick="document.getElementById('dashCoverFileInput').click()">Set Cover</button>
+        </div>
+      </div>
+
+      <!-- Quick Metrics -->
+      <div class="dash-metrics-grid">
+        <div class="dash-metric-card">
+          <div class="dash-metric-num" id="dashMetricItems">0</div>
+          <div class="dash-metric-lbl">Total Products</div>
+        </div>
+        <div class="dash-metric-card">
+          <div class="dash-metric-num" id="dashMetricViews">0</div>
+          <div class="dash-metric-lbl">Total Views</div>
+        </div>
+        <div class="dash-metric-card">
+          <div class="dash-metric-num" id="dashMetricRating">5.0 ⭐</div>
+          <div class="dash-metric-lbl">Customer Rating</div>
+        </div>
+      </div>
+
+      <!-- Add New Product Card (Always Available on Dashboard) -->
+      <div class="dash-card-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <div>
+            <h3 style="font-size: 17px; font-weight: 800;">➕ Add More Items to Your Store</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 0;">Fill in details below to instantly add more products to your store shelves.</p>
+          </div>
+        </div>
+
+        <form id="dashAddItemForm" onsubmit="handleQuickAddItem(event)">
+          <div class="form-group">
+            <label>Item Name / Product Title</label>
+            <input type="text" id="dashProdTitle" class="force-caps-input" oninput="this.value = this.value.toUpperCase()" placeholder="e.g. 5L VEGETABLE OIL, CHOCOLATE CUPCAKES, MEN POLO..." required>
+          </div>
+
+          <div style="display: flex; gap: 12px;">
+            <div class="form-group" style="flex: 1;">
+              <label>Price (₦)</label>
+              <input type="number" id="dashProdPrice" placeholder="18500" required>
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>Category</label>
+              <select id="dashProdCategory">
+                <option value="Supermarket">Supermarket & Provisions</option>
+                <option value="Food & Bakery">Food & Bakery</option>
+                <option value="Electronics">Electronics & Tech</option>
+                <option value="Fashion & Beauty">Fashion & Perfumes</option>
+                <option value="Laundry Services">Laundry & Drycleaning</option>
+                <option value="Cold Room & Proteins">Cold Room & Proteins</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Short Description (Optional)</label>
+            <input type="text" id="dashProdDesc" placeholder="e.g. Fresh sealed pack, available for 10-min doorstep delivery">
+          </div>
+
+          <div class="form-group">
+            <label>Product Photo (Click to snap or upload)</label>
+            <div class="photo-upload-box" onclick="document.getElementById('dashPhotoInput').click()">
+              <input type="file" id="dashPhotoInput" accept="image/*" style="display:none;" onchange="previewUpload(event, 'dashPreviewImg')">
+              <span style="font-size: 26px;">📷</span>
+              <p style="font-size: 12px; font-weight: 700; color: var(--primary); margin-top: 4px;">Choose from Camera or Gallery</p>
+              <img id="dashPreviewImg" class="photo-preview">
+            </div>
+          </div>
+
+          <button type="submit" class="btn-full" style="font-size: 15px; padding: 13px;">
+            🚀 Put This Item on My Shelves
+          </button>
+        </form>
+      </div>
+
+      <!-- Current Store Inventory Manager -->
+      <div class="dash-card-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h3 style="font-size: 17px; font-weight: 800;">📦 My Store Shelves & Inventory</h3>
+          <span style="font-size: 12px; color: var(--text-muted);" id="dashShelfCount">0 items live</span>
+        </div>
+        <div id="dashInventoryContainer" style="border: 1px solid var(--border); border-radius: 12px; overflow: hidden;"></div>
+      </div>
+
+      <!-- Customer Chats & Inquiries Inbox (Where vendor sees chats from everyone) -->
+      <div class="dash-card-section" id="dashChatsCard">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+          <div>
+            <h3 style="font-size: 17px; font-weight: 800;">💬 Customer Inquiries & Chats</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 0;">Live messages and inquiries from estate residents and buyers across your products.</p>
+          </div>
+          <button class="nav-btn" style="font-size: 12px; padding: 4px 10px;" onclick="loadVendorChats(currentStore?.id)">🔄 Refresh Chats</button>
+        </div>
+        <div id="dashVendorChatsContainer" style="border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: white;">
+          <div style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 13px;">Loading incoming inquiries...</div>
+        </div>
+      </div>
+
+      <!-- Store Operating Hours Setting -->
+      <div class="dash-card-section">
+        <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 4px;">⏰ Store Operating & Closing Hours</h4>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">When closed, buyers cannot place orders or checkout.</p>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <div style="flex: 1;">
+            <label style="font-size: 12px; font-weight: 700;">Opening Time</label>
+            <input type="time" id="dashOpenTime" value="08:00" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px;">
+          </div>
+          <div style="flex: 1;">
+            <label style="font-size: 12px; font-weight: 700;">Closing Time</label>
+            <input type="time" id="dashCloseTime" value="21:00" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px;">
+          </div>
+          <button class="btn-direct-chat" style="height: 42px; margin-top: 18px; padding: 0 18px;" onclick="updateStoreHours()">Save Hours</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RATING MODAL (Triggered After Payment) -->
+  <div class="rating-modal-overlay" id="ratingModal">
+    <div class="rating-modal-box">
+      <div style="font-size: 32px; margin-bottom: 8px;">🎉</div>
+      <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 4px;">Payment Confirmed!</h3>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+        How was your experience ordering from <strong id="ratingStoreName">this store</strong>?
+      </p>
+
+      <div class="star-selector" id="starSelector">
+        <span onclick="selectRatingStar(1)">★</span>
+        <span onclick="selectRatingStar(2)">★</span>
+        <span onclick="selectRatingStar(3)">★</span>
+        <span onclick="selectRatingStar(4)">★</span>
+        <span onclick="selectRatingStar(5)" class="selected">★</span>
+      </div>
+
+      <div style="font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 16px;" id="ratingScoreText">
+        5.0 Stars (Excellent)
+      </div>
+
+      <button class="btn-full" onclick="submitStoreRating()">Submit Verified Rating</button>
+      <button onclick="closeRatingModal()" style="background: none; border: none; font-size: 12px; color: var(--text-muted); margin-top: 10px; cursor: pointer;">Skip</button>
+    </div>
+  </div>
+
+  <!-- MODAL: VENDOR SELF-INPUT NEW ITEM DIRECTLY FROM STORE VIEW -->
+  <div class="quick-modal-overlay" id="quickAddModal">
+    <div class="quick-modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="font-size: 16px; font-weight: 800;">+ Add New Item to Store</h3>
+        <button onclick="closeQuickAddModal()" style="background: none; border: none; font-size: 18px; cursor: pointer;">✕</button>
+      </div>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+        Missing an item from your shelves? Add it here and it goes live instantly.
+      </p>
+
+      <form onsubmit="handleVendorSelfAddItem(event)">
+        <div class="form-group">
+          <label>Product Title / Item Name</label>
+          <input type="text" id="modalProdTitle" class="force-caps-input" oninput="this.value = this.value.toUpperCase()" placeholder="e.g. GOLDEN TERRA SOYA OIL 5L" required>
+        </div>
+        <div class="form-group">
+          <label>Price (₦)</label>
+          <input type="number" id="modalProdPrice" placeholder="18500" required>
+        </div>
+        <div class="form-group">
+          <label>Short Description (Optional)</label>
+          <input type="text" id="modalProdDesc" placeholder="e.g. Factory sealed gallon, zero cholesterol">
+        </div>
+        <div class="form-group">
+          <label>Product Photo (Click to snap or upload)</label>
+          <div class="photo-upload-box" onclick="document.getElementById('modalPhotoInput').click()">
+            <input type="file" id="modalPhotoInput" accept="image/*" style="display:none;" onchange="previewUpload(event, 'modalPreviewImg')">
+            <span style="font-size: 22px;">📷</span>
+            <p style="font-size: 11px; font-weight: 700; color: var(--primary);">Choose from Camera / Gallery</p>
+            <img id="modalPreviewImg" class="photo-preview">
+          </div>
+        </div>
+        <button type="submit" class="btn-full" style="margin-top: 10px;">Save & List on Shelves</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT STORE PROFILE & SETTINGS -->
+  <div class="quick-modal-overlay" id="editStoreModal">
+    <div class="quick-modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="font-size: 17px; font-weight: 800;">✏️ Edit Store Settings</h3>
+        <button onclick="closeEditStoreModal()" style="background: none; border: none; font-size: 18px; cursor: pointer;">✕</button>
+      </div>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+        Update your business name, bio, location, and operational schedule.
+      </p>
+
+      <form onsubmit="handleSaveStoreProfile(event)">
+        <div class="form-group">
+          <label>Store / Business Name</label>
+          <input type="text" id="editStoreNameInput" class="force-caps-input" oninput="this.value = this.value.toUpperCase()" required>
+        </div>
+        <div class="form-group">
+          <label>Location / Estate</label>
+          <select id="editStoreEstateSelect">
+            <option value="est_citiview">Citi-View Estate</option>
+            <option value="est_warewa">Warewa</option>
+            <option value="est_arepo">Arepo</option>
+            <option value="est_opic">Opic</option>
+            <option value="est_ibafo">Ibafo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="editStoreCategorySelect">
+            <option value="Supermarket">Supermarket & Provisions</option>
+            <option value="Food & Bakery">Food & Bakery</option>
+            <option value="Electronics">Electronics & Tech</option>
+            <option value="Fashion & Beauty">Fashion & Perfumes</option>
+            <option value="Laundry Services">Laundry & Drycleaning</option>
+            <option value="Cold Room & Proteins">Cold Room & Proteins</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Store Bio / Headline</label>
+          <textarea id="editStoreBioInput" rows="2" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; outline: none;"></textarea>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <div class="form-group" style="flex: 1;">
+            <label>Opening Time</label>
+            <input type="time" id="editStoreOpenTime">
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>Closing Time</label>
+            <input type="time" id="editStoreCloseTime">
+          </div>
+        </div>
+        <button type="submit" class="btn-full" style="margin-top: 10px;">Save Profile Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT PRODUCT DETAILS -->
+  <div class="quick-modal-overlay" id="editProductModal">
+    <div class="quick-modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="font-size: 17px; font-weight: 800; margin: 0;">✏️ Edit Product Details</h3>
+        <button onclick="closeEditProductModal()" style="background: none; border: none; font-size: 18px; cursor: pointer;">✕</button>
+      </div>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+        Update name, price, category, stock status, or photo of this product.
+      </p>
+
+      <form onsubmit="handleSaveEditedProduct(event)">
+        <input type="hidden" id="editProdId">
+
+        <div class="form-group">
+          <label>Product Title / Name</label>
+          <input type="text" id="editProdTitle" class="force-caps-input" oninput="this.value = this.value.toUpperCase()" required>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <div class="form-group" style="flex: 1;">
+            <label>Price (₦)</label>
+            <input type="number" id="editProdPrice" required>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>Category</label>
+            <select id="editProdCategory" class="form-control" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; outline: none; background: white;" required>
+              <option value="Supermarket">Supermarket & Provisions</option>
+              <option value="Food & Bakery">Food & Bakery</option>
+              <option value="Electronics">Electronics & Tech</option>
+              <option value="Fashion & Beauty">Fashion & Perfumes</option>
+              <option value="Laundry Services">Laundry & Drycleaning</option>
+              <option value="Cold Room & Proteins">Cold Room & Proteins</option>
+              <option value="Provisions">Provisions & Beverages</option>
+              <option value="General">General Goods</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Stock Status</label>
+          <select id="editProdStatus">
+            <option value="ACTIVE">🟢 In Stock (Available for Buyers)</option>
+            <option value="SOLD">🔴 Sold Out (Marked as Sold Out)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Short Description</label>
+          <input type="text" id="editProdDesc" placeholder="e.g. 5L factory sealed, original brand">
+        </div>
+
+        <div class="form-group">
+          <label>Product Photo (Click to update)</label>
+          <div class="photo-upload-box" onclick="document.getElementById('editProdPhotoInput').click()">
+            <input type="file" id="editProdPhotoInput" accept="image/*" style="display:none;" onchange="previewUpload(event, 'editProdPreviewImg')">
+            <span style="font-size: 22px;">📷</span>
+            <p style="font-size: 11px; font-weight: 700; color: var(--primary);">Choose New Photo</p>
+            <img id="editProdPreviewImg" class="photo-preview" style="display: none;">
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 14px;">
+          <button type="button" class="nav-btn" style="flex: 1; padding: 10px;" onclick="closeEditProductModal()">Cancel</button>
+          <button type="submit" class="btn-full" style="flex: 2; margin-top: 0; background: var(--primary);">Save Product Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: FORGOT / RESET PASSWORD (PHONE OTP) -->
+  <div class="quick-modal-overlay" id="forgotPasswordModal">
+    <div class="quick-modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="font-size: 17px; font-weight: 800; margin: 0;">🔑 Reset Password</h3>
+        <button onclick="closeForgotPasswordModal()" style="background: none; border: none; font-size: 18px; cursor: pointer;">✕</button>
+      </div>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+        Enter your registered phone number to verify your identity and set a new password.
+      </p>
+
+      <div id="forgotStep1">
+        <div class="form-group">
+          <label>Registered Phone Number</label>
+          <input type="tel" id="forgotPhone" placeholder="e.g. 08012340000" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px;">
+        </div>
+        <button type="button" class="btn-full" onclick="handleSendResetOtp()" id="btnSendOtp">
+          📲 Send Verification Code
+        </button>
+      </div>
+
+      <div id="forgotStep2" style="display: none;">
+        <div style="background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF; padding: 10px; border-radius: 8px; font-size: 12px; margin-bottom: 14px;" id="forgotOtpNotice">
+          Verification code sent!
+        </div>
+        <div class="form-group">
+          <label>6-Digit Verification Code</label>
+          <input type="text" id="forgotOtpCode" placeholder="123456" maxlength="6" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; letter-spacing: 4px; font-weight: 800; text-align: center; font-size: 16px;">
+        </div>
+        <div class="form-group">
+          <label>Enter New Password</label>
+          <input type="password" id="forgotNewPassword" placeholder="••••••••" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px;">
+        </div>
+        <button type="button" class="btn-full" onclick="handleResetPasswordSubmit()">
+          🔐 Save New Password & Login
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: INSTALL MOBILE APP (ANDROID / IOS) -->
+  <div class="quick-modal-overlay" id="pwaInstallModal">
+    <div class="quick-modal-box" style="text-align: center; max-width: 400px;">
+      <div style="font-size: 38px; margin-bottom: 6px;">📲</div>
+      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px; color: var(--primary-dark);">Install Halljar on Your Phone</h3>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">
+        Get instant mobile app access with zero downloads from the Play/App Store, instant order notifications, and lightning speed!
+      </p>
+
+      <div id="androidInstallBox" style="display: none; margin-bottom: 14px;">
+        <button type="button" class="btn-full" onclick="triggerNativeInstall()" style="background: var(--primary); padding: 12px; font-size: 14px; font-weight: 700; border-radius: 10px;">
+          ⬇️ Install App on Android
+        </button>
+      </div>
+
+      <div id="iosInstallBox" style="background: #F1F5F9; border-radius: 12px; padding: 14px; text-align: left; font-size: 12px; line-height: 1.6; margin-bottom: 16px; border: 1px solid var(--border);">
+        <div style="font-weight: 700; color: #0F172A; margin-bottom: 6px;">🍎 iPhone / Safari Instructions:</div>
+        <ol style="margin-left: 18px; padding-left: 0; color: #334155;">
+          <li>Tap the <strong>Share</strong> button <span style="font-size: 15px;">⎋</span> at the bottom of Safari.</li>
+          <li>Scroll down and tap <strong>'Add to Home Screen'</strong> ➕.</li>
+          <li>Tap <strong>'Add'</strong> in the top right to complete installation.</li>
+        </ol>
+      </div>
+
+      <button type="button" class="btn-full" onclick="closeInstallModal()" style="background: #E2E8F0; color: #334155;">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!-- FLOATING CART BAR (WITH TOTAL AND PROCEED TO CHAT) -->
+  <div class="floating-cart-bar" id="floatingCart">
+    <div class="cart-summary">
+      <span id="cartCount">0 items</span> • Total: <strong id="cartTotal" style="color: #34D399;">₦0</strong>
+    </div>
+    <button class="cart-checkout-btn" onclick="proceedToChatWithOrder()">
+      Proceed to Chat & Pay 💬
+    </button>
+  </div>
+
+  <!-- CHAT OVERLAY -->
+  <div class="chat-overlay" id="chatOverlay">
+    <div class="chat-box">
+      <div class="chat-header">
+        <div>
+          <h4 id="chatStoreTitle" style="font-size: 15px; font-weight: 800;">Chatting with Store</h4>
+          <span style="font-size: 11px; color: var(--text-muted);">🟢 Online • Warewa</span>
+        </div>
+        <button onclick="closeChat()" style="background: none; border: none; font-size: 18px; cursor: pointer;">✕</button>
+      </div>
+
+      <div class="chat-order-card" id="chatOrderCard">
+        <!-- Injected order summary or item -->
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+        <!-- Messages -->
+      </div>
+
+      <div class="chat-quick-actions">
+        <button class="quick-chip" onclick="quickSend('Please send your bank account details for payment.')">💳 Send Account Details</button>
+        <button class="quick-chip" style="background: #ECFDF5; border-color: #A7F3D0; color: #065F46;" onclick="openPaymentRatingModal()">⭐ I have made payment (Rate Store)</button>
+        <button class="quick-chip" onclick="quickSend('Can you deliver to my address in Warewa today?')">📍 Deliver today?</button>
+      </div>
+
+      <form class="chat-input-bar" onsubmit="handleSendMessage(event)">
+        <input type="text" id="chatInput" placeholder="Ask for account number or delivery details..." required>
+        <button type="submit" class="btn-send">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = '/api';
+    let currentUser = JSON.parse(localStorage.getItem('halljar_user') || 'null');
+    let currentStore = JSON.parse(localStorage.getItem('halljar_store') || 'null');
+    let currentAccountType = 'INDIVIDUAL';
+    let cart = []; // { id, title, price, storeId, storeName }
+    let currentSelectedRating = 5;
+    let activeChatStoreId = null;
+
+    // Mobile PWA Install Prompt Support
+    let deferredInstallPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      const androidBox = document.getElementById('androidInstallBox');
+      if (androidBox) androidBox.style.display = 'block';
+    });
+
+    function showInstallPrompt() {
+      const modal = document.getElementById('pwaInstallModal');
+      if (modal) modal.classList.add('active');
+    }
+
+    function closeInstallModal() {
+      const modal = document.getElementById('pwaInstallModal');
+      if (modal) modal.classList.remove('active');
+    }
+
+    async function triggerNativeInstall() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        const choice = await deferredInstallPrompt.userChoice;
+        if (choice && choice.outcome === 'accepted') {
+          console.log('Halljar PWA installed');
+          closeInstallModal();
+        }
+        deferredInstallPrompt = null;
+      } else {
+        alert('To install on Android: Tap the 3 dots (⋮) in Chrome, then choose "Add to Home screen" or "Install App".');
+      }
+    }
+
+    function openPaymentRatingModal() {
+      if (!activeChatStoreId && viewingStore) activeChatStoreId = viewingStore.id;
+      const storeTitle = document.getElementById('chatStoreTitle').textContent || 'Store';
+      document.getElementById('ratingStoreName').textContent = storeTitle;
+      selectRatingStar(5);
+      document.getElementById('ratingModal').classList.add('active');
+    }
+
+    function closeRatingModal() {
+      document.getElementById('ratingModal').classList.remove('active');
+    }
+
+    function selectRatingStar(score) {
+      currentSelectedRating = score;
+      const stars = document.querySelectorAll('#starSelector span');
+      stars.forEach((star, index) => {
+        star.classList.toggle('selected', index < score);
+      });
+
+      const labelMap = {
+        1: '1.0 Star (Poor)',
+        2: '2.0 Stars (Fair)',
+        3: '3.0 Stars (Good)',
+        4: '4.0 Stars (Very Good)',
+        5: '5.0 Stars (Excellent)'
+      };
+      document.getElementById('ratingScoreText').textContent = labelMap[score];
+    }
+
+    async function submitStoreRating() {
+      if (!activeChatStoreId) return;
+      const res = await fetch(`${API_BASE}/stores/${activeChatStoreId}/rate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rating: currentSelectedRating })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        closeRatingModal();
+        alert(`⭐ Thank you! Your verified ${currentSelectedRating}-star rating was recorded.`);
+
+        // Clear chat history with this vendor after completed payment/purchase
+        if (activeConversationId) {
+          await fetch(`${API_BASE}/conversations/${activeConversationId}/clear`, {
+            method: 'DELETE'
+          });
+          loadConversationMessages(activeConversationId);
+        }
+
+        // Close chat window
+        closeChat();
+        loadSupermarkets();
+        alert('✅ Order completed & payment verified. Chat with vendor has been cleared!');
+      }
+    }
+
+    // Phone Sound Chime (Synthesized via Web Audio API)
+    function playNotificationChime() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
+        
+        // Chime tone 1: 587.33 Hz (D5)
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(587.33, now);
+        gain1.gain.setValueAtTime(0.2, now);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+        osc1.connect(gain1);
+        gain1.connect(ctx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.18);
+
+        // Chime tone 2: 880 Hz (A5)
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(880, now + 0.14);
+        gain2.gain.setValueAtTime(0.25, now + 0.14);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.start(now + 0.14);
+        osc2.stop(now + 0.38);
+      } catch (err) {
+        console.warn('Audio chime warning:', err);
+      }
+    }
+
+    function requestNotificationPermission() {
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+    }
+
+    function triggerPhoneNotification(senderName, messageText, convId) {
+      // 1. Audio chime
+      playNotificationChime();
+
+      // 2. Physical phone vibration
+      if ('vibrate' in navigator) {
+        try { navigator.vibrate([200, 100, 200]); } catch (e) {}
+      }
+
+      // 3. System Push / Lockscreen Notification
+      if ('Notification' in window && Notification.permission === 'granted') {
+        try {
+          const n = new Notification(`💬 ${senderName}`, {
+            body: messageText,
+            icon: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=150&auto=format&fit=crop&q=80',
+            tag: 'halljar-msg-' + convId
+          });
+          n.onclick = () => {
+            window.focus();
+            if (convId) {
+              activeConversationId = convId;
+              loadConversationMessages(convId);
+              document.getElementById('chatOverlay').classList.add('active');
+            }
+          };
+        } catch (e) {}
+      }
+
+      // 4. In-App Mobile Toast Banner
+      const toast = document.getElementById('phoneNotificationToast');
+      if (toast) {
+        document.getElementById('toastTitle').textContent = `💬 ${senderName}`;
+        document.getElementById('toastMessage').textContent = messageText;
+        const btn = document.getElementById('toastActionBtn');
+        btn.onclick = () => {
+          toast.style.display = 'none';
+          if (convId) {
+            activeConversationId = convId;
+            loadConversationMessages(convId);
+            document.getElementById('chatOverlay').classList.add('active');
+          }
+        };
+        toast.style.display = 'block';
+        setTimeout(() => {
+          toast.style.display = 'none';
+        }, 5500);
+      }
+    }
+
+    // WebSocket setup with resilient reconnection & graceful fallback for Vercel Serverless
+    let ws = null;
+    function initWebSocket() {
+      try {
+        if (location.protocol === 'http:' || location.protocol === 'https:') {
+          const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+          ws = new WebSocket(`${wsProtocol}//${location.host}`);
+          ws.onmessage = (event) => {
+            try {
+              const data = JSON.parse(event.data);
+              handleSocketMessage(data);
+            } catch (err) {}
+          };
+          ws.onerror = () => {};
+          ws.onclose = () => {
+            setTimeout(initWebSocket, 6000);
+          };
+        }
+      } catch (err) {
+        console.warn('WS fallback to polling active');
+      }
+    }
+
+    function handleSocketMessage(data) {
+      if (data.type === 'NEW_MESSAGE') {
+        if (data.conversationId === activeConversationId) {
+          appendMessage(data.message);
+        }
+
+        // Notify user/vendor on incoming message from partner
+        const isFromPartner = currentUser && data.message.senderId !== currentUser.id;
+        if (isFromPartner) {
+          triggerPhoneNotification(data.message.senderName || 'Customer', data.message.text, data.conversationId);
+        }
+
+        // If vendor dashboard is visible and current store is active, refresh chats
+        if (currentStore && document.getElementById('dashboardView') && document.getElementById('dashboardView').classList.contains('active')) {
+          loadVendorChats(currentStore.id);
+        }
+      } else if (data.type === 'MESSAGE_EDITED') {
+        if (data.conversationId === activeConversationId) {
+          loadConversationMessages(activeConversationId);
+        }
+      } else if (data.type === 'MESSAGE_DELETED_FOR_USER') {
+        // Only reload for the user who deleted the message (delete for me alone)
+        if (data.conversationId === activeConversationId && currentUser && currentUser.id === data.userId) {
+          loadConversationMessages(activeConversationId);
+        }
+      } else if (data.type === 'CONVERSATION_CLEARED') {
+        if (data.conversationId === activeConversationId) {
+          loadConversationMessages(activeConversationId);
+        }
+      }
+    }
+
+    // 3.5s background polling fallback (guarantees real-time chat & order sync on Vercel Serverless)
+    setInterval(() => {
+      if (activeConversationId) {
+        loadConversationMessages(activeConversationId, true);
+      }
+      if (currentStore && document.getElementById('dashboardView') && document.getElementById('dashboardView').classList.contains('active')) {
+        loadVendorChats(currentStore.id, true);
+      }
+    }, 3500);
+
+    async function init() {
+      // Register Service Worker for Mobile PWA
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').then(reg => {
+            console.log('Halljar PWA Service Worker active:', reg.scope);
+          }).catch(err => console.warn('SW register note:', err));
+        });
+      }
+      initWebSocket();
+
+      if (!currentUser) {
+        showView('login');
+      } else {
+        renderAuthHeader();
+        // If logged in as seller or Love, ensure vendor store is linked
+        if (!currentStore && (currentUser.role === 'SELLER' || (currentUser.fullName && currentUser.fullName.toLowerCase().includes('love')))) {
+          try {
+            const uRes = await fetch(`${API_BASE}/users/${currentUser.id}/store`);
+            if (uRes.ok) {
+              const uData = await uRes.json();
+              if (uData.store) {
+                currentStore = uData.store;
+                localStorage.setItem('halljar_store', JSON.stringify(currentStore));
+                renderAuthHeader();
+              }
+            }
+          } catch(e) {}
+        }
+        showView('market');
+        loadSupermarkets();
+        fetchListings();
+      }
+    }
+
+    function renderAuthHeader() {
+      const container = document.getElementById('navHeaderActions');
+      const installPill = `<button class="nav-btn" onclick="showInstallPrompt()" style="background:#0F766E; color:white; border:none; display:inline-flex; align-items:center; gap:4px; font-weight:700;">📲 App</button>`;
+      if (currentUser) {
+        const isVendor = (currentUser.role === 'SELLER') || !!currentStore || (currentUser.fullName && currentUser.fullName.toLowerCase().includes('love'));
+        container.innerHTML = `
+          ${installPill}
+          ${isVendor ? `<button class="nav-btn vendor-dash-glass-btn" onclick="openDashboard()">📊 My Dashboard</button>` : `<button class="nav-btn" onclick="showView('signup')">+ Register Business</button>`}
+          <div class="user-pill">
+            <span>👤 ${currentUser.fullName.split(' ')[0]}</span>
+            <a onclick="logout()" style="color:#EF4444; margin-left:6px; cursor:pointer;">Logout</a>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          ${installPill}
+          <button class="nav-btn active" onclick="showView('login')">🔑 Log In</button>
+          <button class="nav-btn" onclick="showView('signup')">Sign Up</button>
+        `;
+      }
+    }
+
+    function setAccountType(type) {
+      currentAccountType = type;
+      document.getElementById('tabIndividual').classList.toggle('active', type === 'INDIVIDUAL');
+      document.getElementById('tabBusiness').classList.toggle('active', type === 'BUSINESS');
+
+      const bizGroup = document.getElementById('businessFieldsGroup');
+      const submitBtn = document.getElementById('btnSubmitSignup');
+
+      if (type === 'BUSINESS') {
+        bizGroup.style.display = 'block';
+        document.getElementById('lblFullName').textContent = 'Business Owner / Manager Name';
+        submitBtn.textContent = 'Register Business & Open Store';
+      } else {
+        bizGroup.style.display = 'none';
+        document.getElementById('lblFullName').textContent = 'Your Full Name';
+        submitBtn.textContent = 'Create Individual Account';
+      }
+    }
+
+    function navToHome() {
+      if (!currentUser) showView('login');
+      else showView('market');
+    }
+
+    function onLocationChanged() {
+      loadSupermarkets();
+      fetchListings();
+    }
+
+    function showView(viewId) {
+      if (!currentUser && viewId !== 'login' && viewId !== 'signup') {
+        viewId = 'login';
+      }
+
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      const target = document.getElementById(viewId + 'View');
+      if (target) target.classList.add('active');
+    }
+
+    function logout() {
+      localStorage.removeItem('halljar_user');
+      localStorage.removeItem('halljar_store');
+      currentUser = null;
+      currentStore = null;
+      cart = [];
+      updateCartBar();
+      renderAuthHeader();
+      showView('login');
+    }
+
+    // 1. AUTH: Login (Resident or Business)
+    let currentLoginAccountType = 'INDIVIDUAL';
+
+    function setLoginAccountType(type) {
+      currentLoginAccountType = type;
+      document.getElementById('loginTabIndividual').classList.toggle('active', type === 'INDIVIDUAL');
+      document.getElementById('loginTabBusiness').classList.toggle('active', type === 'BUSINESS');
+
+      const title = document.getElementById('loginTitle');
+      const subtitle = document.getElementById('loginSubtitle');
+      const label = document.getElementById('lblLoginIdentifier');
+      const input = document.getElementById('loginPhone');
+      const submitBtn = document.getElementById('btnLoginSubmit');
+
+      if (type === 'BUSINESS') {
+        title.textContent = 'Sign In as a Business / Seller';
+        subtitle.textContent = 'Manage your store shelves, inventory items, and customer inquiries.';
+        label.textContent = 'Business Phone, Owner Name, or Store Name';
+        input.placeholder = 'e.g. 08012340000 or Love Cooks';
+        submitBtn.textContent = '🚀 Sign In to Business Dashboard';
+      } else {
+        title.textContent = 'Sign In to Halljar Warewa';
+        subtitle.textContent = 'Access Bokku, Mosh, Giant Supermarkets & local stores in Warewa.';
+        label.textContent = 'Phone Number';
+        input.placeholder = '+234 80 1111 2222';
+        submitBtn.textContent = 'Sign In to Continue';
+      }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const phoneNumber = document.getElementById('loginPhone').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      const res = await fetch(`${API_BASE}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phoneNumber, password, accountType: currentLoginAccountType })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        currentUser = data.user;
+        currentStore = data.store;
+        localStorage.setItem('halljar_user', JSON.stringify(currentUser));
+        if (currentStore) localStorage.setItem('halljar_store', JSON.stringify(currentStore));
+        renderAuthHeader();
+
+        // Request notification permission on successful login
+        requestNotificationPermission();
+
+        // If logged in as business/seller or has an active store, take directly to My Dashboard!
+        const isBusiness = currentLoginAccountType === 'BUSINESS' || currentUser.role === 'SELLER' || !!currentStore;
+        if (isBusiness) {
+          alert(`👋 Welcome back, ${currentUser.fullName}! Opening your store dashboard.`);
+          await openDashboard();
+        } else {
+          showView('market');
+          loadSupermarkets();
+          fetchListings();
+        }
+      } else {
+        alert(data.error || 'Login failed');
+      }
+    }
+
+    // 2. AUTH: Signup (Individual or Business)
+    async function handleSignup(e) {
+      e.preventDefault();
+      const payload = {
+        accountType: currentAccountType,
+        fullName: document.getElementById('signFullName').value,
+        phoneNumber: document.getElementById('signPhone').value,
+        password: document.getElementById('signPassword').value,
+        estateId: document.getElementById('signEstateSelect').value,
+        businessName: document.getElementById('signBizName').value,
+        businessCategory: document.getElementById('signBizCategory').value,
+        openTime: document.getElementById('signOpenTime').value,
+        closeTime: document.getElementById('signCloseTime').value
+      };
+
+      const res = await fetch(`${API_BASE}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        currentUser = data.user;
+        currentStore = data.store;
+        localStorage.setItem('halljar_user', JSON.stringify(currentUser));
+        if (currentStore) localStorage.setItem('halljar_store', JSON.stringify(currentStore));
+        renderAuthHeader();
+
+        if (currentStore) {
+          // Sync location selector to the newly registered business's estate
+          const locSelect = document.getElementById('locationSelect');
+          if (locSelect && currentStore.estateId) {
+            locSelect.value = currentStore.estateId;
+          }
+          alert(`🎉 Congratulations! "${currentStore.storeName}" is now registered. Add your products now!`);
+          openDashboard();
+          loadSupermarkets();
+          fetchListings();
+        } else {
+          alert('🎉 Account created successfully!');
+          showView('market');
+          loadSupermarkets();
+          fetchListings();
+        }
+      } else {
+        alert(data.error || 'Signup failed');
+      }
+    }
+
+    // 3. LOAD STORES (Sorted by Number of Ratings & Showing Stars)
+    async function loadSupermarkets() {
+      const estateId = document.getElementById('locationSelect')?.value || 'est_citiview';
+      const res = await fetch(`${API_BASE}/stores?estateId=${estateId}`);
+      const stores = await res.json();
+      const container = document.getElementById('supermarketsContainer');
+
+      if (!stores.length) {
+        container.innerHTML = `<span style="font-size: 11px; color: var(--text-muted); padding: 4px;">No businesses registered in this location yet.</span>`;
+        return;
+      }
+
+      container.innerHTML = stores.map(store => {
+        const dotClass = store.isOpen ? 'dot-open' : 'dot-closed';
+
+        return `
+          <div class="supermarket-logo-pill" onclick="openStoreCatalog('${store.id}')" title="${store.storeName}">
+            <div style="position: relative; flex-shrink: 0; width: 28px; height: 28px;">
+              <img src="${store.logo || 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=150&auto=format&fit=crop&q=80'}" class="supermarket-logo-img" alt="${store.storeName}">
+              <span class="store-time-dot ${dotClass}" style="position: absolute; bottom: -2px; right: -2px;" title="${store.isOpen ? 'Open' : 'Closed'}"></span>
+            </div>
+            <div style="display: flex; flex-direction: column; min-width: 0; line-height: 1.2;">
+              <span class="supermarket-logo-name" style="max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; font-weight: 700;">${store.storeName}</span>
+              <span class="store-star-pill" style="align-self: flex-start; margin-top: 2px; font-size: 9px; padding: 1px 4px;">⭐ ${store.ratingAvg} <span style="font-size:8px; opacity:0.8;">(${store.ratingCount})</span></span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    let viewingStoreListings = [];
+    let currentMarketListings = [];
+    let currentStoreCategoryFilter = 'ALL';
+
+    // 4. OPEN STORE CATALOG & OPTIONALLY AUTO-SCROLL TO ITEM (Chowdeck Display)
+    async function openStoreCatalog(storeId, scrollToItemId = null) {
+      try {
+        const res = await fetch(`${API_BASE}/stores/${storeId}/catalog`);
+        if (!res.ok) {
+          alert('Could not open store catalog.');
+          return;
+        }
+        const data = await res.json();
+        viewingStore = data.store;
+        viewingStoreListings = data.listings || [];
+        currentStoreCategoryFilter = 'ALL';
+
+        // 1. Cover Photo & Real DP
+        const coverEl = document.getElementById('catStoreCoverImg');
+        if (coverEl) coverEl.src = data.store.coverPhoto || 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=1200&auto=format&fit=crop&q=80';
+        
+        const logoEl = document.getElementById('catStoreLogoImg');
+        if (logoEl) logoEl.src = data.store.logo || 'https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=150&auto=format&fit=crop&q=80';
+
+        // 2. Business Title & Verified Tag
+        document.getElementById('catStoreTitle').textContent = data.store.storeName;
+        const verifiedTag = document.getElementById('catVerifiedBadge');
+        if (verifiedTag) verifiedTag.style.display = data.store.verifiedKYC !== false ? 'inline-flex' : 'none';
+
+        // 3. Bio / Description
+        document.getElementById('catStoreBio').textContent = data.store.bio || `Welcome to ${data.store.storeName}! Fast in-estate delivery & pickup.`;
+
+        // 4. Ratings
+        const ratingEl = document.getElementById('catStoreRating');
+        if (ratingEl) ratingEl.textContent = Number(data.store.ratingAvg || 5.0).toFixed(1);
+        const reviewCountEl = document.getElementById('catStoreReviewCount');
+        if (reviewCountEl) reviewCountEl.textContent = `(${data.store.ratingCount || 35}+ ratings)`;
+
+        // 5. Open Till Status Pill
+        const openTillPill = document.getElementById('catOpenTillPill');
+        if (openTillPill) {
+          if (data.store.isOpen) {
+            openTillPill.className = 'chowdeck-meta-pill status-open';
+            openTillPill.innerHTML = `🟢 Open till ${data.store.closeTime || '21:30'}`;
+            document.getElementById('btnStoreChat').disabled = false;
+          } else {
+            openTillPill.className = 'chowdeck-meta-pill status-closed';
+            openTillPill.innerHTML = `🔴 Closed • Opens at ${data.store.openTime || '08:00'}`;
+            document.getElementById('btnStoreChat').disabled = true;
+          }
+        }
+
+        // 6. Preparation Time Pill
+        const prepTimePill = document.getElementById('catPrepTimePill');
+        if (prepTimePill) prepTimePill.textContent = `⏱️ ${data.store.prepTime || '15–25 mins prep'}`;
+
+        // 7. Location Pill
+        const locPill = document.getElementById('catLocationPill');
+        if (locPill) locPill.textContent = `📍 ${data.store.estateName || 'Estate'}`;
+
+        // Reset in-store search input
+        const storeSearch = document.getElementById('storeSearchInput');
+        if (storeSearch) storeSearch.value = '';
+
+        const isOwner = currentStore && currentStore.id === storeId;
+        const selfAddBtn = document.getElementById('btnVendorSelfAdd');
+        if (selfAddBtn) selfAddBtn.style.display = isOwner ? 'inline-block' : 'none';
+
+        // Build Chowdeck Category Tabs (All + Category Options)
+        buildStoreCategoryTabs(viewingStoreListings);
+
+        // Render Items
+        renderStoreItems(viewingStoreListings, viewingStore);
+        showView('storeCatalog');
+
+        // Scroll page to top of catalog
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Auto-scroll to the exact clicked product if requested
+        if (scrollToItemId) {
+          setTimeout(() => {
+            const targetEl = document.getElementById(`menu_item_${scrollToItemId}`);
+            if (targetEl) {
+              targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              targetEl.classList.add('highlighted');
+              setTimeout(() => targetEl.classList.remove('highlighted'), 3000);
+            }
+          }, 200);
+        }
+      } catch (err) {
+        console.error('Error opening store catalog:', err);
+        alert('Failed to load store catalog.');
+      }
+    }
+
+    // Build Chowdeck Category Filter Tabs: Place for All, Place for other options
+    function buildStoreCategoryTabs(listings) {
+      const container = document.getElementById('storeCategoryTabs');
+      if (!container) return;
+
+      const categoryCounts = {};
+      listings.forEach(item => {
+        const cat = item.category || 'General';
+        categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+      });
+
+      const uniqueCategories = Object.keys(categoryCounts);
+
+      let tabsHtml = `
+        <button class="cat-tab-pill ${currentStoreCategoryFilter === 'ALL' ? 'active' : ''}" onclick="selectStoreCategory('ALL')">
+          All <span class="tab-count">${listings.length}</span>
+        </button>
+      `;
+
+      uniqueCategories.forEach(cat => {
+        tabsHtml += `
+          <button class="cat-tab-pill ${currentStoreCategoryFilter === cat ? 'active' : ''}" onclick="selectStoreCategory('${escapeQuotes(cat)}')">
+            ${cat} <span class="tab-count">${categoryCounts[cat]}</span>
+          </button>
+        `;
+      });
+
+      container.innerHTML = tabsHtml;
+    }
+
+    function selectStoreCategory(cat) {
+      currentStoreCategoryFilter = cat;
+      buildStoreCategoryTabs(viewingStoreListings);
+      applyStoreFilters();
+    }
+
+    function filterStoreItems() {
+      applyStoreFilters();
+    }
+
+    function applyStoreFilters() {
+      const q = (document.getElementById('storeSearchInput')?.value || '').trim().toLowerCase();
+      let filtered = viewingStoreListings;
+
+      if (currentStoreCategoryFilter !== 'ALL') {
+        filtered = filtered.filter(item => (item.category || 'General').toLowerCase() === currentStoreCategoryFilter.toLowerCase());
+      }
+
+      if (q) {
+        filtered = filtered.filter(item => 
+          item.title.toLowerCase().includes(q) || (item.description && item.description.toLowerCase().includes(q)) || (item.category && item.category.toLowerCase().includes(q))
+        );
+      }
+
+      renderStoreItems(filtered, viewingStore);
+    }
+
+    function renderStoreItems(listings, store) {
+      const container = document.getElementById('storeItemsContainer');
+      const isOwner = currentStore && currentStore.id === store.id;
+
+      if (!listings.length) {
+        container.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); padding: 40px; background: white; border-radius: var(--radius); border: 1px solid var(--border);">
+            <p style="margin-bottom: 10px; font-weight:600;">No items found in this section.</p>
+            ${isOwner ? `<button class="nav-btn" style="background:var(--primary); color:white;" onclick="openQuickAddModal()">+ Add New Item to Shelves</button>` : ''}
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = listings.map(item => {
+        const qty = getCartItemQty(item.id);
+        const rating = item.ratingAvg || '4.9';
+        const reviewsCount = item.reviewsCount || '24';
+        let actionButtonHtml = '';
+
+        if (!store.isOpen) {
+          actionButtonHtml = `<button class="chowdeck-add-btn" disabled>Closed</button>`;
+        } else if (qty > 0) {
+          actionButtonHtml = `
+            <div class="chowdeck-counter">
+              <span class="counter-btn" onclick="decreaseCartItem('${item.id}')">−</span>
+              <span class="counter-qty">${qty}</span>
+              <span class="counter-btn" onclick="addToCart('${item.id}', '${escapeQuotes(item.title)}', ${item.price}, '${store.id}', '${escapeQuotes(store.storeName)}')">+</span>
+            </div>
+          `;
+        } else {
+          actionButtonHtml = `
+            <button class="chowdeck-add-btn" onclick="addToCart('${item.id}', '${escapeQuotes(item.title)}', ${item.price}, '${store.id}', '${escapeQuotes(store.storeName)}')">
+              Add +
+            </button>
+          `;
+        }
+
+        return `
+          <div class="chowdeck-item-card" id="menu_item_${item.id}">
+            <img src="${item.images[0]}" class="chowdeck-thumb" alt="${item.title}">
+            <div class="chowdeck-info">
+              <div class="chowdeck-title">${item.title}</div>
+              <div style="font-size: 11px; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                <span style="color: #D97706; font-weight: 800;">⭐ ${rating}</span>
+                <span style="color: #94A3B8; font-size: 10px;">(${reviewsCount})</span>
+                <span style="color: #CBD5E1;">•</span>
+                <span style="color: #0F766E; font-weight: 700; background: #CCFBF1; padding: 1px 6px; border-radius: 8px; font-size: 10px;">${item.category || 'In-Stock'}</span>
+              </div>
+              <div class="chowdeck-desc">${item.description || 'In-stock item from ' + store.storeName}</div>
+              <div class="chowdeck-price">₦${Number(item.price).toLocaleString()}</div>
+            </div>
+            <div class="chowdeck-actions">
+              ${actionButtonHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // VENDOR QUICK SELF-INPUT MODAL
+    function openQuickAddModal() {
+      uploadedImageData = null;
+      document.getElementById('modalPreviewImg').style.display = 'none';
+      document.getElementById('modalProdTitle').value = '';
+      document.getElementById('modalProdPrice').value = '';
+      document.getElementById('modalProdDesc').value = '';
+      document.getElementById('quickAddModal').classList.add('active');
+    }
+
+    function closeQuickAddModal() {
+      document.getElementById('quickAddModal').classList.remove('active');
+    }
+
+    async function handleVendorSelfAddItem(e) {
+      e.preventDefault();
+      if (!viewingStore) return;
+
+      const rawTitle = document.getElementById('modalProdTitle').value.trim();
+      const formattedTitle = rawTitle.toUpperCase();
+
+      const photoImg = uploadedImageData || 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=600&auto=format&fit=crop&q=80';
+      const payload = {
+        storeId: viewingStore.id,
+        title: formattedTitle,
+        price: document.getElementById('modalProdPrice').value,
+        description: document.getElementById('modalProdDesc').value,
+        category: viewingStore.category || 'Supermarket',
+        image: photoImg
+      };
+
+      const res = await fetch(`${API_BASE}/listings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        closeQuickAddModal();
+        alert(`🎉 Item "${formattedTitle}" seamlessly added to store shelves!`);
+        openStoreCatalog(viewingStore.id);
+        fetchListings();
+      } else {
+        alert(data.error || 'Failed to add item. Please try again.');
+      }
+    }
+
+    function escapeQuotes(str) {
+      return (str || '').replace(/'/g, "\\'");
+    }
+
+    // In-store Search Filter
+    function filterStoreItems() {
+      applyStoreFilters();
+    }
+
+    // 5. IN-STOCK ITEMS TODAY (Cross-business items with click-to-scroll to exact item)
+    async function fetchListings() {
+      const search = document.getElementById('searchInput').value;
+      const estateId = document.getElementById('locationSelect').value;
+      const url = new URL(`${API_BASE}/listings`);
+      if (search) url.searchParams.append('search', search);
+      if (estateId) url.searchParams.append('estateId', estateId);
+
+      const res = await fetch(url);
+      currentMarketListings = await res.json();
+      renderMarketListings(currentMarketListings);
+    }
+
+    function renderMarketListings(listings) {
+      const container = document.getElementById('marketListingsContainer');
+      if (!listings || !listings.length) {
+        container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 30px;">No in-stock items found in this location.</p>`;
+        return;
+      }
+
+      container.innerHTML = listings.map(item => {
+        const isOpen = item.store.isOpen;
+        const qty = getCartItemQty(item.id);
+
+        let cartBtnHtml = '';
+        if (!isOpen) {
+          cartBtnHtml = `<button class="btn-add-cart" disabled>Closed</button>`;
+        } else if (qty > 0) {
+          cartBtnHtml = `
+            <div class="chowdeck-counter" style="padding: 4px 8px;">
+              <span class="counter-btn" onclick="decreaseCartItem('${item.id}')">−</span>
+              <span class="counter-qty">${qty}</span>
+              <span class="counter-btn" onclick="addToCart('${item.id}', '${escapeQuotes(item.title)}', ${item.price}, '${item.store.id}', '${escapeQuotes(item.store.storeName)}')">+</span>
+            </div>
+          `;
+        } else {
+          cartBtnHtml = `
+            <button class="btn-add-cart" onclick="addToCart('${item.id}', '${escapeQuotes(item.title)}', ${item.price}, '${item.store.id}', '${escapeQuotes(item.store.storeName)}')">
+              🛒 Add
+            </button>
+          `;
+        }
+
+        return `
+          <div class="listing-card">
+            <div style="cursor: pointer;" onclick="openStoreCatalog('${item.store.id}', '${item.id}')">
+              <img src="${item.images[0]}" class="card-img" alt="${item.title}">
+            </div>
+            <div class="card-body">
+              <div>
+                <a class="card-store-link" onclick="openStoreCatalog('${item.store.id}', '${item.id}')">
+                  <span>🏪 ${item.store.storeName}</span>
+                  <span class="store-time-dot ${isOpen ? 'dot-open' : 'dot-closed'}" title="${isOpen ? 'Open' : 'Closed'}"></span>
+                </a>
+                <h3 class="card-title" style="cursor:pointer;" onclick="openStoreCatalog('${item.store.id}', '${item.id}')">${item.title}</h3>
+                <div class="card-price">₦${Number(item.price).toLocaleString()}</div>
+              </div>
+              <div class="btn-row" style="align-items: center;">
+                ${cartBtnHtml}
+                <button class="btn-direct-chat" onclick="openStoreCatalog('${item.store.id}', '${item.id}')">
+                  View all →
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 6. CART MANAGEMENT (With Quantity Counter + and -)
+    function addToCart(id, title, price, storeId, storeName) {
+      if (cart.length > 0 && cart[0].storeId !== storeId) {
+        if (!confirm(`Your cart already contains items from "${cart[0].storeName}". Would you like to clear it and start an order with "${storeName}"?`)) {
+          return;
+        }
+        cart = [];
+      }
+
+      const existing = cart.find(item => item.id === id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ id, title, price, storeId, storeName, qty: 1 });
+      }
+
+      updateCartBar();
+      refreshActiveViewButtons();
+    }
+
+    function decreaseCartItem(id) {
+      const idx = cart.findIndex(item => item.id === id);
+      if (idx !== -1) {
+        if (cart[idx].qty > 1) {
+          cart[idx].qty -= 1;
+        } else {
+          cart.splice(idx, 1);
+        }
+      }
+      updateCartBar();
+      refreshActiveViewButtons();
+    }
+
+    function getCartItemQty(id) {
+      const item = cart.find(i => i.id === id);
+      return item ? item.qty : 0;
+    }
+
+    function updateCartBar() {
+      const bar = document.getElementById('floatingCart');
+      if (cart.length === 0) {
+        bar.style.display = 'none';
+        return;
+      }
+      bar.style.display = 'flex';
+      const totalCount = cart.reduce((sum, i) => sum + i.qty, 0);
+      const totalAmount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+      document.getElementById('cartCount').textContent = `${totalCount} item${totalCount > 1 ? 's' : ''} from ${cart[0].storeName}`;
+      document.getElementById('cartTotal').textContent = `₦${totalAmount.toLocaleString()}`;
+    }
+
+    function refreshActiveViewButtons() {
+      // Re-renders the buttons in the store catalog or market feed to show the updated counters
+      if (document.getElementById('storeCatalogView').classList.contains('active') && viewingStore) {
+        renderStoreItems(viewingStoreListings, viewingStore);
+      }
+      if (document.getElementById('marketView').classList.contains('active')) {
+        renderMarketListings(currentMarketListings);
+      }
+    }
+
+    // 7. PROCEED TO CHAT WITH CART ORDER (Ask for account details)
+    async function proceedToChatWithOrder() {
+      if (cart.length === 0) return;
+      const targetStoreId = cart[0].storeId;
+      const targetStoreName = cart[0].storeName;
+      const firstListingId = cart[0].id;
+      const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+      const itemsListText = cart.map(i => `• ${i.qty}x ${i.title} (₦${(i.price * i.qty).toLocaleString()})`).join('\n');
+      const orderMessage = `Hello ${targetStoreName}, I would like to order the following:\n\n${itemsListText}\n\nTotal: ₦${total.toLocaleString()}\n\nPlease send your bank account details so I can make payment for delivery.`;
+
+      const res = await fetch(`${API_BASE}/conversations`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ listingId: firstListingId, storeId: targetStoreId, buyerId: currentUser.id })
+      });
+      const data = await res.json();
+      activeConversationId = data.conversation.id;
+      activeChatStoreId = targetStoreId;
+
+      document.getElementById('chatStoreTitle').textContent = targetStoreName;
+      document.getElementById('chatOrderCard').innerHTML = `
+        <strong>🛒 Pending Order from ${targetStoreName}</strong>
+        <div style="margin-top: 4px;">${cart.reduce((s, i) => s + i.qty, 0)} items • Total: <strong>₦${total.toLocaleString()}</strong></div>
+      `;
+
+      await fetch(`${API_BASE}/conversations/${activeConversationId}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ senderId: currentUser.id, text: orderMessage })
+      });
+
+      await loadConversationMessages(activeConversationId);
+      document.getElementById('chatOverlay').classList.add('active');
+
+      cart = [];
+      updateCartBar();
+      refreshActiveViewButtons();
+    }
+
+    async function openSingleProductChat(listingId) {
+      const res = await fetch(`${API_BASE}/conversations`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ listingId, buyerId: currentUser.id })
+      });
+      const data = await res.json();
+      activeConversationId = data.conversation.id;
+      activeChatStoreId = data.store.id;
+
+      document.getElementById('chatStoreTitle').textContent = data.store.storeName;
+      document.getElementById('chatOrderCard').innerHTML = `
+        <div style="display: flex; gap: 10px; align-items: center;">
+          ${data.listing ? `<img src="${data.listing.images[0]}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 6px;">
+          <div>
+            <strong>${data.listing.title}</strong>
+            <div style="color: var(--primary); font-weight: 700;">₦${Number(data.listing.price).toLocaleString()}</div>
+          </div>` : `<strong>Chat with ${data.store.storeName}</strong>`}
+        </div>
+      `;
+
+      await loadConversationMessages(activeConversationId);
+      document.getElementById('chatOverlay').classList.add('active');
+    }
+
+    async function initiateStoreDirectChat() {
+      if (!viewingStore) return;
+      const res = await fetch(`${API_BASE}/conversations`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ storeId: viewingStore.id, buyerId: currentUser.id })
+      });
+      const data = await res.json();
+      activeConversationId = data.conversation.id;
+      activeChatStoreId = viewingStore.id;
+
+      document.getElementById('chatStoreTitle').textContent = viewingStore.storeName;
+      document.getElementById('chatOrderCard').innerHTML = `
+        <div style="font-weight: 700;">Direct Inquiry with ${viewingStore.storeName}</div>
+        <div style="font-size: 11px; color: var(--text-muted);">Ask about items, delivery in estate, or custom orders</div>
+      `;
+
+      await loadConversationMessages(activeConversationId);
+      document.getElementById('chatOverlay').classList.add('active');
+    }
+
+    async function loadConversationMessages(convId, isSilent = false) {
+      const messagesContainer = document.getElementById('chatMessages');
+      if (!messagesContainer) return;
+
+      const userParam = currentUser ? `?userId=${currentUser.id}` : '';
+      try {
+        const res = await fetch(`${API_BASE}/conversations/${convId}/messages${userParam}`);
+        if (!res.ok) return;
+        const messages = await res.json();
+
+        if (isSilent) {
+          const currentCount = messagesContainer.querySelectorAll('.msg-bubble').length;
+          if (currentCount === messages.length) return; // Unchanged
+        }
+
+        const wasNearBottom = messagesContainer.scrollHeight - messagesContainer.scrollTop <= messagesContainer.clientHeight + 60;
+        messagesContainer.innerHTML = '';
+        messages.forEach(msg => appendMessage(msg));
+        if (!isSilent || wasNearBottom) {
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+      } catch (err) {}
+    }
+
+    function closeChat() {
+      document.getElementById('chatOverlay').classList.remove('active');
+      activeConversationId = null;
+    }
+
+    function appendMessage(msg) {
+      const messagesContainer = document.getElementById('chatMessages');
+      const isMe = currentUser && msg.senderId === currentUser.id;
+      const bubbleClass = isMe ? 'msg-buyer' : 'msg-seller';
+
+      let warningHtml = '';
+      if (msg.scamWarning) {
+        warningHtml = `<div style="background:#FEF3C7; color:#92400E; font-size:11px; padding:6px 10px; border-radius:6px; margin:4px 0;">${msg.scamWarning}</div>`;
+      }
+
+      // Check if sent within 1 minute
+      const ageSeconds = (Date.now() - new Date(msg.timestamp).getTime()) / 1000;
+      const canEdit = isMe && ageSeconds <= 60;
+      const canDelete = isMe && ageSeconds <= 60;
+
+      let actionButtonsHtml = '';
+      if (isMe) {
+        actionButtonsHtml = `
+          <div class="msg-actions">
+            ${msg.isEdited ? '<span style="font-style:italic;">(edited)</span>' : ''}
+            ${canEdit ? `<button class="msg-action-btn" onclick="editChatMessage('${msg.id}', '${escapeQuotes(msg.text)}')">Edit (1m)</button>` : ''}
+            ${canDelete ? `<button class="msg-action-btn" onclick="deleteChatMessage('${msg.id}')">Delete (for me)</button>` : ''}
+          </div>
+        `;
+      }
+
+      messagesContainer.innerHTML += `
+        ${warningHtml}
+        <div class="msg-bubble ${bubbleClass}" id="chat_msg_${msg.id}" style="white-space: pre-line;">
+          <div class="msg-content">${msg.text}</div>
+          ${actionButtonsHtml}
+        </div>
+      `;
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    async function editChatMessage(msgId, currentText) {
+      const newText = prompt('Edit your message (within 1 minute):', currentText);
+      if (!newText || newText === currentText) return;
+
+      const res = await fetch(`${API_BASE}/conversations/${activeConversationId}/messages/${msgId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ senderId: currentUser.id, text: newText })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        loadConversationMessages(activeConversationId);
+      } else {
+        alert(data.error || 'Failed to edit message.');
+      }
+    }
+
+    async function deleteChatMessage(msgId) {
+      if (!confirm('Are you sure you want to delete this message? (Within 1 minute of sending, this will delete it for you alone)')) return;
+      const res = await fetch(`${API_BASE}/conversations/${activeConversationId}/messages/${msgId}?senderId=${currentUser.id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        loadConversationMessages(activeConversationId);
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Failed to delete message.');
+      }
+    }
+
+    async function handleSendMessage(e) {
+      e.preventDefault();
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text || !activeConversationId) return;
+
+      input.value = '';
+      await fetch(`${API_BASE}/conversations/${activeConversationId}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ senderId: currentUser.id, text })
+      });
+    }
+
+    function quickSend(text) {
+      document.getElementById('chatInput').value = text;
+      handleSendMessage(new Event('submit'));
+    }
+
+    // EDIT STORE PROFILE MODAL
+    function openEditStoreModal() {
+      if (!currentStore) return;
+      document.getElementById('editStoreNameInput').value = currentStore.storeName || '';
+      document.getElementById('editStoreEstateSelect').value = currentStore.estateId || 'est_citiview';
+      document.getElementById('editStoreCategorySelect').value = currentStore.category || 'Supermarket';
+      document.getElementById('editStoreBioInput').value = currentStore.bio || '';
+      document.getElementById('editStoreOpenTime').value = currentStore.openTime || '08:00';
+      document.getElementById('editStoreCloseTime').value = currentStore.closeTime || '21:00';
+      document.getElementById('editStoreModal').classList.add('active');
+    }
+
+    function closeEditStoreModal() {
+      document.getElementById('editStoreModal').classList.remove('active');
+    }
+
+    async function handleSaveStoreProfile(e) {
+      e.preventDefault();
+      if (!currentStore) return;
+
+      const payload = {
+        storeName: document.getElementById('editStoreNameInput').value,
+        estateId: document.getElementById('editStoreEstateSelect').value,
+        category: document.getElementById('editStoreCategorySelect').value,
+        bio: document.getElementById('editStoreBioInput').value,
+        openTime: document.getElementById('editStoreOpenTime').value,
+        closeTime: document.getElementById('editStoreCloseTime').value
+      };
+
+      const res = await fetch(`${API_BASE}/stores/${currentStore.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        currentStore = data.store;
+        localStorage.setItem('halljar_store', JSON.stringify(currentStore));
+        closeEditStoreModal();
+        alert('🎉 Store profile and settings updated successfully!');
+        await openDashboard();
+        loadSupermarkets();
+        fetchListings();
+      } else {
+        alert(data.error || 'Failed to update store.');
+      }
+    }
+
+    let currentVendorListings = [];
+
+    // 8. VENDOR DASHBOARD: ADD ITEMS & INVENTORY ACTIONS
+    async function openDashboard() {
+      // 1. Guard check auth
+      if (!currentUser) {
+        showView('login');
+        return;
+      }
+
+      // 2. Recover store from server if missing in localStorage
+      if (!currentStore) {
+        try {
+          const uRes = await fetch(`${API_BASE}/users/${currentUser.id}/store`);
+          if (uRes.ok) {
+            const uData = await uRes.json();
+            if (uData.store) {
+              currentStore = uData.store;
+              localStorage.setItem('halljar_store', JSON.stringify(currentStore));
+            }
+          }
+        } catch (e) {
+          console.warn('Store recovery failed:', e);
+        }
+      }
+
+      // 3. Auto-link or auto-create store if seller lacks store
+      if (!currentStore && (currentUser.role === 'SELLER' || (currentUser.fullName && currentUser.fullName.toLowerCase().includes('love')))) {
+        try {
+          const autoRes = await fetch(`${API_BASE}/stores/auto-create`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId: currentUser.id,
+              storeName: (currentUser.fullName && currentUser.fullName.toLowerCase().includes('love')) ? "Love Supermarket" : `${currentUser.fullName}'s Store`,
+              estateId: currentUser.estateId || 'est_warewa',
+              category: 'Supermarket'
+            })
+          });
+          if (autoRes.ok) {
+            const aData = await autoRes.json();
+            currentStore = aData.store;
+            localStorage.setItem('halljar_store', JSON.stringify(currentStore));
+          }
+        } catch (e) {
+          console.warn('Auto-create failed:', e);
+        }
+      }
+
+      if (!currentStore) {
+        alert('Please register or sign in with your business account to access the Vendor Dashboard.');
+        showView('signup');
+        return;
+      }
+
+      // 4. Fetch store catalog with auto-sync if missing on server (includeAll=true so Sold Out items remain visible)
+      try {
+        let res = await fetch(`${API_BASE}/stores/${currentStore.id}/catalog?includeAll=true`);
+        let data = null;
+        if (res.ok) {
+          data = await res.json();
+        } else {
+          // If server was restarted, re-sync store from client localStorage
+          const syncRes = await fetch(`${API_BASE}/stores/sync`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ store: currentStore, user: currentUser })
+          });
+          if (syncRes.ok) {
+            const syncData = await syncRes.json();
+            currentStore = syncData.store;
+            localStorage.setItem('halljar_store', JSON.stringify(currentStore));
+            const retryRes = await fetch(`${API_BASE}/stores/${currentStore.id}/catalog?includeAll=true`);
+            if (retryRes.ok) data = await retryRes.json();
+          }
+        }
+
+        if (data && data.store) {
+          currentStore = data.store;
+          localStorage.setItem('halljar_store', JSON.stringify(currentStore));
+
+          document.getElementById('dashStoreName').textContent = data.store.storeName;
+          document.getElementById('dashStoreLocation').textContent = `${data.store.estateName || 'Warewa'} • ${data.store.category || 'Supermarket'}`;
+          document.getElementById('dashOpenTime').value = data.store.openTime || '08:00';
+          document.getElementById('dashCloseTime').value = data.store.closeTime || '21:00';
+
+          const liveBadge = document.getElementById('dashLiveStatusBadge');
+          if (liveBadge) {
+            liveBadge.className = data.store.isOpen ? 'store-time-badge status-open' : 'store-time-badge status-closed';
+            liveBadge.textContent = data.store.isOpen ? '● OPEN' : '● CLOSED';
+          }
+
+          // Populate cover photo
+          const coverImg = document.getElementById('dashCoverImg');
+          const coverBtnText = document.getElementById('dashCoverBtnText');
+          if (data.store.cover) {
+            coverImg.src = data.store.cover;
+            coverImg.style.display = 'block';
+            if (coverBtnText) coverBtnText.textContent = 'Change Cover';
+          } else {
+            coverImg.style.display = 'none';
+            if (coverBtnText) coverBtnText.textContent = 'Set Cover Photo';
+          }
+
+          // Populate logo / DP
+          const logoImg = document.getElementById('dashLogoImg');
+          const logoPlaceholder = document.getElementById('dashLogoPlaceholder');
+          if (data.store.logo) {
+            logoImg.src = data.store.logo;
+            logoImg.style.display = 'block';
+            if (logoPlaceholder) logoPlaceholder.style.display = 'none';
+          } else {
+            logoImg.style.display = 'none';
+            if (logoPlaceholder) logoPlaceholder.style.display = 'flex';
+          }
+
+          // Blank storefront onboarding banner: show if store has no cover or no products
+          const blankBanner = document.getElementById('dashBlankOnboardAlert');
+          if (blankBanner) {
+            blankBanner.style.display = (!data.store.cover || !data.listings || data.listings.length === 0) ? 'flex' : 'none';
+          }
+
+          // Populate edit modal fields
+          if (document.getElementById('editStoreNameInput')) {
+            document.getElementById('editStoreNameInput').value = data.store.storeName;
+            document.getElementById('editStoreBioInput').value = data.store.bio || '';
+            document.getElementById('editStoreCategorySelect').value = data.store.category || 'Supermarket';
+            document.getElementById('editStoreEstateSelect').value = data.store.estateId || 'est_warewa';
+          }
+
+          // Update Dashboard Metrics
+          currentVendorListings = data.listings || [];
+          const activeListings = currentVendorListings.filter(l => l.status === 'ACTIVE');
+          document.getElementById('dashMetricItems').textContent = currentVendorListings.length;
+          const totalViews = currentVendorListings.reduce((sum, i) => sum + (i.views || 0), 0);
+          document.getElementById('dashMetricViews').textContent = totalViews;
+          document.getElementById('dashMetricRating').textContent = `${data.store.ratingAvg || 5.0} ⭐ (${data.store.ratingCount || 0})`;
+          document.getElementById('dashShelfCount').textContent = `${currentVendorListings.length} product${currentVendorListings.length > 1 ? 's' : ''} on shelves (${activeListings.length} in stock)`;
+
+          const container = document.getElementById('dashInventoryContainer');
+          if (!currentVendorListings.length) {
+            container.innerHTML = `<div style="padding: 24px; text-align: center; color: var(--text-muted);">No products on shelves yet. Use the form above to add your first items!</div>`;
+          } else {
+            container.innerHTML = currentVendorListings.map(item => `
+              <div class="vendor-item-row" style="${item.status === 'SOLD' ? 'background: #FFF5F5;' : ''}">
+                <div class="vendor-item-left">
+                  <img src="${(item.images && item.images[0]) || 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=600&auto=format&fit=crop&q=80'}" class="vendor-item-thumb">
+                  <div>
+                    <div style="font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                      ${item.title}
+                      ${item.status === 'SOLD' ? '<span style="font-size: 10px; background: #FEE2E2; color: #DC2626; padding: 2px 6px; border-radius: 6px; font-weight: 800;">SOLD OUT</span>' : '<span style="font-size: 10px; background: #DCFCE7; color: #15803D; padding: 2px 6px; border-radius: 6px; font-weight: 800;">IN STOCK</span>'}
+                    </div>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">${item.category || 'General'} • 👁️ ${item.views || 0} views</div>
+                    <div style="font-weight: 800; color: var(--primary); font-size: 13px; margin-top: 2px;">₦${Number(item.price).toLocaleString()}</div>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                  <button class="vendor-action-btn vendor-btn-edit" onclick="openEditProductModal('${item.id}')" title="Edit this product">
+                    ✏️ Edit
+                  </button>
+                  <button class="vendor-action-btn ${item.status === 'ACTIVE' ? 'vendor-btn-stock' : 'vendor-btn-sold'}" onclick="toggleItemStatus('${item.id}')" title="Click to toggle between In Stock and Sold Out">
+                    ${item.status === 'ACTIVE' ? 'In Stock' : 'Sold Out'}
+                  </button>
+                  <button class="vendor-action-btn vendor-btn-del" onclick="deleteVendorListing('${item.id}')" title="Delete product">
+                    🗑️
+                  </button>
+                </div>
+              </div>
+            `).join('');
+          }
+        }
+
+        if (currentStore) {
+          await loadVendorChats(currentStore.id);
+        }
+      } catch (err) {
+        console.error('Error rendering dashboard:', err);
+      }
+
+      // Always switch view to the dashboard!
+      showView('dashboard');
+    }
+
+    async function loadVendorChats(storeId, isSilent = false) {
+      const container = document.getElementById('dashVendorChatsContainer');
+      if (!container) return;
+      if (!storeId) {
+        if (!isSilent) container.innerHTML = `<div style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 13px;">Please log in with a business account to view incoming customer chats.</div>`;
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/stores/${storeId}/conversations`);
+        if (!res.ok) return;
+        const convs = await res.json();
+        if (!convs.length) {
+          if (!isSilent) container.innerHTML = `<div style="padding: 28px 16px; text-align: center; color: var(--text-muted); font-size: 13px;">💬 No customer inquiries yet. When buyers message you about your store or products, their chats will appear here in real time!</div>`;
+          return;
+        }
+
+        container.innerHTML = convs.map(c => {
+          const buyerName = (c.buyer && c.buyer.fullName) || 'Estate Resident';
+          const buyerInitial = buyerName.charAt(0).toUpperCase();
+          const buyerPhone = (c.buyer && c.buyer.phoneNumber) || '';
+          const unit = (c.buyer && c.buyer.unit) ? ` • Unit ${c.buyer.unit}` : '';
+          const prodSnippet = c.listing ? `<div style="font-size: 11px; color: var(--primary); font-weight: 700; margin-top: 2px;">Inquiring on: ${c.listing.title} (₦${Number(c.listing.price).toLocaleString()})</div>` : '';
+          const timeStr = new Date(c.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+          return `
+            <div class="vendor-chat-card" onclick="openVendorConversation('${c.id}', '${escapeQuotes(buyerName)}', '${escapeQuotes(buyerPhone)}', '${c.listing ? escapeQuotes(c.listing.title) : ''}')">
+              <div style="display: flex; gap: 12px; align-items: center; min-width: 0;">
+                <div class="vendor-chat-avatar">${buyerInitial}</div>
+                <div class="vendor-chat-meta">
+                  <div style="font-weight: 800; font-size: 13px; color: var(--text-dark); display: flex; align-items: center; gap: 6px;">
+                    ${buyerName}
+                    <span style="font-size: 11px; font-weight: 600; color: var(--text-muted);">${unit}</span>
+                  </div>
+                  ${prodSnippet}
+                  <div style="font-size: 12px; color: #475569; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 420px;">
+                    ${c.lastMessage}
+                  </div>
+                </div>
+              </div>
+              <div style="text-align: right; flex-shrink: 0;">
+                <div style="font-size: 11px; color: var(--text-muted);">${timeStr}</div>
+                <button class="nav-btn" style="margin-top: 6px; font-size: 11px; padding: 4px 10px; background: var(--primary); color: white; border: none; font-weight: 700;">
+                  💬 Reply
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error('Failed to load vendor chats:', err);
+        container.innerHTML = `<div style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 13px;">Error loading customer chats.</div>`;
+      }
+    }
+
+    async function openVendorConversation(convId, buyerName, buyerPhone, itemTitle) {
+      activeConversationId = convId;
+      activeChatStoreId = currentStore ? currentStore.id : null;
+
+      document.getElementById('chatStoreTitle').textContent = `Customer: ${buyerName}`;
+      document.getElementById('chatOrderCard').innerHTML = `
+        <div style="font-size: 13px; font-weight: 700; color: var(--text-dark);">
+          Inquiry from ${buyerName} ${buyerPhone ? `(${buyerPhone})` : ''}
+        </div>
+        ${itemTitle ? `<div style="font-size: 12px; color: var(--primary); font-weight: 700; margin-top: 2px;">Regarding Item: ${itemTitle}</div>` : ''}
+        <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Responding as vendor for <strong>${currentStore ? currentStore.storeName : 'your store'}</strong>.</div>
+      `;
+
+      await loadConversationMessages(activeConversationId);
+      document.getElementById('chatOverlay').classList.add('active');
+    }
+
+    function viewMyStoreAsBuyer() {
+      if (currentStore) {
+        openStoreCatalog(currentStore.id);
+      }
+    }
+
+    function openEditProductModal(listingId) {
+      const item = currentVendorListings.find(l => l.id === listingId);
+      if (!item) return;
+
+      uploadedImageData = null;
+      document.getElementById('editProdId').value = item.id;
+      document.getElementById('editProdTitle').value = item.title;
+      document.getElementById('editProdPrice').value = item.price;
+
+      const catSelect = document.getElementById('editProdCategory');
+      const itemCat = item.category || 'General';
+      let optExists = Array.from(catSelect.options).some(o => o.value.toLowerCase() === itemCat.toLowerCase());
+      if (!optExists) {
+        const newOpt = document.createElement('option');
+        newOpt.value = itemCat;
+        newOpt.textContent = itemCat;
+        catSelect.appendChild(newOpt);
+      }
+      catSelect.value = itemCat;
+
+      document.getElementById('editProdStatus').value = item.status || 'ACTIVE';
+      document.getElementById('editProdDesc').value = item.description || '';
+
+      const preview = document.getElementById('editProdPreviewImg');
+      if (item.images && item.images[0]) {
+        preview.src = item.images[0];
+        preview.style.display = 'block';
+      } else {
+        preview.style.display = 'none';
+      }
+
+      document.getElementById('editProductModal').classList.add('active');
+    }
+
+    function closeEditProductModal() {
+      document.getElementById('editProductModal').classList.remove('active');
+    }
+
+    async function handleSaveEditedProduct(e) {
+      e.preventDefault();
+      const listingId = document.getElementById('editProdId').value;
+      if (!listingId) return;
+
+      const rawTitle = document.getElementById('editProdTitle').value.trim();
+      const formattedTitle = rawTitle.toUpperCase();
+
+      // Check if an item with the same title already exists in the store (excluding the item being edited)
+      const existing = currentVendorListings.find(l => l.id !== listingId && l.title && l.title.trim().toUpperCase() === formattedTitle);
+      if (existing) {
+        alert(`⚠️ An item named "${formattedTitle}" already exists in your store inventory. Please choose a different item name.`);
+        return;
+      }
+
+      const payload = {
+        title: formattedTitle,
+        price: document.getElementById('editProdPrice').value,
+        category: document.getElementById('editProdCategory').value,
+        status: document.getElementById('editProdStatus').value,
+        description: document.getElementById('editProdDesc').value
+      };
+
+      if (uploadedImageData) {
+        payload.image = uploadedImageData;
+      }
+
+      const res = await fetch(`${API_BASE}/listings/${listingId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        closeEditProductModal();
+        alert('🎉 Product details updated successfully!');
+        await openDashboard();
+        fetchListings();
+      } else {
+        alert(data.error || 'Failed to update product. Please try again.');
+      }
+    }
+
+    async function toggleItemStatus(listingId) {
+      const res = await fetch(`${API_BASE}/listings/${listingId}/status`, { method: 'PATCH' });
+      if (res.ok) {
+        await openDashboard();
+        fetchListings();
+      }
+    }
+
+    async function deleteVendorListing(listingId) {
+      if (!confirm('⚠️ Are you sure you want to permanently delete this product from your shelves? This cannot be undone.')) {
+        return;
+      }
+      const res = await fetch(`${API_BASE}/listings/${listingId}`, { method: 'DELETE' });
+      if (res.ok) {
+        await openDashboard();
+        fetchListings();
+      }
+    }
+
+    async function updateStoreHours() {
+      const openTime = document.getElementById('dashOpenTime').value;
+      const closeTime = document.getElementById('dashCloseTime').value;
+
+      const res = await fetch(`${API_BASE}/stores/${currentStore.id}/hours`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ openTime, closeTime })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert(`Operating hours updated (${openTime} - ${closeTime})!`);
+        await openDashboard();
+        loadSupermarkets();
+        fetchListings();
+      }
+    }
+
+    async function handleQuickAddItem(e) {
+      e.preventDefault();
+      if (!currentStore) {
+        alert('Please log in with a business account to add products.');
+        return;
+      }
+
+      const rawTitle = document.getElementById('dashProdTitle').value.trim();
+      const formattedTitle = rawTitle.toUpperCase();
+
+      // Check if an item with the same title already exists in the store
+      const existing = currentVendorListings.find(l => l.title && l.title.trim().toUpperCase() === formattedTitle);
+      if (existing) {
+        alert(`⚠️ An item named "${formattedTitle}" already exists in your store inventory. Please choose a different item name.`);
+        return;
+      }
+
+      const photoImg = uploadedImageData || 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=600&auto=format&fit=crop&q=80';
+
+      const payload = {
+        storeId: currentStore.id,
+        title: formattedTitle,
+        price: document.getElementById('dashProdPrice').value,
+        category: document.getElementById('dashProdCategory').value,
+        description: document.getElementById('dashProdDesc') ? document.getElementById('dashProdDesc').value : '',
+        image: photoImg
+      };
+
+      const res = await fetch(`${API_BASE}/listings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        alert(`🎉 Item "${formattedTitle}" listed successfully in your store!`);
+        document.getElementById('dashProdTitle').value = '';
+        document.getElementById('dashProdPrice').value = '';
+        if (document.getElementById('dashProdDesc')) document.getElementById('dashProdDesc').value = '';
+        uploadedImageData = null;
+        document.getElementById('dashPreviewImg').style.display = 'none';
+
+        // Sync location selector to make sure the item and store are in view
+        const locSelect = document.getElementById('locationSelect');
+        if (locSelect && currentStore.estateId) {
+          locSelect.value = currentStore.estateId;
+        }
+
+        await openDashboard();
+        loadSupermarkets();
+        fetchListings();
+      } else {
+        alert(data.error || 'Failed to list item. Please try again.');
+      }
+    }
+
+    function previewUpload(event, previewId) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedImageData = e.target.result;
+          const imgEl = document.getElementById(previewId);
+          imgEl.src = uploadedImageData;
+          imgEl.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Storefront Cover & DP Real-time Upload
+    function handleStoreCoverUpload(e) {
+      const file = e.target.files[0];
+      if (!file || !currentStore) return;
+      const reader = new FileReader();
+      reader.onload = async function(evt) {
+        const coverData = evt.target.result;
+        const res = await fetch(`${API_BASE}/stores/${currentStore.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cover: coverData })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          currentStore = data.store;
+          localStorage.setItem('halljar_store', JSON.stringify(currentStore));
+          const img = document.getElementById('dashCoverImg');
+          img.src = coverData;
+          img.style.display = 'block';
+          document.getElementById('dashCoverBtnText').textContent = 'Change Cover';
+          const blankTip = document.getElementById('dashBlankOnboardAlert');
+          if (blankTip && currentStore.logo) blankTip.style.display = 'none';
+          alert('🎉 Storefront cover photo updated!');
+        } else {
+          alert('Failed to upload cover photo.');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleStoreLogoUpload(e) {
+      const file = e.target.files[0];
+      if (!file || !currentStore) return;
+      const reader = new FileReader();
+      reader.onload = async function(evt) {
+        const logoData = evt.target.result;
+        const res = await fetch(`${API_BASE}/stores/${currentStore.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ logo: logoData })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          currentStore = data.store;
+          localStorage.setItem('halljar_store', JSON.stringify(currentStore));
+          const img = document.getElementById('dashLogoImg');
+          img.src = logoData;
+          img.style.display = 'block';
+          document.getElementById('dashLogoPlaceholder').style.display = 'none';
+          const blankTip = document.getElementById('dashBlankOnboardAlert');
+          if (blankTip && currentStore.cover) blankTip.style.display = 'none';
+          alert('🎉 Store profile picture (DP) updated!');
+        } else {
+          alert('Failed to upload profile picture.');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Password Reset Modal Handlers
+    function openForgotPasswordModal() {
+      document.getElementById('forgotStep1').style.display = 'block';
+      document.getElementById('forgotStep2').style.display = 'none';
+      document.getElementById('forgotPhone').value = document.getElementById('loginPhone').value || '';
+      document.getElementById('forgotPasswordModal').classList.add('active');
+    }
+
+    function closeForgotPasswordModal() {
+      document.getElementById('forgotPasswordModal').classList.remove('active');
+    }
+
+    async function handleSendResetOtp() {
+      const phoneNumber = document.getElementById('forgotPhone').value.trim();
+      if (!phoneNumber) {
+        alert('Please enter your phone number.');
+        return;
+      }
+
+      const res = await fetch(`${API_BASE}/auth/forgot-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phoneNumber })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        document.getElementById('forgotStep1').style.display = 'none';
+        document.getElementById('forgotStep2').style.display = 'block';
+        document.getElementById('forgotOtpNotice').innerHTML = `
+          📲 <strong>Verification Code:</strong> ${data.message}
+        `;
+        if (data.code) {
+          document.getElementById('forgotOtpCode').value = data.code;
+        }
+      } else {
+        alert(data.error || 'Failed to send verification code.');
+      }
+    }
+
+    async function handleResetPasswordSubmit() {
+      const phoneNumber = document.getElementById('forgotPhone').value.trim();
+      const code = document.getElementById('forgotOtpCode').value.trim();
+      const newPassword = document.getElementById('forgotNewPassword').value;
+
+      if (!phoneNumber || !code || !newPassword) {
+        alert('Please enter your verification code and new password.');
+        return;
+      }
+
+      const res = await fetch(`${API_BASE}/auth/reset-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phoneNumber, code, newPassword })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        alert('🎉 Password reset successfully! You can now sign in with your new password.');
+        closeForgotPasswordModal();
+        document.getElementById('loginPassword').value = newPassword;
+      } else {
+        alert(data.error || 'Failed to reset password.');
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
