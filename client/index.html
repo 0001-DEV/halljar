@@ -2344,12 +2344,8 @@
       }
 
       if (currentUser) {
-        const displayName = (currentStore && currentStore.storeName) ? currentStore.storeName : currentUser.fullName;
         container.innerHTML = `
-          ${isVendor ? `<button class="nav-btn vendor-dash-glass-btn" style="padding: 6px 11px; font-size: 11px; font-weight: 700; border-radius: 16px; margin-left: auto; white-space: nowrap;" onclick="openDashboard()">📊 View Dashboard</button>` : `<button class="nav-btn" onclick="showView('signup')">+ Register Business</button>`}
-          <div class="user-pill" style="padding: 5px 11px; font-size: 12px; font-weight: 700; white-space: nowrap; max-width: 160px; overflow: hidden; text-overflow: ellipsis; margin-left: 4px;" title="${displayName}">
-            <span>👤 ${displayName}</span>
-          </div>
+          ${isVendor ? `<button class="nav-btn vendor-dash-glass-btn" style="padding: 7px 15px; font-size: 12px; font-weight: 700; border-radius: 20px; margin-left: auto; white-space: nowrap;" onclick="openDashboard()">📊 View Dashboard</button>` : `<button class="nav-btn" style="margin-left: auto;" onclick="showView('signup')">+ Register Business</button>`}
         `;
       } else {
         container.innerHTML = `
