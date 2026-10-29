@@ -7,10 +7,15 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build Halljar Android APK
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout Repository
@@ -52,6 +57,10 @@ jobs:
           cd mobile
           flutter build apk --release -v
 
+      - name: Prepare Direct APK
+        run: |
+          cp mobile/build/app/outputs/flutter-apk/app-release.apk mobile/build/app/outputs/flutter-apk/halljar.apk
+
       - name: Upload Release APK Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -59,3 +68,14 @@ jobs:
           path: mobile/build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
           retention-days: 30
+
+      - name: Publish Direct APK to GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main'
+        with:
+          tag_name: v1.0.0
+          name: "Halljar Mobile App v1.0.0"
+          body: "Direct 1-tap download for Android. Click `halljar.apk` below to download and install immediately without unzipping."
+          files: mobile/build/app/outputs/flutter-apk/halljar.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
