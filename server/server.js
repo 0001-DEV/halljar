@@ -823,17 +823,26 @@ app.post('/api/auth/register', (req, res) => {
   });
 });
 
-// Auth: Login (Flexible by phone, username, store name or Love)
+// Auth: Login (Flexible by phone, username, store name or Love, with serverless persistence rehydration)
 app.post('/api/auth/login', (req, res) => {
-  const { phoneNumber, password, accountType } = req.body;
+  const { phoneNumber, password, accountType, cachedUser, cachedStore, cachedPassword } = req.body;
   const pNorm = (phoneNumber || '').trim().toLowerCase();
-  const normPhone = (p) => (p || '').replace(/\D/g, '').replace(/^234/, '0');
+  const normPhone = (p) => {
+    if (!p) return '';
+    let clean = p.toString().replace(/\D/g, '');
+    if (clean.startsWith('234')) {
+      clean = '0' + clean.slice(3);
+    } else if (!clean.startsWith('0') && clean.length === 10) {
+      clean = '0' + clean;
+    }
+    return clean;
+  };
   const targetPhoneNorm = normPhone(phoneNumber);
   
   const targetRole = accountType === 'BUSINESS' ? 'SELLER' : 'BUYER';
   
   // Find all users matching phone, name, love, or store
-  const matchedUsers = DB.users.filter(u => {
+  let matchedUsers = DB.users.filter(u => {
     const matchPhone = (u.phoneNumber && u.phoneNumber.toLowerCase() === pNorm) || (targetPhoneNorm && normPhone(u.phoneNumber) === targetPhoneNorm);
     const matchName = u.fullName && u.fullName.toLowerCase() === pNorm;
     const matchLove = pNorm === 'love' && (u.fullName.toLowerCase().includes('love') || (u.phoneNumber && u.phoneNumber.toLowerCase().includes('love')));
@@ -843,6 +852,31 @@ app.post('/api/auth/login', (req, res) => {
     if (password && u.password && u.password !== password && password !== 'password123') return false;
     return true;
   });
+
+  // Re-hydration support for Vercel serverless cold starts
+  if ((!matchedUsers || matchedUsers.length === 0) && cachedUser && cachedUser.phoneNumber) {
+    const cleanCached = normPhone(cachedUser.phoneNumber);
+    if (cleanCached === targetPhoneNorm || (cachedUser.fullName && cachedUser.fullName.toLowerCase() === pNorm)) {
+      const rehydratedUser = {
+        id: cachedUser.id || ('usr_' + Date.now()),
+        fullName: cachedUser.fullName,
+        phoneNumber: cachedUser.phoneNumber,
+        password: cachedPassword || password,
+        role: cachedUser.role || targetRole,
+        estateId: cachedUser.estateId || 'est_citiview',
+        unit: cachedUser.unit || ''
+      };
+      DB.users.push(rehydratedUser);
+      if (cachedStore) {
+        cachedStore.userId = rehydratedUser.id;
+        if (!DB.stores.some(s => s.id === cachedStore.id)) {
+          DB.stores.unshift(cachedStore);
+        }
+      }
+      saveDB();
+      matchedUsers = [rehydratedUser];
+    }
+  }
 
   if (!matchedUsers || matchedUsers.length === 0) {
     return res.status(401).json({ error: 'Invalid phone number or password.' });

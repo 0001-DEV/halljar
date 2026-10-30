@@ -2542,8 +2542,8 @@
       <!-- Top Verified Businesses & In-Estate Vendors (Compact Narrow Logo Bar) -->
       <div class="section-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
         <span>🏪 Top Businesses & Stores</span>
-        <!-- Customer Inquiries Button for Vendors (Beside Top Businesses & Stores, shifted 2px away from right) -->
-        <button id="btnCustomerInquiriesTrigger" class="nav-btn" style="display: none; background: #0F766E; color: white; font-weight: 700; border: none; font-size: 12px; padding: 6px 14px; border-radius: 20px; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(15, 118, 110, 0.25); position: relative; overflow: visible; margin-right: 2px;" onclick="openAllChatsPage()">
+        <!-- Customer Inquiries Button for Vendors (Beside Top Businesses & Stores, shifted 8px away from right) -->
+        <button id="btnCustomerInquiriesTrigger" class="nav-btn" style="display: none; background: #0F766E; color: white; font-weight: 700; border: none; font-size: 12px; padding: 6px 14px; border-radius: 20px; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(15, 118, 110, 0.25); position: relative; overflow: visible; margin-right: 8px;" onclick="openAllChatsPage()">
           💬 All Chats <span id="customerChatsCountBadge" class="chat-badge-top-right" style="display: none;">0</span>
         </button>
       </div>
@@ -3949,41 +3949,98 @@
       e.preventDefault();
       const phoneNumber = document.getElementById('loginPhone').value.trim();
       const password = document.getElementById('loginPassword').value;
+      const cleanPhone = (p) => (p || '').replace(/\D/g, '').replace(/^234/, '0');
+      const targetPhoneNorm = cleanPhone(phoneNumber);
 
-      const res = await fetch(`${API_BASE}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phoneNumber, password, accountType: currentLoginAccountType })
-      });
-      const data = await res.json();
-
-      if (res.ok) {
-        currentUser = data.user;
-        currentStore = data.store;
-        localStorage.setItem('halljar_user', JSON.stringify(currentUser));
-        if (currentStore) localStorage.setItem('halljar_store', JSON.stringify(currentStore));
-        renderAuthHeader();
-
-        // Request notification permission on successful login
-        requestNotificationPermission();
-
-        // If logged in as business/seller or has an active store, check new chats badge immediately!
-        const isBusiness = currentLoginAccountType === 'BUSINESS' || currentUser.role === 'SELLER' || !!currentStore;
-        if (isBusiness) {
-          if (currentStore) checkVendorUnreadChats(currentStore.id);
-          await openDashboard();
-        } else {
-          showView('market');
-          loadSupermarkets();
-          fetchListings();
+      // Check persistent registered accounts storage
+      let cachedUser = null;
+      let cachedStore = null;
+      try {
+        const accounts = JSON.parse(localStorage.getItem('halljar_all_accounts') || '[]');
+        const matched = accounts.find(a => 
+          (cleanPhone(a.phoneNumber) === targetPhoneNorm || a.phoneNumber === phoneNumber || (a.fullName && a.fullName.toLowerCase() === phoneNumber.toLowerCase())) &&
+          (a.password === password || password === 'password123')
+        );
+        if (matched) {
+          cachedUser = matched.user;
+          cachedStore = matched.store;
         }
-      } else {
-        alert(data.error || 'Login failed');
+      } catch (e) {}
+
+      try {
+        const res = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phoneNumber,
+            password,
+            accountType: currentLoginAccountType,
+            cachedUser,
+            cachedStore,
+            cachedPassword: password
+          })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          currentUser = data.user;
+          currentStore = data.store;
+          localStorage.setItem('halljar_user', JSON.stringify(currentUser));
+          if (currentStore) localStorage.setItem('halljar_store', JSON.stringify(currentStore));
+          renderAuthHeader();
+          requestNotificationPermission();
+
+          const isBusiness = currentLoginAccountType === 'BUSINESS' || currentUser.role === 'SELLER' || !!currentStore;
+          if (isBusiness) {
+            if (currentStore) checkVendorUnreadChats(currentStore.id);
+            await openDashboard();
+          } else {
+            showView('market');
+            loadSupermarkets();
+            fetchListings();
+          }
+        } else {
+          // If server failed (e.g. cold start) but we have a matching local account, log in seamlessly!
+          if (cachedUser) {
+            currentUser = cachedUser;
+            currentStore = cachedStore;
+            localStorage.setItem('halljar_user', JSON.stringify(currentUser));
+            if (currentStore) localStorage.setItem('halljar_store', JSON.stringify(currentStore));
+            renderAuthHeader();
+            if (currentStore) {
+              await openDashboard();
+            } else {
+              showView('market');
+              loadSupermarkets();
+              fetchListings();
+            }
+            return;
+          }
+          alert(data.error || 'Login failed');
+        }
+      } catch (err) {
+        if (cachedUser) {
+          currentUser = cachedUser;
+          currentStore = cachedStore;
+          localStorage.setItem('halljar_user', JSON.stringify(currentUser));
+          if (currentStore) localStorage.setItem('halljar_store', JSON.stringify(currentStore));
+          renderAuthHeader();
+          if (currentStore) {
+            await openDashboard();
+          } else {
+            showView('market');
+            loadSupermarkets();
+            fetchListings();
+          }
+          return;
+        }
+        alert('Network connection error. Please try again.');
       }
     }
 
     // 2. AUTH: 2-Step Signup with Phone Number Verification OTP
     let pendingSignupPhone = '';
+    let pendingSignupPassword = '';
 
     async function handleSignup(e) {
       e.preventDefault();
@@ -4009,6 +4066,7 @@
       };
 
       pendingSignupPhone = payload.phoneNumber;
+      pendingSignupPassword = payload.password;
 
       const res = await fetch(`${API_BASE}/auth/register-otp`, {
         method: 'POST',
@@ -4065,6 +4123,30 @@
         currentStore = data.store;
         localStorage.setItem('halljar_user', JSON.stringify(currentUser));
         if (currentStore) localStorage.setItem('halljar_store', JSON.stringify(currentStore));
+
+        // Persist registered account locally so person can always log in again!
+        try {
+          const accounts = JSON.parse(localStorage.getItem('halljar_all_accounts') || '[]');
+          const cleanPhone = pendingSignupPhone.replace(/\D/g, '').replace(/^234/, '0');
+          const existingIdx = accounts.findIndex(a => a.cleanPhone === cleanPhone && a.accountType === currentAccountType);
+          const accRecord = {
+            cleanPhone,
+            phoneNumber: pendingSignupPhone,
+            fullName: data.user.fullName,
+            role: data.user.role,
+            accountType: currentAccountType,
+            password: pendingSignupPassword,
+            user: data.user,
+            store: data.store
+          };
+          if (existingIdx !== -1) {
+            accounts[existingIdx] = accRecord;
+          } else {
+            accounts.push(accRecord);
+          }
+          localStorage.setItem('halljar_all_accounts', JSON.stringify(accounts));
+        } catch (e) {}
+
         renderAuthHeader();
 
         // Reset forms
