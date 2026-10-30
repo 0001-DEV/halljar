@@ -35,12 +35,69 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
+    /* App Frame for Desktop & Mobile Preview */
     body {
-      background-color: var(--bg);
+      background-color: #0F172A;
       color: var(--text);
-      padding-top: env(safe-area-inset-top, 0px);
-      padding-bottom: calc(85px + env(safe-area-inset-bottom, 0px));
-      overscroll-behavior-y: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #app-mobile-frame {
+      width: 100%;
+      max-width: 440px;
+      height: 100vh;
+      max-height: 920px;
+      background: var(--bg);
+      position: relative;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 10px #1E293B, 0 0 0 12px #334155;
+      border-radius: 36px;
+      margin: 20px auto;
+    }
+
+    /* On actual mobile screens, expand to 100% full screen naturally */
+    @media (max-width: 480px) {
+      body {
+        background-color: var(--bg);
+        display: block;
+        min-height: 100vh;
+      }
+      #app-mobile-frame {
+        max-width: 100%;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+        margin: 0;
+      }
+    }
+
+    /* Mobile Status Bar Indicator on Desktop */
+    .mobile-status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 18px 4px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #0F172A;
+      background: #FFFFFF;
+      position: sticky;
+      top: 0;
+      z-index: 60;
+    }
+    @media (max-width: 480px) {
+      .mobile-status-bar { display: none; }
     }
 
     /* Top Navigation Header */
@@ -50,7 +107,7 @@
       top: 0;
       z-index: 50;
       border-bottom: 1px solid var(--border);
-      padding: 12px 20px;
+      padding: 12px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -1769,6 +1826,18 @@
   </style>
 </head>
 <body>
+
+  <!-- Mobile Frame Container for System & Phone view -->
+  <div id="app-mobile-frame">
+    <!-- Phone Top Status Bar -->
+    <div class="mobile-status-bar">
+      <span>9:41</span>
+      <div style="display:flex; align-items:center; gap:5px; font-size:11px;">
+        <span>5G</span>
+        <span>📶</span>
+        <span>🔋 100%</span>
+      </div>
+    </div>
 
   <!-- Animated Halljar Intro Splash Screen -->
   <div id="halljarSplashScreen" class="splash-screen" onclick="dismissSplashScreen()">
@@ -5008,6 +5077,8 @@
       </div>
     </div>
   </div>
+
+  </div> <!-- End #app-mobile-frame -->
 
 </body>
 </html>
