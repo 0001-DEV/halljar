@@ -36,6 +36,10 @@
       -webkit-tap-highlight-color: transparent;
     }
     /* App Frame for Desktop & Mobile Preview */
+    html {
+      overflow-x: hidden;
+      max-width: 100vw;
+    }
     body {
       background-color: #0F172A;
       color: var(--text);
@@ -47,6 +51,8 @@
       padding: 0;
       font-family: 'Plus Jakarta Sans', sans-serif;
       -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+      max-width: 100vw;
     }
 
     #app-mobile-frame {
@@ -80,20 +86,74 @@
       -ms-overflow-style: none;
     }
 
-    /* On actual mobile screens, expand to 100% full screen naturally */
-    @media (max-width: 480px) {
-      body {
+    /* On actual mobile screens and mobile browsers */
+    @media (max-width: 600px) {
+      html, body {
         background-color: var(--bg);
         display: block;
         min-height: 100vh;
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
       }
       #app-mobile-frame {
-        max-width: 100%;
-        height: 100vh;
-        max-height: 100vh;
-        border-radius: 0;
-        box-shadow: none;
-        margin: 0;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        min-width: 100vw !important;
+        height: auto !important;
+        min-height: 100vh !important;
+        max-height: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        overflow-x: hidden !important;
+      }
+      .mobile-status-bar {
+        display: none !important;
+      }
+      .container {
+        padding: 12px 12px 90px !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+      }
+      .splash-screen {
+        position: fixed !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        border-radius: 0 !important;
+        max-width: 100vw !important;
+      }
+      .splash-text-part {
+        font-size: 38px !important;
+      }
+      .pusher-avatar {
+        font-size: 28px !important;
+      }
+      .splash-tagline {
+        font-size: 11px !important;
+        letter-spacing: 1.5px !important;
+        text-align: center !important;
+        padding: 0 16px !important;
+      }
+      header {
+        padding: 10px 12px !important;
+        max-width: 100vw !important;
+      }
+      .brand-logo {
+        font-size: 18px !important;
+      }
+      .form-card, .signup-premium-card {
+        margin: 10px auto 20px !important;
+        padding: 18px 14px !important;
+        border-radius: 14px !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      #phoneNotificationToast {
+        width: calc(100vw - 24px) !important;
+        max-width: calc(100vw - 24px) !important;
       }
     }
 
