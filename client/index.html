@@ -106,6 +106,40 @@
 
     /* Mobile Screens (Phone Browser & Installed PWA) */
     @media (max-width: 600px) {
+      *, *::before, *::after {
+        box-sizing: border-box !important;
+      }
+      html, body {
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+      }
+      #app-mobile-frame {
+        width: 100% !important;
+        max-width: 100vw !important;
+        min-width: 0 !important;
+        overflow-x: hidden !important;
+      }
+      .container {
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+      }
+      .form-card, .signup-premium-card, #dashboardView, #allChatsView, .chowdeck-store-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+      }
+      .account-type-tabs {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+      }
+      .type-tab {
+        min-width: 0 !important;
+        overflow: hidden !important;
+      }
+
       body {
         background-color: var(--bg) !important;
         display: block !important;
@@ -1584,8 +1618,6 @@
       15% { opacity: 1; }
       100% { transform: translateX(0); opacity: 1; }
     }
-      100% { transform: translateX(0); opacity: 1; }
-    }
     @keyframes leftAvatarDissolve {
       0% { transform: scaleX(-1) scale(1) translateY(0); opacity: 1; filter: blur(0px); }
       40% { transform: scaleX(-1) scale(1.3) translateY(-6px); opacity: 0.7; filter: blur(2px); }
@@ -2030,6 +2062,7 @@
 
   <!-- Mobile Frame Container for System & Phone view -->
   <div id="app-mobile-frame">
+  
     <!-- Phone Top Status Bar -->
     <div class="mobile-status-bar">
       <span>9:41</span>
@@ -2071,7 +2104,7 @@
   </header>
 
   <!-- Real-time Mobile Push Alert Toast -->
-  <div id="phoneNotificationToast" style="display:none; position:fixed; top:14px; left:50%; transform:translateX(-50%); z-index:9999; background:rgba(15, 23, 42, 0.95); backdrop-filter:blur(10px); color:white; padding:12px 18px; border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,0.35); max-width:92%; width:400px; animation:slideDown 0.3s ease; border:1px solid rgba(255,255,255,0.15);">
+  <div id="phoneNotificationToast" style="display:none; position:fixed; top:14px; left:50%; transform:translateX(-50%); z-index:9999; background:rgba(15, 23, 42, 0.95); backdrop-filter:blur(10px); color:white; padding:12px 18px; border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,0.35); width: calc(100vw - 24px); max-width: 380px; box-sizing: border-box; animation:slideDown 0.3s ease; border:1px solid rgba(255,255,255,0.15);">
     <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
       <div style="display:flex; align-items:center; gap:10px; min-width:0;">
         <span style="font-size:24px;">🔔</span>
@@ -3594,7 +3627,7 @@
       if (!banner) {
         banner = document.createElement('div');
         banner.id = 'smsNotificationBanner';
-        banner.style.cssText = 'position: fixed; top: 18px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #0F172A; color: #FFFFFF; padding: 14px 18px; border-radius: 16px; box-shadow: 0 12px 30px rgba(0,0,0,0.35); z-index: 9999999; display: flex; align-items: center; gap: 12px; max-width: 90vw; width: 420px; border: 1px solid rgba(255,255,255,0.15); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; opacity: 0;';
+        banner.style.cssText = 'position: fixed; top: 18px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #0F172A; color: #FFFFFF; padding: 14px 18px; border-radius: 16px; box-shadow: 0 12px 30px rgba(0,0,0,0.35); z-index: 9999999; display: flex; align-items: center; gap: 12px; width: calc(100vw - 24px); max-width: 380px; box-sizing: border-box; border: 1px solid rgba(255,255,255,0.15); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; opacity: 0;';
         document.body.appendChild(banner);
       }
       banner.innerHTML = `
@@ -5279,7 +5312,9 @@
     </div>
   </div>
 
-  </div> <!-- End #app-mobile-frame -->
+  
 
+
+  </div> <!-- End #app-mobile-frame -->
 </body>
 </html>
