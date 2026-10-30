@@ -8,7 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Halljar">
-  <link rel="manifest" href="/manifest.json">
+  <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=192&auto=format&fit=crop&q=80">
   <title>Halljar Marketplace</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -3041,6 +3042,7 @@
     let cart = []; // { id, title, price, storeId, storeName }
     let currentSelectedRating = 5;
     let activeChatStoreId = null;
+    let activeConversationId = null;
 
     // Mobile PWA Install Prompt Support
     let deferredInstallPrompt = null;
@@ -3299,6 +3301,10 @@
     // WebSocket setup with resilient reconnection & graceful fallback for Vercel Serverless
     let ws = null;
     function initWebSocket() {
+      // Vercel serverless environments do not support WebSockets; built-in 3.5s HTTP polling handles real-time sync cleanly
+      if (location.hostname.includes('vercel.app')) {
+        return;
+      }
       try {
         if (location.protocol === 'http:' || location.protocol === 'https:') {
           const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
