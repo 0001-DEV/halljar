@@ -14,6 +14,31 @@
   <title>Halljar Marketplace</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+
+    /* INSTANT TOUCH & ZERO-DELAY BUTTON RESPONSIVENESS */
+    *, *::before, *::after {
+      -webkit-tap-highlight-color: transparent !important;
+    }
+    html, body, button, a, input, select, textarea, [onclick],
+    .nav-btn, .btn-full, .btn-add-cart, .btn-direct-chat,
+    .supermarket-logo-pill, .listing-card, .type-tab, .step-chip,
+    .chowdeck-counter, .counter-btn, .menu-item-row, .splash-screen {
+      touch-action: manipulation !important;
+    }
+    button, .nav-btn, .btn-full, .btn-add-cart, .btn-direct-chat,
+    .supermarket-logo-pill, [onclick], .type-tab, .counter-btn {
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    button:active, .nav-btn:active, .btn-full:active, .btn-add-cart:active,
+    .btn-direct-chat:active, .supermarket-logo-pill:active,
+    .type-tab:active, .counter-btn:active {
+      transform: scale(0.96) !important;
+      transition: transform 0.04s ease-out !important;
+      filter: brightness(0.93);
+    }
+
     :root {
       --primary: #0F766E;
       --primary-light: #CCFBF1;
@@ -200,7 +225,18 @@
         letter-spacing: -1px !important;
       }
       .pusher-avatar {
-        font-size: 24px !important;
+        font-size: unset !important;
+        line-height: 1 !important;
+      }
+      .sketched-human {
+        width: 32px !important;
+        height: 32px !important;
+      }
+      .left-avatar {
+        margin-right: 2px !important;
+      }
+      .right-avatar {
+        margin-left: 2px !important;
       }
       .splash-tagline {
         font-size: 10px !important;
@@ -1577,23 +1613,44 @@
       animation: pushFromRight 1.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
     .pusher-avatar {
-      font-size: 38px;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       user-select: none;
-      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35));
+      line-height: 1;
     }
-    /* Left pusher is flipped to face RIGHT towards 'Hall' */
-    .left-avatar {
-      margin-right: 6px;
-      transform: scaleX(-1);
+    .sketched-human {
+      width: 48px;
+      height: 48px;
       display: inline-block;
+      vertical-align: middle;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.45));
+    }
+    .left-avatar {
+      margin-right: 4px;
+      display: inline-flex;
       animation: leftAvatarDissolve 0.6s 1.7s forwards;
     }
-    /* Right pusher naturally faces LEFT towards 'jar' (inward) */
     .right-avatar {
-      margin-left: 6px;
-      display: inline-block;
+      margin-left: 4px;
+      display: inline-flex;
       animation: rightAvatarDissolve 0.6s 1.7s forwards;
+    }
+    .human-left-svg {
+      animation: humanLeftExertion 0.5s ease-in-out infinite alternate;
+      transform-origin: bottom right;
+    }
+    .human-right-svg {
+      animation: humanRightExertion 0.5s ease-in-out infinite alternate;
+      transform-origin: bottom left;
+    }
+    @keyframes humanLeftExertion {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(1.5px) rotate(-1.5deg) translateX(2px); }
+    }
+    @keyframes humanRightExertion {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(1.5px) rotate(1.5deg) translateX(-2px); }
     }
     .splash-text-part {
       font-size: 52px;
@@ -1632,14 +1689,14 @@
       100% { transform: translateX(0); opacity: 1; }
     }
     @keyframes leftAvatarDissolve {
-      0% { transform: scaleX(-1) scale(1) translateY(0); opacity: 1; filter: blur(0px); }
-      40% { transform: scaleX(-1) scale(1.3) translateY(-6px); opacity: 0.7; filter: blur(2px); }
-      100% { transform: scaleX(-1) scale(1.8) translateY(-14px); opacity: 0; filter: blur(8px); visibility: hidden; }
+      0% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0px); }
+      40% { transform: scale(1.15) translateY(-4px); opacity: 0.7; filter: blur(2px); }
+      100% { transform: scale(1.3) translateY(-10px); opacity: 0; filter: blur(6px); visibility: hidden; }
     }
     @keyframes rightAvatarDissolve {
       0% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0px); }
-      40% { transform: scale(1.3) translateY(-6px); opacity: 0.7; filter: blur(2px); }
-      100% { transform: scale(1.8) translateY(-14px); opacity: 0; filter: blur(8px); visibility: hidden; }
+      40% { transform: scale(1.15) translateY(-4px); opacity: 0.7; filter: blur(2px); }
+      100% { transform: scale(1.3) translateY(-10px); opacity: 0; filter: blur(6px); visibility: hidden; }
     }
     @keyframes textGlowMorph {
       0% {
@@ -2227,19 +2284,73 @@
       </div>
     </div>
 
-  <!-- Animated Halljar Intro Splash Screen -->
-  <div id="halljarSplashScreen" class="splash-screen" onclick="dismissSplashScreen()">
+  <!-- Animated Halljar Intro Splash Screen (Sketched Humans Pushing Letters) -->
+  <div id="halljarSplashScreen" class="splash-screen" onclick="dismissSplashScreen()" onpointerdown="dismissSplashScreen()">
     <div class="splash-stage">
-      <!-- Left side: Avatar pushing 'Hall' -->
+      <!-- Left side: Sketched Human pushing 'Hall' -->
       <div class="push-group push-left">
-        <span class="pusher-avatar left-avatar">🏃‍♂️</span>
+        <span class="pusher-avatar left-avatar" title="Sketched Human Pushing Hall">
+          <svg class="sketched-human human-left-svg" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Ground & dust lines -->
+            <path d="M4 64 C 10 61, 16 63, 22 62" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M2 58 C 7 56, 12 59, 17 57" stroke="rgba(250,204,21,0.5)" stroke-width="1.6" stroke-linecap="round"/>
+            <!-- Back Leg driving hard from ground -->
+            <path d="M12 62 L 22 48 L 30 38" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M7 62 L 15 62" stroke="#FACC15" stroke-width="3.5" stroke-linecap="round"/>
+            <!-- Front Leg bent at knee driving forward -->
+            <path d="M30 38 L 44 46 L 38 62" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M34 62 L 44 62" stroke="#FACC15" stroke-width="3.8" stroke-linecap="round"/>
+            <!-- Hip contour sketch -->
+            <path d="M26 36 C 30 35, 34 38, 32 44" stroke="rgba(250,204,21,0.8)" stroke-width="2" stroke-linecap="round"/>
+            <!-- Torso leaning forward at athletic pushing angle -->
+            <path d="M30 38 L 44 24" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/>
+            <path d="M28 38 C 34 33, 40 28, 42 22" stroke="rgba(250,204,21,0.7)" stroke-width="2" stroke-linecap="round"/>
+            <!-- Head tilted into push -->
+            <circle cx="50" cy="15" r="7.5" fill="#FFFFFF"/>
+            <path d="M44 14 C 46 9, 52 9, 56 12" stroke="#0F766E" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M46 17 L 54 17" stroke="#FACC15" stroke-width="1.8" stroke-linecap="round"/>
+            <!-- Back Arm reaching forward to push -->
+            <path d="M42 26 L 52 23 L 65 20" stroke="#E2E8F0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M64 17 L 66 23" stroke="#FACC15" stroke-width="3.2" stroke-linecap="round"/>
+            <!-- Front Arm braced straight against 'Hall' -->
+            <path d="M43 28 L 54 28 L 67 27" stroke="#FFFFFF" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M67 24 L 68 31" stroke="#FACC15" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </span>
         <span class="splash-text-part">Hall</span>
       </div>
 
-      <!-- Right side: 'jar' being pushed by Avatar from the right -->
+      <!-- Right side: 'jar' being pushed by Sketched Human from the right -->
       <div class="push-group push-right">
         <span class="splash-text-part">jar</span>
-        <span class="pusher-avatar right-avatar">🏃‍♀️</span>
+        <span class="pusher-avatar right-avatar" title="Sketched Human Pushing jar">
+          <svg class="sketched-human human-right-svg" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Ground & dust lines -->
+            <path d="M66 64 C 60 61, 54 63, 48 62" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M68 58 C 63 56, 58 59, 53 57" stroke="rgba(250,204,21,0.5)" stroke-width="1.6" stroke-linecap="round"/>
+            <!-- Back Leg driving hard from ground -->
+            <path d="M58 62 L 48 48 L 40 38" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M63 62 L 55 62" stroke="#FACC15" stroke-width="3.5" stroke-linecap="round"/>
+            <!-- Front Leg bent at knee driving forward -->
+            <path d="M40 38 L 26 46 L 32 62" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M36 62 L 26 62" stroke="#FACC15" stroke-width="3.8" stroke-linecap="round"/>
+            <!-- Hip contour sketch -->
+            <path d="M44 36 C 40 35, 36 38, 38 44" stroke="rgba(250,204,21,0.8)" stroke-width="2" stroke-linecap="round"/>
+            <!-- Torso leaning forward at athletic pushing angle -->
+            <path d="M40 38 L 26 24" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/>
+            <path d="M42 38 C 36 33, 30 28, 28 22" stroke="rgba(250,204,21,0.7)" stroke-width="2" stroke-linecap="round"/>
+            <!-- Head tilted into push with sketched ponytail -->
+            <circle cx="20" cy="15" r="7.5" fill="#FFFFFF"/>
+            <path d="M24 11 C 29 8, 34 10, 36 15" stroke="#FACC15" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M25 15 C 29 14, 33 16, 35 20" stroke="#FACC15" stroke-width="2" stroke-linecap="round"/>
+            <!-- Back Arm reaching forward to push -->
+            <path d="M28 26 L 18 23 L 5 20" stroke="#E2E8F0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6 17 L 4 23" stroke="#FACC15" stroke-width="3.2" stroke-linecap="round"/>
+            <!-- Front Arm braced straight against 'jar' -->
+            <path d="M27 28 L 16 28 L 3 27" stroke="#FFFFFF" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 24 L 2 31" stroke="#FACC15" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </span>
       </div>
     </div>
     <div class="splash-tagline">Citi-View & Estate Marketplace</div>
@@ -3183,7 +3294,7 @@
         splash.style.pointerEvents = 'none';
         setTimeout(() => {
           splash.style.display = 'none';
-        }, 450);
+        }, 120);
       }
     }
     // Auto-dismiss splash screen after animation completes
@@ -4173,10 +4284,13 @@
     }
 
     // 3. LOAD STORES (Sorted by Number of Ratings & Showing Stars)
+    const storesCatalogCache = {};
+
     async function loadSupermarkets() {
       const estateId = document.getElementById('locationSelect')?.value || 'est_citiview';
       const res = await fetch(`${API_BASE}/stores?estateId=${estateId}`);
       const stores = await res.json();
+      stores.forEach(s => { storesCatalogCache[s.id] = storesCatalogCache[s.id] || { store: s, listings: [] }; });
       const container = document.getElementById('supermarketsContainer');
 
       if (!stores.length) {
@@ -4207,87 +4321,106 @@
     let currentStoreCategoryFilter = 'ALL';
 
     // 4. OPEN STORE CATALOG & OPTIONALLY AUTO-SCROLL TO ITEM (Chowdeck Display)
+    function renderStoreHeaderDetails(store) {
+      if (!store) return;
+      const coverEl = document.getElementById('catStoreCoverImg');
+      if (coverEl) coverEl.src = store.cover || store.coverPhoto || 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=1200&auto=format&fit=crop&q=80';
+      
+      const logoEl = document.getElementById('catStoreLogoImg');
+      if (logoEl) logoEl.src = store.logo || 'https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=150&auto=format&fit=crop&q=80';
+
+      document.getElementById('catStoreTitle').textContent = store.storeName;
+      const verifiedTag = document.getElementById('catVerifiedBadge');
+      if (verifiedTag) verifiedTag.style.display = store.verifiedKYC !== false ? 'inline-flex' : 'none';
+
+      document.getElementById('catStoreBio').textContent = store.bio || `Welcome to ${store.storeName}! Fast in-estate delivery & pickup.`;
+
+      const ratingEl = document.getElementById('catStoreRating');
+      if (ratingEl) ratingEl.textContent = Number(store.ratingAvg || 5.0).toFixed(1);
+      const reviewCountEl = document.getElementById('catStoreReviewCount');
+      if (reviewCountEl) reviewCountEl.textContent = `(${store.ratingCount || 35}+ ratings)`;
+
+      const isOwner = (currentStore && currentStore.id === store.id) || (currentUser && store.userId === currentUser.id);
+
+      const openTillPill = document.getElementById('catOpenTillPill');
+      const storeChatBtn = document.getElementById('btnStoreChat');
+      if (openTillPill) {
+        if (store.isOpen) {
+          openTillPill.className = 'chowdeck-meta-pill status-open';
+          openTillPill.innerHTML = `🟢 Open till ${store.closeTime || '21:30'}`;
+          if (storeChatBtn) storeChatBtn.disabled = false;
+        } else {
+          openTillPill.className = 'chowdeck-meta-pill status-closed';
+          openTillPill.innerHTML = `🔴 Closed • Opens at ${store.openTime || '08:00'}`;
+          if (storeChatBtn) storeChatBtn.disabled = true;
+        }
+      }
+
+      if (storeChatBtn) {
+        storeChatBtn.style.display = isOwner ? 'none' : 'inline-flex';
+      }
+
+      const prepTimePill = document.getElementById('catPrepTimePill');
+      if (prepTimePill) prepTimePill.textContent = `⏱️ ${store.prepTime || '15–25 mins prep'}`;
+
+      const locPill = document.getElementById('catLocationPill');
+      if (locPill) locPill.textContent = `📍 ${store.estateName || 'Estate'}`;
+
+      const storeSearch = document.getElementById('storeSearchInput');
+      if (storeSearch) storeSearch.value = '';
+
+      const selfAddBtn = document.getElementById('btnVendorSelfAdd');
+      if (selfAddBtn) selfAddBtn.style.display = isOwner ? 'inline-block' : 'none';
+    }
+
     async function openStoreCatalog(storeId, scrollToItemId = null) {
+      // 1. INSTANT VIEW TRANSITION (0ms response time on click)
+      showView('storeCatalog');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+
+      // 2. OPTIMISTIC RENDER FROM CACHE
+      let cached = storesCatalogCache[storeId];
+      if (!cached && currentMarketListings && currentMarketListings.length) {
+        const matchingItem = currentMarketListings.find(i => i.store && i.store.id === storeId);
+        if (matchingItem && matchingItem.store) {
+          cached = {
+            store: matchingItem.store,
+            listings: currentMarketListings.filter(i => i.store && i.store.id === storeId)
+          };
+          storesCatalogCache[storeId] = cached;
+        }
+      }
+
+      if (cached && cached.store) {
+        viewingStore = cached.store;
+        viewingStoreListings = cached.listings || [];
+        renderStoreHeaderDetails(viewingStore);
+        buildStoreCategoryTabs(viewingStoreListings);
+        renderStoreItems(viewingStoreListings, viewingStore);
+      } else {
+        const itemsContainer = document.getElementById('storeCatalogItems');
+        if (itemsContainer) {
+          itemsContainer.innerHTML = '<div style="text-align: center; padding: 40px 10px; color: #94A3B8; font-weight: 600; font-size: 13px;">🏪 Loading items...</div>';
+        }
+      }
+
+      // 3. FETCH CATALOG IN BACKGROUND & REFRESH SEAMLESSLY
       try {
         const res = await fetch(`${API_BASE}/stores/${storeId}/catalog`);
         if (!res.ok) {
-          alert('Could not open store catalog.');
+          if (!cached) alert('Could not open store catalog.');
           return;
         }
         const data = await res.json();
+        storesCatalogCache[storeId] = data;
         viewingStore = data.store;
         viewingStoreListings = data.listings || [];
         currentStoreCategoryFilter = 'ALL';
 
-        // 1. Cover Photo & Real DP
-        const coverEl = document.getElementById('catStoreCoverImg');
-        if (coverEl) coverEl.src = data.store.cover || data.store.coverPhoto || 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=1200&auto=format&fit=crop&q=80';
-        
-        const logoEl = document.getElementById('catStoreLogoImg');
-        if (logoEl) logoEl.src = data.store.logo || 'https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=150&auto=format&fit=crop&q=80';
-
-        // 2. Business Title & Verified Tag
-        document.getElementById('catStoreTitle').textContent = data.store.storeName;
-        const verifiedTag = document.getElementById('catVerifiedBadge');
-        if (verifiedTag) verifiedTag.style.display = data.store.verifiedKYC !== false ? 'inline-flex' : 'none';
-
-        // 3. Bio / Description
-        document.getElementById('catStoreBio').textContent = data.store.bio || `Welcome to ${data.store.storeName}! Fast in-estate delivery & pickup.`;
-
-        // 4. Ratings
-        const ratingEl = document.getElementById('catStoreRating');
-        if (ratingEl) ratingEl.textContent = Number(data.store.ratingAvg || 5.0).toFixed(1);
-        const reviewCountEl = document.getElementById('catStoreReviewCount');
-        if (reviewCountEl) reviewCountEl.textContent = `(${data.store.ratingCount || 35}+ ratings)`;
-
-        const isOwner = (currentStore && currentStore.id === storeId) || (currentUser && data.store.userId === currentUser.id);
-
-        // 5. Open Till Status Pill
-        const openTillPill = document.getElementById('catOpenTillPill');
-        const storeChatBtn = document.getElementById('btnStoreChat');
-        if (openTillPill) {
-          if (data.store.isOpen) {
-            openTillPill.className = 'chowdeck-meta-pill status-open';
-            openTillPill.innerHTML = `🟢 Open till ${data.store.closeTime || '21:30'}`;
-            if (storeChatBtn) storeChatBtn.disabled = false;
-          } else {
-            openTillPill.className = 'chowdeck-meta-pill status-closed';
-            openTillPill.innerHTML = `🔴 Closed • Opens at ${data.store.openTime || '08:00'}`;
-            if (storeChatBtn) storeChatBtn.disabled = true;
-          }
-        }
-
-        // Hide Chat Store option if viewing own business
-        if (storeChatBtn) {
-          storeChatBtn.style.display = isOwner ? 'none' : 'inline-flex';
-        }
-
-        // 6. Preparation Time Pill
-        const prepTimePill = document.getElementById('catPrepTimePill');
-        if (prepTimePill) prepTimePill.textContent = `⏱️ ${data.store.prepTime || '15–25 mins prep'}`;
-
-        // 7. Location Pill
-        const locPill = document.getElementById('catLocationPill');
-        if (locPill) locPill.textContent = `📍 ${data.store.estateName || 'Estate'}`;
-
-        // Reset in-store search input
-        const storeSearch = document.getElementById('storeSearchInput');
-        if (storeSearch) storeSearch.value = '';
-
-        const selfAddBtn = document.getElementById('btnVendorSelfAdd');
-        if (selfAddBtn) selfAddBtn.style.display = isOwner ? 'inline-block' : 'none';
-
-        // Build Chowdeck Category Tabs (All + Category Options)
+        renderStoreHeaderDetails(data.store);
         buildStoreCategoryTabs(viewingStoreListings);
-
-        // Render Items
         renderStoreItems(viewingStoreListings, viewingStore);
-        showView('storeCatalog');
 
-        // Scroll page to top of catalog
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-
-        // Auto-scroll to the exact clicked product if requested
         if (scrollToItemId) {
           setTimeout(() => {
             const targetEl = document.getElementById(`menu_item_${scrollToItemId}`);
@@ -4296,11 +4429,10 @@
               targetEl.classList.add('highlighted');
               setTimeout(() => targetEl.classList.remove('highlighted'), 3000);
             }
-          }, 200);
+          }, 100);
         }
       } catch (err) {
         console.error('Error opening store catalog:', err);
-        alert('Failed to load store catalog.');
       }
     }
 
@@ -4646,82 +4778,107 @@
       const firstListingId = cart[0].id;
       const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
 
-      const itemsListText = cart.map(i => `• ${i.qty}x ${i.title} (₦${(i.price * i.qty).toLocaleString()})`).join('\n');
-      const orderMessage = `Hello ${targetStoreName}, I would like to order the following:\n\n${itemsListText}\n\nTotal: ₦${total.toLocaleString()}\n\nPlease send your bank account details so I can make payment for delivery.`;
-
-      const res = await fetch(`${API_BASE}/conversations`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ listingId: firstListingId, storeId: targetStoreId, buyerId: currentUser.id })
-      });
-      const data = await res.json();
-      activeConversationId = data.conversation.id;
-      activeChatStoreId = targetStoreId;
-
+      // 1. INSTANT: Open chat overlay immediately (0ms delay)
+      document.getElementById('chatOverlay').classList.add('active');
       document.getElementById('chatStoreTitle').textContent = targetStoreName;
       document.getElementById('chatOrderCard').innerHTML = `
         <strong>🛒 Pending Order from ${targetStoreName}</strong>
         <div style="margin-top: 4px;">${cart.reduce((s, i) => s + i.qty, 0)} items • Total: <strong>₦${total.toLocaleString()}</strong></div>
       `;
+      const messagesContainer = document.getElementById('chatMessages');
+      if (messagesContainer) {
+        messagesContainer.innerHTML = '<div style="text-align: center; padding: 30px; color: #94A3B8; font-size: 13px;">📲 Sending order details to vendor...</div>';
+      }
 
-      await fetch(`${API_BASE}/conversations/${activeConversationId}/messages`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ senderId: currentUser.id, text: orderMessage })
-      });
-
-      await loadConversationMessages(activeConversationId);
-      document.getElementById('chatOverlay').classList.add('active');
+      const itemsListText = cart.map(i => `• ${i.qty}x ${i.title} (₦${(i.price * i.qty).toLocaleString()})`).join('\n');
+      const orderMessage = `Hello ${targetStoreName}, I would like to order the following:\n\n${itemsListText}\n\nTotal: ₦${total.toLocaleString()}\n\nPlease send your bank account details so I can make payment for delivery.`;
 
       cart = [];
       updateCartBar();
       refreshActiveViewButtons();
+
+      try {
+        const res = await fetch(`${API_BASE}/conversations`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ listingId: firstListingId, storeId: targetStoreId, buyerId: currentUser.id })
+        });
+        const data = await res.json();
+        activeConversationId = data.conversation.id;
+        activeChatStoreId = targetStoreId;
+
+        await fetch(`${API_BASE}/conversations/${activeConversationId}/messages`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ senderId: currentUser.id, text: orderMessage })
+        });
+
+        await loadConversationMessages(activeConversationId);
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     async function openSingleProductChat(listingId) {
-      const res = await fetch(`${API_BASE}/conversations`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ listingId, buyerId: currentUser.id })
-      });
-      const data = await res.json();
-      activeConversationId = data.conversation.id;
-      activeChatStoreId = data.store.id;
-
-      document.getElementById('chatStoreTitle').textContent = data.store.storeName;
-      document.getElementById('chatOrderCard').innerHTML = `
-        <div style="display: flex; gap: 10px; align-items: center;">
-          ${data.listing ? `<img src="${data.listing.images[0]}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 6px;">
-          <div>
-            <strong>${data.listing.title}</strong>
-            <div style="color: var(--primary); font-weight: 700;">₦${Number(data.listing.price).toLocaleString()}</div>
-          </div>` : `<strong>Chat with ${data.store.storeName}</strong>`}
-        </div>
-      `;
-
-      await loadConversationMessages(activeConversationId);
       document.getElementById('chatOverlay').classList.add('active');
+      const messagesContainer = document.getElementById('chatMessages');
+      if (messagesContainer) {
+        messagesContainer.innerHTML = '<div style="text-align: center; padding: 30px; color: #94A3B8; font-size: 13px;">💬 Opening chat...</div>';
+      }
+      try {
+        const res = await fetch(`${API_BASE}/conversations`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ listingId, buyerId: currentUser.id })
+        });
+        const data = await res.json();
+        activeConversationId = data.conversation.id;
+        activeChatStoreId = data.store.id;
+
+        document.getElementById('chatStoreTitle').textContent = data.store.storeName;
+        document.getElementById('chatOrderCard').innerHTML = `
+          <div style="display: flex; gap: 10px; align-items: center;">
+            ${data.listing ? `<img src="${data.listing.images[0]}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 6px;">
+            <div>
+              <strong>${data.listing.title}</strong>
+              <div style="color: var(--primary); font-weight: 700;">₦${Number(data.listing.price).toLocaleString()}</div>
+            </div>` : `<strong>Chat with ${data.store.storeName}</strong>`}
+          </div>
+        `;
+
+        await loadConversationMessages(activeConversationId);
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     async function initiateStoreDirectChat() {
       if (!viewingStore) return;
-      const res = await fetch(`${API_BASE}/conversations`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ storeId: viewingStore.id, buyerId: currentUser.id })
-      });
-      const data = await res.json();
-      activeConversationId = data.conversation.id;
-      activeChatStoreId = viewingStore.id;
-
+      // 1. INSTANT: Open chat overlay immediately (0ms delay)
+      document.getElementById('chatOverlay').classList.add('active');
       document.getElementById('chatStoreTitle').textContent = viewingStore.storeName;
       document.getElementById('chatOrderCard').innerHTML = `
         <div style="font-weight: 700;">Direct Inquiry with ${viewingStore.storeName}</div>
         <div style="font-size: 11px; color: var(--text-muted);">Ask about items, delivery in estate, or custom orders</div>
       `;
+      const messagesContainer = document.getElementById('chatMessages');
+      if (messagesContainer) {
+        messagesContainer.innerHTML = '<div style="text-align: center; padding: 30px; color: #94A3B8; font-size: 13px;">💬 Connecting to store...</div>';
+      }
 
-      await loadConversationMessages(activeConversationId);
-      document.getElementById('chatOverlay').classList.add('active');
+      try {
+        const res = await fetch(`${API_BASE}/conversations`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ storeId: viewingStore.id, buyerId: currentUser.id })
+        });
+        const data = await res.json();
+        activeConversationId = data.conversation.id;
+        activeChatStoreId = viewingStore.id;
+        await loadConversationMessages(activeConversationId);
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     async function loadConversationMessages(convId, isSilent = false) {
@@ -5154,6 +5311,13 @@
     }
 
     async function openVendorConversation(convId, buyerName, buyerPhone, itemTitle) {
+      // 1. INSTANT: Open chat overlay immediately (0ms delay)
+      document.getElementById('chatOverlay').classList.add('active');
+      const messagesContainer = document.getElementById('chatMessages');
+      if (messagesContainer) {
+        messagesContainer.innerHTML = '<div style="text-align: center; padding: 30px; color: #94A3B8; font-size: 13px;">💬 Loading conversation...</div>';
+      }
+
       // Mark this conversation as read
       const readTimestamps = JSON.parse(localStorage.getItem('halljar_vendor_read_timestamps') || '{}');
       readTimestamps[convId] = new Date().toISOString();
@@ -5174,7 +5338,6 @@
       `;
 
       await loadConversationMessages(activeConversationId);
-      document.getElementById('chatOverlay').classList.add('active');
     }
 
     function viewMyStoreAsBuyer() {
